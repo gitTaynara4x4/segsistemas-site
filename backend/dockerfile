@@ -2,16 +2,12 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# (mantém porque você pediu requirements, mesmo sendo site estático)
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia seus arquivos do site
 COPY frontend ./frontend
-
-# Faz / abrir seu inicio.html automaticamente
 RUN cp ./frontend/inicio.html ./index.html
 
 EXPOSE 2932
 
-CMD ["python", "-m", "http.server", "8000", "--bind", "0.0.0.0"]
+CMD ["python", "-m", "http.server", "2932", "--bind", "0.0.0.0"]
