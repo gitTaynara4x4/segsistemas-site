@@ -12,6 +12,6 @@ COPY frontend ./frontend
 # Faz / abrir seu inicio.html automaticamente
 RUN cp ./frontend/inicio.html ./index.html
 
-EXPOSE 8000
+EXPOSE 2932
 
 CMD ["python", "-m", "http.server", "8000", "--bind", "0.0.0.0"]
