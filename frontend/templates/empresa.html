@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+{% block description %}SEGSis - Líder em Segurança Eletrônica e Monitoramento 24h desde 1996.{% endblock %}
+{% block title %}A Empresa | SEGSis Monitoramento{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Herr+Von+Muellerhoff&display=swap" rel="stylesheet">
+
+<style>
+  /* --- HERO --- */
+  .hero-internal {
+    height: 50vh;
+    min-height: 400px;
+    background: linear-gradient(135deg, rgba(2,6,23,0.95), rgba(15,23,42,0.85)),
+                url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    padding-top: 60px;
+    color: #fff;
+  }
+  .hero-breadcrumb { color: var(--gold-metallic); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem; display: block; margin-bottom: 10px; }
+  .hero-internal h1 { font-size: 3.5rem; line-height: 1.1; margin-bottom: 15px; }
+
+  /* --- TRUST BAR --- */
+  .trust-bar {
+    background: var(--white);
+    margin-top: -50px;
+    position: relative;
+    z-index: 10;
+    padding: 40px 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border-radius: 8px;
+  }
+  .trust-grid { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; text-align: center; }
+  .trust-item h3 { font-size: 2.2rem; color: var(--navy-deep); font-weight: 800; margin-bottom: 5px; }
+  .trust-item span { color: #64748b; font-weight: 500; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; }
+
+  /* --- CONTEÚDO --- */
+  .content-section { padding: 100px 0; overflow: hidden; }
+  .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .content-text h2 { font-size: 2.2rem; color: var(--navy-deep); margin-bottom: 25px; line-height: 1.2; }
+  .content-text p { font-size: 1.05rem; color: #64748b; line-height: 1.8; margin-bottom: 20px; text-align: justify; }
+
+  /* MOLDURA PARA IMAGEM FIXA (DNA TECNOLÓGICO) */
+  .img-frame {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+    height: 400px;
+  }
+  .img-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .img-frame:hover img { transform: scale(1.05); }
+
+  .img-frame::before {
+    content: ''; position: absolute; top: -20px; left: -20px; width: 100%; height: 100%;
+    border: 2px solid var(--gold-metallic); border-radius: 12px; z-index: -1; opacity: 0.4;
+  }
+
+  /* === SLIDER (KEN BURNS) === */
+  .pro-slider {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 30px 60px -15px rgba(0,0,0,0.3);
+  }
+
+  .pro-slider::before {
+    content: ''; position: absolute; top: -20px; right: -20px; width: 100%; height: 100%;
+    border: 2px solid var(--gold-metallic); border-radius: 12px; z-index: -1; opacity: 0.4;
+  }
+
+  .slide-item {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0;
+    animation: kenBurns 15s infinite;
+  }
+
+  .slide-item img { width: 100%; height: 100%; object-fit: cover; }
+
+  .slide-item:nth-child(1) { animation-delay: 0s; }
+  .slide-item:nth-child(2) { animation-delay: 5s; }
+  .slide-item:nth-child(3) { animation-delay: 10s; }
+
+  @keyframes kenBurns {
+    0% { opacity: 0; transform: scale(1); }
+    5% { opacity: 1; }
+    33% { opacity: 1; transform: scale(1.1); }
+    38% { opacity: 0; transform: scale(1.15); }
+    100% { opacity: 0; transform: scale(1); }
+  }
+
+  .grid-reverse .content-text { order: 2; }
+  .grid-reverse .img-frame { order: 1; }
+
+  /* --- QUOTE DIRETOR --- */
+  .director-quote { background: #f8fafc; padding: 80px 0; text-align: center; }
+  .quote-box { max-width: 800px; margin: 0 auto; position: relative; }
+  .quote-box i { font-size: 3rem; color: var(--gold-metallic); opacity: 0.3; margin-bottom: 20px; }
+  .quote-text { font-size: 1.4rem; font-style: italic; color: var(--navy-deep); line-height: 1.6; margin-bottom: 30px; font-weight: 300; }
+
+  .director-info { display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap; }
+  .director-avatar { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-metallic); }
+  .director-details { text-align: left; }
+  .director-details h5 { color: var(--navy-deep); font-size: 1.1rem; margin-bottom: 0; }
+  .director-details span { color: #64748b; font-size: 0.9rem; }
+
+  .signature { font-family: 'Herr Von Muellerhoff', cursive; font-size: 2.5rem; color: var(--navy-deep); margin-left: 20px; opacity: 0.7; }
+
+  .final-cta { background: var(--navy-deep); padding: 80px 0; text-align: center; color: #fff; position: relative; overflow: hidden; }
+  .final-cta::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at center, rgba(212,175,55,0.15) 0%, rgba(15,23,42,0) 70%); pointer-events: none; }
+  .final-cta h2 { font-size: 2.5rem; margin-bottom: 20px; }
+  .final-cta p { font-size: 1.2rem; opacity: 0.8; margin-bottom: 40px; max-width: 600px; margin: 0 auto 40px; }
+
+  .partners-strip { padding: 50px 0; background: #fff; border-bottom: 1px solid #e2e8f0; }
+  .partners-grid { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; opacity: 0.6; filter: grayscale(100%); }
+  .partners-grid img { height: 40px; transition: 0.3s; }
+  .partners-grid:hover { filter: grayscale(0); opacity: 1; }
+
+  @media (max-width: 900px) {
+    .hero-internal h1 { font-size: 2.5rem; }
+    .content-grid { grid-template-columns: 1fr; gap: 40px; }
+    .grid-reverse .content-text { order: 1; }
+    .grid-reverse .img-frame { order: 2; }
+    .img-frame::before { display: none; }
+    .pro-slider::before { display: none; }
+    .trust-grid { flex-direction: column; gap: 30px; }
+    .trust-bar { padding: 30px; }
+    .pro-slider { height: 280px; }
+    .img-frame { height: 280px; }
+    .hero-internal { background-attachment: scroll; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="hero-internal">
+  <div class="container">
+    <div data-aos="fade-up">
+      <span class="hero-breadcrumb">SEGSis Monitoramento</span>
+      <h1>Solidez, Tecnologia <br>e Confiança.</h1>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="trust-bar" data-aos="fade-up" data-aos-delay="100">
+    <div class="trust-grid">
+      <div class="trust-item">
+        <h3>+1.200</h3>
+        <span>Clientes Ativos</span>
+      </div>
+      <div class="trust-item">
+        <h3>29</h3>
+        <span>Anos de História</span>
+      </div>
+      <div class="trust-item">
+        <h3>24/7</h3>
+        <span>Monitoramento Real</span>
+      </div>
+      <div class="trust-item">
+        <h3>15min</h3>
+        <span>Resposta Média</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="content-section">
+  <div class="container">
+    <div class="content-grid">
+      <div class="content-text" data-aos="fade-right">
+        <span style="color:var(--gold-metallic); font-weight:700; text-transform:uppercase;">Nossa Trajetória</span>
+        <h2>Desde 1996 construindo confiança</h2>
+        <p>A <strong>SEGSis Monitoramento</strong> nasceu com um propósito claro: elevar o padrão de segurança eletrônica no Vale do Paraíba. O que começou como uma empresa focada em instalações técnicas, evoluiu para se tornar um hub completo de soluções em proteção patrimonial.</p>
+        <p>Ao longo de quase três décadas, testemunhamos a revolução tecnológica do setor. Fomos pioneiros na implementação de sistemas digitais de monitoramento e na integração de inteligência artificial para análise de riscos.</p>
+        <ul style="margin-top:20px; list-style:none;">
+          <li style="margin-bottom:10px;"><i class="fas fa-check-circle" style="color:var(--gold-metallic); margin-right:10px;"></i> Estrutura Própria de Atendimento</li>
+          <li style="margin-bottom:10px;"><i class="fas fa-check-circle" style="color:var(--gold-metallic); margin-right:10px;"></i> Frota Tática Exclusiva</li>
+          <li><i class="fas fa-check-circle" style="color:var(--gold-metallic); margin-right:10px;"></i> Certificação Técnica</li>
+        </ul>
+      </div>
+
+      <div class="pro-slider" data-aos="fade-left">
+        <div class="slide-item">
+          <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=800&q=80" alt="Equipe Reunida">
+        </div>
+        <div class="slide-item">
+          <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80" alt="Sala de Reunião">
+        </div>
+        <div class="slide-item">
+          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80" alt="Escritório Moderno">
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="director-quote">
+  <div class="container">
+    <div class="quote-box" data-aos="zoom-in">
+      <i class="fas fa-quote-left"></i>
+      <p class="quote-text">"Segurança não é sobre equipamentos, é sobre pessoas. Quando um cliente contrata a SEGSis, ele não está comprando apenas câmeras, ele está comprando a certeza de que haverá alguém zelando pelo sono da sua família."</p>
+
+      <div class="director-info">
+        <img src="{{ url_for('static', path='img/nilson-diretor.png') }}" alt="Diretor Nilson" class="director-avatar">
+        <div class="director-details">
+          <h5>Nilson Gonçalves</h5>
+          <span>Diretor Executivo - SEGSis</span>
+        </div>
+        <div class="signature">Nilson Gonçalves</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content-section" style="background:#fff;">
+  <div class="container">
+    <div class="content-grid grid-reverse">
+      <div class="content-text" data-aos="fade-left">
+        <span style="color:var(--gold-metallic); font-weight:700; text-transform:uppercase;">DNA Tecnológico</span>
+        <h2>Inteligência Artificial a favor da sua proteção</h2>
+        <p>Não acreditamos em soluções genéricas. Na <strong>SEGSis</strong>, a segurança é desenhada sob medida, unindo a expertise humana à precisão das máquinas.</p>
+        <p>Utilizamos softwares de gestão de eventos que priorizam ocorrências reais. Nossas câmeras com <em>Video Analytics</em> são capazes de distinguir um animal doméstico de um intruso, garantindo que nossa equipe de pronta resposta seja acionada apenas quando necessário.</p>
+
+        <a href="https://wa.me/5512974101924?text=Quero%20saber%20sobre%20monitoramento%20inteligente" class="btn btn-gold" style="margin-top:20px;">
+          Conhecer Tecnologia
+        </a>
+      </div>
+
+      <div class="img-frame" data-aos="fade-right">
+        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80" alt="Painel de Inteligência de Segurança">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="partners-strip">
+  <div class="container">
+    <p style="text-align:center; margin-bottom:20px; color:#94a3b8; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px;">
+      Tecnologia homologada pelos líderes mundiais
+    </p>
+    <div class="partners-grid">
+      <img src="{{ url_for('static', path='img/intelbras.png') }}" alt="Intelbras">
+      <img src="{{ url_for('static', path='img/hikvision.png') }}" alt="Hikvision">
+      <img src="{{ url_for('static', path='img/jfl.png') }}" alt="JFL">
+      <img src="{{ url_for('static', path='img/dahua.png') }}" alt="Dahua">
+    </div>
+  </div>
+</section>
+
+<section style="padding: 60px 0; background: #f8fafc;">
+  <div class="container text-center">
+    <h4 style="color:var(--navy-deep); margin-bottom:30px;">Compliance e Ética</h4>
+    <div style="display:flex; justify-content:center; gap:20px; flex-wrap:wrap;">
+      <a href="#" class="btn btn-outline" style="color:#64748b; border-color:#cbd5e1; font-size:0.8rem;">Política de Privacidade</a>
+      <a href="#" class="btn btn-outline" style="color:#64748b; border-color:#cbd5e1; font-size:0.8rem;">Termos de Uso</a>
+      <a href="#" class="btn btn-outline" style="color:#64748b; border-color:#cbd5e1; font-size:0.8rem;">Código de Conduta</a>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <div class="container">
+    <div data-aos="zoom-in">
+      <h2>Sua segurança não pode esperar.</h2>
+      <p>Junte-se a mais de 1.000 famílias e empresas que dormem tranquilas no Vale do Paraíba.</p>
+      <a href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20visitei%20a%20p%C3%A1gina%20Sobre%20e%20quero%20um%20or%C3%A7amento." class="btn btn-gold">
+        <i class="fab fa-whatsapp"></i> Falar com Especialista Agora
+      </a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

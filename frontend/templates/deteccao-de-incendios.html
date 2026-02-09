@@ -1,0 +1,437 @@
+{% extends "base.html" %}
+
+{% block description %}Engenharia de Incêndio SEGSis. Projetos de detecção, alarme e combate a incêndio com monitoramento 24h e emissão de AVCB.{% endblock %}
+{% block title %}Prevenção e Combate a Incêndio | SEGSis Engenharia{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ====== IMPORTANTE ====== */
+  :root {
+    --navy-deep: #0f172a;
+    --navy-light: #1e293b;
+    --gold-metallic: #d4af37;
+    --gold-hover: #b5952f;
+    --gray-light: #f1f5f9;
+    --text-body: #475569;
+    --white: #ffffff;
+  }
+
+  /* --- HERO (PARALLAX) --- */
+  .incendio-hero {
+    height: 65vh;
+    min-height: 500px;
+    background-color: var(--navy-deep);
+    /* Hero Image */
+    background-image: url('https://images.pexels.com/photos/257736/pexels-photo-257736.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  .incendio-hero::before {
+    content:'';
+    position:absolute; inset:0;
+    background: linear-gradient(90deg, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.6) 100%);
+  }
+  .incendio-hero-content {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    max-width: 700px;
+    padding-top: 60px;
+  }
+  .incendio-breadcrumb {
+    color: var(--gold-metallic);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+    display: inline-block;
+    background: rgba(212, 175, 55, 0.1);
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+  .incendio-hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+  .incendio-hero p {
+    font-size: 1.15rem;
+    opacity: 0.9;
+    margin-bottom: 30px;
+    font-weight: 300;
+  }
+  .incendio-hero .btn-action-hero {
+    display: inline-block;
+    background: var(--gold-metallic);
+    color: var(--navy-deep);
+    padding: 12px 22px;
+    border-radius: 6px;
+    font-weight: 700;
+  }
+  .incendio-hero .btn-action-hero:hover {
+    background: #fff;
+    color: var(--navy-deep);
+  }
+
+  /* --- LAYOUT PRINCIPAL --- */
+  .incendio-details {
+    padding: 80px 0;
+    background: #fff;
+  }
+  .incendio-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 50px;
+    align-items: start;
+  }
+
+  .incendio-title {
+    font-size: 2.2rem;
+    color: var(--navy-deep);
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+  .incendio-intro {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-body);
+    margin-bottom: 40px;
+    border-left: 4px solid var(--gold-metallic);
+    padding-left: 25px;
+  }
+
+  /* --- CARDS --- */
+  .incendio-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    margin-bottom: 50px;
+  }
+
+  .incendio-card {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+    transition: all 0.4s ease;
+    position: relative;
+  }
+  .incendio-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+    border-color: var(--gold-metallic);
+  }
+
+  .incendio-card-img {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+    background-color: #e2e8f0;
+  }
+  .incendio-card-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s ease;
+  }
+  .incendio-card:hover .incendio-card-img img {
+    transform: scale(1.1);
+  }
+  .incendio-card-img::after {
+    content: '';
+    position: absolute; inset:0;
+    background: rgba(212, 175, 55, 0.0);
+    transition: 0.3s;
+  }
+  .incendio-card:hover .incendio-card-img::after {
+    background: rgba(212, 175, 55, 0.1);
+  }
+
+  .incendio-card-body { padding: 25px; }
+  .incendio-card-title {
+    font-size: 1.2rem;
+    color: var(--navy-deep);
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .incendio-card-title i { color: var(--gold-metallic); font-size: 1rem; }
+  .incendio-card-text { font-size: 0.9rem; color: #64748b; }
+
+  /* --- SIDEBAR --- */
+  .incendio-sidebar {
+    background: var(--navy-deep);
+    color: #fff;
+    padding: 40px 30px;
+    border-radius: 8px;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+    position: sticky;
+    top: 100px;
+    border-top: 5px solid var(--gold-metallic);
+  }
+  .incendio-sidebar h3 { margin-bottom: 10px; }
+  .incendio-sidebar p { opacity: 0.85; font-size: 0.9rem; }
+
+  .incendio-sidebar ul { margin: 20px 0; font-size: 0.9rem; padding: 0; }
+  .incendio-sidebar li { margin-bottom:10px; }
+  .incendio-sidebar li i { color: var(--gold-metallic); margin-right: 8px; }
+
+  .incendio-btn-full {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: var(--gold-metallic);
+    color: var(--navy-deep);
+    padding: 15px;
+    border-radius: 6px;
+    font-weight: 800;
+    margin-top: 20px;
+    transition: 0.3s;
+  }
+  .incendio-btn-full:hover { background: #fff; color: var(--navy-deep); }
+
+  /* --- GALERIA --- */
+  .incendio-gallery {
+    background: var(--navy-deep);
+    padding: 80px 0;
+    color: #fff;
+    text-align: center;
+  }
+  .incendio-gallery h2 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+  .incendio-gallery p.sub {
+    color: var(--gold-metallic);
+    margin-bottom: 50px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+  }
+
+  .incendio-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .incendio-gallery-item {
+    position: relative;
+    height: 250px;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    background-color: #334155;
+  }
+  .incendio-gallery-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+  }
+  .incendio-gallery-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    padding: 20px;
+    transform: translateY(100%);
+    transition: 0.3s;
+  }
+  .incendio-gallery-item:hover img { transform: scale(1.1); opacity: 0.8; }
+  .incendio-gallery-item:hover .incendio-gallery-overlay { transform: translateY(0); }
+  .incendio-gallery-title { color: #fff; font-weight: 700; font-size: 1.1rem; }
+
+  /* --- RESPONSIVO --- */
+  @media (max-width: 992px) {
+    .incendio-grid { grid-template-columns: 1fr; }
+    .incendio-sidebar { margin-top: 40px; position: static; }
+    .incendio-hero h1 { font-size: 2.5rem; }
+    .incendio-hero { background-attachment: scroll; }
+  }
+  @media (max-width: 600px) {
+    .incendio-cards { grid-template-columns: 1fr; }
+    .incendio-gallery-grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <section class="incendio-hero">
+    <div class="container">
+      <div class="incendio-hero-content" data-aos="fade-right">
+        <span class="incendio-breadcrumb">Engenharia de Segurança</span>
+        <h1>Sistemas de Combate a Incêndio de Alta Performance</h1>
+        <p>Da elaboração do projeto executivo à instalação certificada. Garantimos a aprovação do seu AVCB com tecnologia de ponta.</p>
+        <a href="#galeria" class="btn-action-hero">Ver Nossas Obras</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="incendio-details" id="solucoes">
+    <div class="container">
+      <div class="incendio-grid">
+
+        <div class="content-col" data-aos="fade-up">
+          <h2 class="incendio-title">Engenharia de Proteção</h2>
+
+          <div class="incendio-intro">
+            <p>A segurança contra incêndios exige precisão cirúrgica. A SEGSis atua com rigor técnico, fornecendo sistemas que identificam riscos em milissegundos. Nossas soluções integram detecção inteligente, automação de combate e gestão de rotas de fuga.</p>
+          </div>
+
+          <div class="incendio-cards">
+
+            <div class="incendio-card">
+              <div class="incendio-card-img">
+                <img 
+                  src="https://images.pexels.com/photos/12392040/pexels-photo-12392040.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                  alt="Detector de Fumaça"
+                  onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Foto+Deteccao';"
+                >
+              </div>
+              <div class="incendio-card-body">
+                <h3 class="incendio-card-title"><i class="fas fa-rss"></i> Detecção e Alarme</h3>
+                <p class="incendio-card-text">Sistemas endereçáveis inteligentes que localizam o foco inicial e acionam protocolos automáticos.</p>
+              </div>
+            </div>
+
+            <div class="incendio-card">
+              <div class="incendio-card-img">
+                <img 
+                  src="https://images.pexels.com/photos/257700/pexels-photo-257700.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                  alt="Automação Industrial"
+                  onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Foto+Automacao';"
+                >
+              </div>
+              <div class="incendio-card-body">
+                <h3 class="incendio-card-title"><i class="fas fa-cogs"></i> Automação Industrial</h3>
+                <p class="incendio-card-text">Controle de bombas, sprinklers e hidrantes integrados à central de comando da planta.</p>
+              </div>
+            </div>
+
+            <div class="incendio-card">
+              <div class="incendio-card-img">
+                <img 
+                  src="https://images.pexels.com/photos/256219/pexels-photo-256219.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                  alt="Compartimentação"
+                  onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Foto+Portas';"
+                >
+              </div>
+              <div class="incendio-card-body">
+                <h3 class="incendio-card-title"><i class="fas fa-door-closed"></i> Compartimentação</h3>
+                <p class="incendio-card-text">Instalação certificada de Portas Corta-Fogo (PCF) com barras antipânico e eletroímãs.</p>
+              </div>
+            </div>
+
+            <div class="incendio-card">
+              <div class="incendio-card-img">
+                <img 
+                  src="https://images.pexels.com/photos/834892/pexels-photo-834892.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                  alt="Projeto Técnico"
+                  onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Foto+Projetos';"
+                >
+              </div>
+              <div class="incendio-card-body">
+                <h3 class="incendio-card-title"><i class="fas fa-file-contract"></i> Projetos e AVCB</h3>
+                <p class="incendio-card-text">Elaboração de projetos técnicos, trâmites legais e emissão de laudos para renovação de AVCB.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="sidebar-col">
+          <div class="incendio-sidebar">
+            <h3>Precisa regularizar sua empresa?</h3>
+            <p>Nossa equipe analisa sua planta gratuitamente e sugere a adequação exata às normas do Corpo de Bombeiros.</p>
+
+            <ul>
+              <li><i class="fas fa-check"></i> Visita Técnica</li>
+              <li><i class="fas fa-check"></i> Laudo de ART</li>
+              <li><i class="fas fa-check"></i> Instalação Certificada</li>
+            </ul>
+
+            <a href="https://wa.me/5512974101924" class="incendio-btn-full">
+              <i class="fab fa-whatsapp"></i> Falar com Engenheiro
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="incendio-gallery" id="galeria">
+    <div class="container">
+      <div class="gallery-header" data-aos="fade-up">
+        <h2>Atuação em Campo</h2>
+        <p class="sub">Confira a qualidade técnica das nossas instalações</p>
+      </div>
+
+      <div class="incendio-gallery-grid">
+        <div class="incendio-gallery-item" data-aos="zoom-in" data-aos-delay="100">
+          <img 
+            src="https://images.pexels.com/photos/279979/pexels-photo-279979.jpeg?auto=compress&cs=tinysrgb&w=800" 
+            alt="Rede de Hidrantes"
+            onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Hidrantes';"
+          >
+          <div class="incendio-gallery-overlay"><div class="incendio-gallery-title">Rede de Hidrantes</div></div>
+        </div>
+
+        <div class="incendio-gallery-item" data-aos="zoom-in" data-aos-delay="200">
+          <img 
+            src="https://images.pexels.com/photos/20569115/pexels-photo-20569115.jpeg?auto=compress&cs=tinysrgb&w=800" 
+            alt="Central Endereçável"
+            onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Central';"
+          >
+          <div class="incendio-gallery-overlay"><div class="incendio-gallery-title">Central Endereçável</div></div>
+        </div>
+
+        <div class="incendio-gallery-item" data-aos="zoom-in" data-aos-delay="300">
+          <img 
+            src="https://images.pexels.com/photos/585418/pexels-photo-585418.jpeg?auto=compress&cs=tinysrgb&w=800" 
+            alt="Projetos Industriais"
+            onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Industrial';"
+          >
+          <div class="incendio-gallery-overlay"><div class="incendio-gallery-title">Projetos Industriais</div></div>
+        </div>
+
+        <div class="incendio-gallery-item" data-aos="zoom-in" data-aos-delay="400">
+          <img 
+            src="https://images.pexels.com/photos/209251/pexels-photo-209251.jpeg?auto=compress&cs=tinysrgb&w=800" 
+            alt="Extintores"
+            onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Extintores';"
+          >
+          <div class="incendio-gallery-overlay"><div class="incendio-gallery-title">Sinalização e Extintores</div></div>
+        </div>
+
+        <div class="incendio-gallery-item" data-aos="zoom-in" data-aos-delay="500">
+          <img 
+            src="https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=800" 
+            alt="Manutenção Técnica"
+            onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Manutencao';"
+          >
+          <div class="incendio-gallery-overlay"><div class="incendio-gallery-title">Manutenção Técnica</div></div>
+        </div>
+
+        <div class="incendio-gallery-item" data-aos="zoom-in" data-aos-delay="600">
+          <img 
+            src="https://images.pexels.com/photos/224924/pexels-photo-224924.jpeg?auto=compress&cs=tinysrgb&w=800" 
+            alt="Execução de Obra"
+            onerror="this.onerror=null;this.src='https://placehold.co/800x600?text=Obra';"
+          >
+          <div class="incendio-gallery-overlay"><div class="incendio-gallery-title">Execução de Obra</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

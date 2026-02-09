@@ -141,7 +141,7 @@ header.scrolled .mobile-toggle{color:var(--navy-deep)}
 .desktop-only{display:block}
 .mobile-only{display:none}
 
-/* ✅ LOGO SEM FUNDO / SEM BORDA */
+/* LOGO */
 .logo{
   display:flex;
   align-items:center;
@@ -152,12 +152,7 @@ header.scrolled .mobile-toggle{color:var(--navy-deep)}
   height:52px;
   display:block;
   border-radius:999px;
-
-  /* como sua imagem já é redonda e sem fundo:
-     deixo o object-fit pra não cortar caso tenha transparência */
   object-fit:contain;
-
-  /* só uma sombra pra destacar no header escuro */
   filter:drop-shadow(0 14px 24px rgba(0,0,0,.35));
 }
 header.scrolled .logo-img{
@@ -268,43 +263,109 @@ header.scrolled .logo-img{
   100%{transform:translateX(calc(-200px * 7))}
 }
 
-/* SERVICES */
+/* SERVICES GRID & CARDS */
 .services{padding:100px 0}
-.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:30px}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px}
+
 .service-card{
   background:var(--white);
-  padding:40px;
+  padding:25px 20px;
   border-radius:var(--radius);
   border:1px solid #e2e8f0;
   transition:.3s;
   position:relative;
   overflow:hidden;
+  height:100%;
+  display:flex;
+  flex-direction:column;
 }
 .service-card:hover{
-  transform:translateY(-10px);
+  transform:translateY(-5px);
   box-shadow:var(--shadow-hover);
   border-color:var(--gold-metallic);
 }
 .card-icon{
-  width:60px;height:60px;
-  background:rgba(212,175,55,.1);
+  text-align:center;
+  font-size:2rem;
   color:var(--gold-metallic);
-  border-radius:50%;
+  margin-bottom:15px;
+}
+.service-card h3{
+  min-height:50px;
   display:flex;align-items:center;justify-content:center;
-  font-size:1.5rem;
-  margin-bottom:25px;
-}
-.service-card h3{font-size:1.4rem;color:var(--navy-deep);margin-bottom:15px}
-.service-card p{color:#64748b;font-size:.95rem;margin-bottom:20px}
-.learn-more{
+  font-size:1.4rem;
   color:var(--navy-deep);
-  font-weight:600;
-  font-size:.9rem;
-  display:flex;
-  align-items:center;
-  gap:5px;
+  margin-bottom:15px;
+  font-weight:700;
+  text-align:center;
 }
-.learn-more:hover{color:var(--gold-metallic);gap:10px}
+.service-card ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+  text-align: left;
+  flex-grow: 1;
+}
+.service-card ul li {
+  position: relative;
+  padding-left: 15px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+.service-card ul li::before {
+  content: '•';
+  color: var(--gold-metallic);
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.service-card ul li a {
+  text-decoration: none;
+  color: #64748b;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+}
+.service-card ul li a::after {
+  content: '\f054'; 
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: 0.7rem;
+  color: var(--gold-metallic);
+  opacity: 0.5;
+  transition: 0.3s;
+}
+.service-card ul li a:hover {
+  color: var(--navy-deep);
+  padding-left: 5px;
+}
+.service-card ul li a:hover::after {
+  opacity: 1;
+  transform: translateX(3px);
+}
+.learn-more{
+  display:block;
+  text-align:center;
+  margin-top:auto;
+  font-size:0.85rem;
+  font-weight:600;
+  color:var(--navy-deep);
+  text-decoration:none;
+  border-top:1px solid #f1f5f9;
+  padding-top:15px;
+}
+.learn-more:hover{color:var(--gold-metallic)}
+
+/* SEGMENTS SECTION */
+.segments-section {
+  background-color: #f8fafc;
+  padding: 80px 0;
+}
 
 /* PROCESS */
 .process{padding:100px 0;background:var(--navy-deep);color:var(--white)}

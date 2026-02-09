@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block description %}Segurança Empresarial SEGSis. Monitoramento 24h, Alarme, Controle de Acesso e Botão de Pânico para proteger seu negócio.{% endblock %}
+{% block title %}Para sua Empresa | SEGSis Monitoramento{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* --- ESTILOS GERAIS DA PÁGINA --- */
+  :root{
+    --gold-metallic:#d4af37;
+    --navy-deep:#0f172a;
+  }
+
+  .service-hero{
+    height:50vh;
+    min-height:400px;
+    /* Imagem: Ambiente corporativo moderno / Escritório seguro */
+    background-image:url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1920&q=80');
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    align-items:center;
+    position:relative;
+  }
+  .service-hero::before{
+    content:'';
+    position:absolute; top:0; left:0; right:0; bottom:0;
+    background:linear-gradient(to right, rgba(2,6,23,0.95), rgba(15,23,42,0.5));
+  }
+  .service-hero-content{ position:relative; z-index:2; color:#fff; padding-top:60px; }
+  .service-hero h1{ font-size:3.5rem; margin-bottom:10px; line-height:1.1; font-weight:700; }
+  .breadcrumb{ color:var(--gold-metallic); font-weight:700; text-transform:uppercase; font-size:.9rem; letter-spacing:2px; }
+
+  .details-section{ padding:100px 0; background:#fff; }
+
+  /* Layout Grid: Conteúdo Principal + Sidebar */
+  .details-grid{
+    display:grid;
+    grid-template-columns:1.4fr .6fr;
+    gap:60px;
+    align-items:start;
+  }
+
+  /* Sidebar Flutuante */
+  .sidebar-card{
+    background:#f8fafc;
+    padding:40px;
+    border-radius:12px;
+    box-shadow:0 20px 40px -10px rgba(0,0,0,.1);
+    position:sticky;
+    top:120px;
+    border:1px solid #e2e8f0;
+  }
+
+  /* --- ESTILOS DOS BLOCOS DE CONTEÚDO (ZIG-ZAG) --- */
+  .feature-block{
+    display:flex;
+    align-items:center;
+    gap:40px;
+    margin-bottom:80px;
+    padding-bottom:40px;
+    border-bottom:1px solid #f1f5f9;
+  }
+  .feature-block:last-child{ border-bottom:none; margin-bottom:0; }
+  .feature-block.reverse{ flex-direction:row-reverse; }
+
+  .feature-img{
+    flex:1;
+    height:280px;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 15px 30px rgba(0,0,0,.1);
+    position:relative;
+  }
+  .feature-img img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:transform .5s ease;
+  }
+  .feature-block:hover .feature-img img{ transform:scale(1.05); }
+
+  .feature-text{ flex:1.2; }
+  .feature-text h3{
+    color:var(--navy-deep);
+    font-size:1.6rem;
+    margin-bottom:15px;
+    display:flex;
+    align-items:center;
+    font-weight:700;
+  }
+  .feature-text h3 i{ color:var(--gold-metallic); margin-right:12px; font-size:1.3rem; }
+  .feature-text p{ color:#475569; line-height:1.8; text-align:justify; font-size:1.05rem; }
+
+  /* Destaque Help/Pânico */
+  .panic-highlight{
+    background:#fff1f2;
+    border-left:4px solid #e11d48;
+    padding:20px;
+    border-radius:0 8px 8px 0;
+    margin-top:15px;
+  }
+
+  @media (max-width:900px){
+    .details-grid{ grid-template-columns:1fr; }
+    .sidebar-card{ position:static; margin-top:40px; }
+    .feature-block, .feature-block.reverse{ flex-direction:column; gap:20px; margin-bottom:50px; }
+    .feature-img{ width:100%; height:220px; }
+    .service-hero h1{ font-size:2.5rem; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <div class="top-bar"><span>SEGURANÇA CORPORATIVA</span> &nbsp; Soluções robustas para comércio e empresas.</div>
+
+  <section class="service-hero">
+    <div class="container">
+      <div class="service-hero-content" data-aos="fade-right">
+        <span class="breadcrumb">Empresarial</span>
+        <h1>Segurança para sua<br>Empresa</h1>
+        <p style="font-size:1.2rem; opacity:.95; max-width:600px; margin-top:15px;">
+          Proteja seu patrimônio, estoque e colaboradores com tecnologia de ponta e resposta tática imediata.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="details-section">
+    <div class="container">
+      <div class="details-grid">
+
+        <div class="content-col">
+
+          <div class="feature-block" data-aos="fade-up">
+            <div class="feature-img">
+              <img src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80" alt="Monitoramento de Câmeras Escritório">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-video"></i> Monitoramento Eletrônico</h3>
+              <p>Garanta que sua empresa esteja segura mesmo quando as portas estão fechadas. Nosso sistema combina <strong>sensores de intrusão</strong> e câmeras com inteligência artificial. Qualquer movimento suspeito fora do horário de expediente gera um alerta imediato na nossa Central 24h, protegendo seu estoque e equipamentos contra furtos.</p>
+            </div>
+          </div>
+
+          <div class="feature-block reverse" data-aos="fade-up">
+            <div class="feature-img">
+              <img src="https://images.unsplash.com/photo-1595246140569-8d7797b5e4ee?auto=format&fit=crop&w=800&q=80" alt="Sensor de Incêndio Corporativo">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-fire-extinguisher"></i> Prevenção de Incêndios</h3>
+              <p>Um incêndio pode significar o fim das operações do seu negócio. Integramos detectores de fumaça e calor ao painel de alarme. O objetivo é a detecção precoce: em caso de princípio de incêndio, a central é notificada instantaneamente, permitindo o acionamento rápido dos Bombeiros e evitando a perda total do patrimônio.</p>
+            </div>
+          </div>
+
+          <div class="feature-block" data-aos="fade-up">
+            <div class="feature-img">
+              <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80" alt="Controle de Acesso Biométrico">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-id-card"></i> Controle de Acesso Básico</h3>
+              <p>Organize o fluxo de funcionários, clientes e entregadores. Oferecemos soluções de vídeo porteiros IP e fechaduras eletromagnéticas para recepções e áreas restritas. Você mantém a porta trancada e libera a entrada apenas após identificação visual, garantindo que pessoas não autorizadas não circulem pela empresa.</p>
+            </div>
+          </div>
+
+          <div class="feature-block reverse" data-aos="fade-up">
+            <div class="feature-img">
+              <img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=800&q=80" alt="Abertura de Loja Segura">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-store-alt"></i> Chegada Assistida (Abertura/Fechamento)</h3>
+              <p>Os horários de abertura e fechamento são os mais críticos para assaltos no comércio. Com a <strong>Chegada Assistida</strong>, seu funcionário avisa a central antes de abrir ou fechar a loja. Nossa equipe monitora as câmeras externas em tempo real durante todo o procedimento, pronta para enviar apoio tático ao menor sinal de risco.</p>
+            </div>
+          </div>
+
+          <div class="feature-block" data-aos="fade-up">
+            <div class="feature-img">
+              <img src="https://images.unsplash.com/photo-1616469829581-73993eb86b02?auto=format&fit=crop&w=800&q=80" alt="Botão de Pânico sob a mesa">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-hand-holding-medical" style="color:#e11d48"></i> Help / Pânico Silencioso</h3>
+              <p>Proteja a vida dos seus colaboradores em situações de assalto à mão armada. Instalamos botões de pânico fixos (sob balcões/mesas) ou móveis.</p>
+
+              <div class="panic-highlight">
+                <p style="margin-bottom:0; font-size:0.95rem; color:#881337;">
+                  <strong>Como funciona:</strong> Ao ser acionado discretamente, o alarme não emite som na empresa para não reagir contra o invasor, mas alerta a Central de Monitoramento como prioridade máxima de emergência policial.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="sidebar-col">
+          <div class="sidebar-card">
+            <h3 style="color:var(--navy-deep); margin-bottom:15px; text-align:center;">Proteja seu Negócio</h3>
+            <p style="color:#64748b; margin-bottom:30px; font-size:0.95rem; text-align:center;">Solicite uma análise de risco gratuita para sua empresa.</p>
+
+            <a href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20gostaria%20de%20proteger%20minha%20empresa"
+               class="btn btn-gold btn-full"
+               style="text-align:center; display:block; padding:15px; border-radius:6px; background:var(--gold-metallic); color:#fff; text-decoration:none; font-weight:600; transition:.3s;">
+              <i class="fab fa-whatsapp"></i> Solicitar Cotação
+            </a>
+
+            <hr style="margin:25px 0; border:0; border-top:1px solid #e2e8f0;">
+
+            <div style="text-align:center;">
+              <p style="font-size:0.9rem; color:#64748b; margin-bottom:5px;">Consultoria Empresarial:</p>
+              <strong style="color:var(--navy-deep); font-size:1.2rem;">(12) 3633-4871</strong>
+            </div>
+
+            <div style="margin-top:20px; background:#fff; padding:15px; border-radius:8px; border:1px solid #e2e8f0;">
+              <p style="font-size:0.85rem; color:#64748b; margin-bottom:10px; font-weight:600;">Vantagens Corporativas:</p>
+              <ul style="list-style:none; padding:0; font-size:0.85rem; color:#475569;">
+                <li style="margin-bottom:5px;"><i class="fas fa-check" style="color:var(--gold-metallic); margin-right:5px;"></i> Relatórios de Arme/Desarme</li>
+                <li style="margin-bottom:5px;"><i class="fas fa-check" style="color:var(--gold-metallic); margin-right:5px;"></i> Gestão de Usuários</li>
+                <li><i class="fas fa-check" style="color:var(--gold-metallic); margin-right:5px;"></i> Suporte Técnico Prioritário</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

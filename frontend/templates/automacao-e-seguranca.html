@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block description %}Automação e Segurança Eletrônica SEGSis. Casa inteligente, IoT, CFTV e alarmes integrados no seu celular.{% endblock %}
+{% block title %}Automação e Segurança | SEGSis Monitoramento{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Estilos Específicos da Página de Serviço */
+  .service-hero {
+    height: 45vh;
+    min-height: 350px;
+    /* Imagem de Fundo Específica de Casa Inteligente/Tech */
+    background-image: url('https://images.unsplash.com/photo-1558002038-109177381792?auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  .service-hero::before {
+    content:''; position:absolute; top:0; left:0; right:0; bottom:0;
+    background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+  }
+  .service-hero-content { position: relative; z-index: 2; color: #fff; padding-top: 60px; }
+  .service-hero h1 { font-size: 3rem; margin-bottom: 10px; }
+  .breadcrumb { color: var(--gold-metallic); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+
+  .details-section { padding: 80px 0; }
+  .details-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 50px; align-items: start; }
+
+  .feature-list { list-style: none; margin-top: 30px; }
+  .feature-list li {
+    background: #f8fafc;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--gold-metallic);
+    display: flex; align-items: center; gap: 15px;
+    font-weight: 500; color: var(--navy-deep);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+  .feature-list i { color: var(--gold-metallic); font-size: 1.2rem; }
+
+  .sidebar-card {
+    background: #fff; padding: 40px; border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    position: sticky; top: 100px; border: 1px solid #e2e8f0;
+  }
+
+  @media (max-width: 900px) {
+    .details-grid { grid-template-columns: 1fr; }
+    .service-hero h1 { font-size: 2.2rem; }
+    .sidebar-card { position: static; margin-top: 40px; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <section class="service-hero">
+    <div class="container">
+      <div class="service-hero-content" data-aos="fade-right">
+        <span class="breadcrumb">Soluções SEGSis</span>
+        <h1>Automação e Segurança</h1>
+        <p style="font-size: 1.2rem; opacity: 0.9;">Conforto, controle e proteção na palma da sua mão.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="details-section">
+    <div class="container">
+      <div class="details-grid">
+
+        <div class="content-col" data-aos="fade-up">
+          <h2 style="color:var(--navy-deep); margin-bottom:20px;">Como funciona?</h2>
+
+          <div style="color:#64748b; line-height:1.8; font-size:1.05rem;">
+            <p>Imagine controlar a segurança e o conforto do seu imóvel de qualquer lugar do mundo. A SEGSis integra sistemas de alarme e câmeras de alta definição com dispositivos de <strong>Casa Inteligente (IoT)</strong>.</p>
+            <br>
+            <p>Você pode acender luzes remotamente para simular presença durante viagens, receber alertas se uma porta ficou aberta, controlar o ar-condicionado e visualizar suas câmeras, tudo pelo mesmo aplicativo. Transformamos ambientes comuns em espaços conectados, eficientes e muito mais seguros.</p>
+          </div>
+
+          <h3 style="margin-top:40px; color:var(--navy-deep);">O que inclui:</h3>
+
+          <ul class="feature-list">
+            <li><i class="fas fa-shield-alt"></i> Segurança Eletrônica Integrada (Alarme/CFTV)</li>
+            <li><i class="fas fa-laptop-house"></i> Automação Predial e Residencial (IoT)</li>
+            <li><i class="fas fa-plug"></i> Tomadas e Interruptores Inteligentes</li>
+            <li><i class="fas fa-microphone"></i> Configuração de Assistentes Virtuais (Alexa/Google)</li>
+            <li><i class="fas fa-tools"></i> Assistência Técnica Especializada</li>
+          </ul>
+        </div>
+
+        <div class="sidebar-col">
+          <div class="sidebar-card">
+            <h3 style="color:var(--navy-deep); margin-bottom:15px;">Casa do Futuro?</h3>
+            <p style="color:#64748b; margin-bottom:30px; font-size:0.9rem;">Não, é o presente. Automatize sua segurança hoje mesmo.</p>
+
+            <a href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20quero%20saber%20mais%20sobre%20Automacao"
+               class="btn btn-gold btn-full"
+               style="text-align:center; display:block;">
+              <i class="fab fa-whatsapp"></i> Solicitar Projeto Smart
+            </a>
+
+            <div style="margin-top:20px; text-align:center; font-size:0.9rem; color:#64748b;">
+              <i class="fas fa-phone-alt" style="color:var(--gold-metallic)"></i> (12) 3633-4871
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

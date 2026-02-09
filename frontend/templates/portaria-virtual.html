@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block description %}Portaria Virtual SEGSis. Soluções de Portaria Remota 24h, Gerenciamento Híbrido e Controle de Acesso Inteligente.{% endblock %}
+{% block title %}Portaria Virtual e Remota | SEGSis Monitoramento{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* --- Estilos Específicos da Página --- */
+  :root{
+    --gold-metallic:#d4af37;
+    --navy-deep:#0f172a;
+  }
+
+  .service-hero{
+    height:60vh;
+    min-height:500px;
+    /* Imagem: Hall de entrada de luxo/tecnológico */
+    background-image:url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1920&q=80');
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    align-items:center;
+    position:relative;
+  }
+  .service-hero::before{
+    content:'';
+    position:absolute; top:0; left:0; right:0; bottom:0;
+    background:linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.6));
+  }
+  .service-hero-content{ position:relative; z-index:2; color:#fff; padding-top:60px; }
+  .service-hero h1{ font-size:3.5rem; margin-bottom:10px; font-weight:700; }
+  .breadcrumb{ color:var(--gold-metallic); font-weight:600; text-transform:uppercase; font-size:.9rem; letter-spacing:1px; }
+
+  .details-section{ padding:80px 0; background:#fff; }
+  .details-grid{ display:grid; grid-template-columns:1.5fr 0.8fr; gap:60px; align-items:start; }
+
+  /* Estilo dos Tópicos Específicos */
+  .topic-block{ margin-bottom:40px; }
+  .topic-block h3{
+    color:var(--navy-deep);
+    font-size:1.5rem;
+    margin-bottom:15px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .topic-block h3 i{ color:var(--gold-metallic); font-size:1.3rem; }
+  .topic-block p{
+    color:#64748b;
+    line-height:1.7;
+    font-size:1.05rem;
+    text-align:justify;
+  }
+
+  /* Imagens dentro do conteúdo */
+  .content-img{
+    width:100%;
+    height:300px;
+    object-fit:cover;
+    border-radius:12px;
+    margin:20px 0;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+  }
+
+  .highlight-box{
+    background:#f8fafc;
+    border-left:4px solid var(--gold-metallic);
+    padding:25px;
+    margin:30px 0;
+    border-radius:0 8px 8px 0;
+  }
+
+  .feature-check-list{
+    list-style:none;
+    margin-top:15px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    padding-left:0;
+  }
+  .feature-check-list li{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:#475569;
+    font-size:.95rem;
+    font-weight:500;
+  }
+  .feature-check-list li i{ color:var(--gold-metallic); font-size:.8rem; }
+
+  /* Sidebar */
+  .sidebar-card{
+    background:#fff;
+    padding:40px;
+    border-radius:12px;
+    box-shadow:0 10px 40px rgba(0,0,0,0.08);
+    position:sticky;
+    top:120px;
+    border:1px solid #e2e8f0;
+  }
+
+  /* Responsividade */
+  @media (max-width:900px){
+    .details-grid{ grid-template-columns:1fr; }
+    .service-hero h1{ font-size:2.5rem; }
+    .sidebar-card{ position:static; margin-top:40px; }
+    .feature-check-list{ grid-template-columns:1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <div class="top-bar"><span>ECONOMIA INTELIGENTE</span> &nbsp; Reduza custos condominiais com tecnologia SEGSis.</div>
+
+  <section class="service-hero">
+    <div class="container">
+      <div class="service-hero-content" data-aos="fade-right">
+        <span class="breadcrumb">Tecnologia &amp; Segurança</span>
+        <h1>Portaria Inteligente</h1>
+        <p style="font-size:1.2rem; opacity:.9; max-width:600px;">
+          A evolução da segurança condominial. Controle total, redução de custos e atendimento ágil 24 horas por dia.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="details-section">
+    <div class="container">
+      <div class="details-grid">
+
+        <div class="content-col" data-aos="fade-up">
+          <h2 style="color:var(--navy-deep); margin-bottom:30px; font-weight:700;">Nossas Soluções de Acesso</h2>
+
+          <div class="topic-block">
+            <h3><i class="fas fa-satellite-dish"></i> Portaria Virtual</h3>
+            <p>
+              A <strong>Portaria Virtual SEGSis</strong> é o sistema que substitui a presença física do porteiro por uma central de tecnologia avançada.
+              Através de câmeras e interfones IP, todo o fluxo de entrada e saída é gerido à distância.
+            </p>
+            <img
+              src="https://images.unsplash.com/photo-1557597774-9d2739f85a76?auto=format&fit=crop&w=800&q=80"
+              alt="Central de Monitoramento SEGSis"
+              class="content-img"
+            >
+          </div>
+
+          <div class="topic-block">
+            <h3><i class="fas fa-clock"></i> Portaria Remota 24h</h3>
+            <p>
+              Nossa central opera ininterruptamente. Visitantes e prestadores de serviços são atendidos em tempo real por operadores treinados
+              que seguem protocolos estritos de identificação.
+            </p>
+            <ul class="feature-check-list">
+              <li><i class="fas fa-check"></i> Atendimento imediato via interfone</li>
+              <li><i class="fas fa-check"></i> Monitoramento visual da entrada e saída</li>
+              <li><i class="fas fa-check"></i> Registro de áudio e vídeo de todos os atendimentos</li>
+              <li><i class="fas fa-check"></i> Pronta resposta em caso de pânico ou emergência</li>
+            </ul>
+          </div>
+
+          <div class="topic-block">
+            <h3><i class="fas fa-users-cog"></i> Gerenciamento Híbrido</h3>
+            <div class="highlight-box">
+              <p style="margin-bottom:0; color:#475569;">
+                <strong>O melhor dos dois mundos:</strong> O Gerenciamento Híbrido une a tecnologia da Portaria Remota com a presença física estratégica.
+                Ideal para condomínios que desejam manter um zelador ou porteiro em horário comercial.
+              </p>
+            </div>
+          </div>
+
+          <div class="topic-block">
+            <h3><i class="fas fa-fingerprint"></i> Controle de Acesso Avançado</h3>
+            <p>
+              A segurança começa na identificação precisa. Utilizamos equipamentos de ponta para garantir que apenas pessoas autorizadas acessem o perímetro:
+            </p>
+
+            <img
+              src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80"
+              alt="Tecnologia de Acesso"
+              class="content-img"
+            >
+
+            <ul class="feature-check-list" style="margin-top:20px;">
+              <li><i class="fas fa-check"></i> <strong>Biometria Facial:</strong> Acesso rápido e sem toque.</li>
+              <li><i class="fas fa-check"></i> <strong>Tags e Controles Criptografados:</strong> Impossíveis de clonar.</li>
+              <li><i class="fas fa-check"></i> <strong>QR Code (Pass):</strong> Convites virtuais para visitantes.</li>
+              <li><i class="fas fa-check"></i> <strong>Leitura de Placas (LPR):</strong> Automação para veículos.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sidebar-col">
+          <div class="sidebar-card">
+            <h3 style="color:var(--navy-deep); margin-bottom:10px;">Solicite um Orçamento</h3>
+            <p style="color:#64748b; margin-bottom:25px; font-size:0.95rem;">
+              Descubra quanto seu condomínio pode economizar hoje mesmo com a SEGSis.
+            </p>
+
+            <a
+              href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20gostaria%20de%20um%20or%C3%A7amento%20de%20Portaria%20Virtual"
+              class="btn btn-gold btn-full"
+              style="text-align:center; display:block; padding:15px; border-radius:6px; background:var(--gold-metallic); color:#fff; text-decoration:none; font-weight:600; transition:0.3s;"
+            >
+              <i class="fab fa-whatsapp"></i> Falar com Consultor
+            </a>
+
+            <hr style="margin:25px 0; border:0; border-top:1px solid #e2e8f0;">
+
+            <div style="display:flex; align-items:center; gap:15px; margin-bottom:15px;">
+              <div style="width:40px; height:40px; background:#f1f5f9; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--navy-deep);">
+                <i class="fas fa-phone-alt"></i>
+              </div>
+              <div>
+                <span style="display:block; font-size:0.8rem; color:#94a3b8; font-weight:600;">Ligue para nós</span>
+                <span style="color:var(--navy-deep); font-weight:600;">(12) 3633-4871</span>
+              </div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:15px;">
+              <div style="width:40px; height:40px; background:#f1f5f9; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--navy-deep);">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div>
+                <span style="display:block; font-size:0.8rem; color:#94a3b8; font-weight:600;">E-mail</span>
+                <span style="color:var(--navy-deep); font-weight:600;">contato@segsis.com.br</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

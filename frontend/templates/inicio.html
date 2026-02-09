@@ -1,0 +1,397 @@
+{% extends "base.html" %}
+
+{% block title %}SEG Monitoramento | Segurança Inteligente{% endblock %}
+
+{% block content %}
+
+<style>
+  /* ==========================================================
+     CARROSSEL SÓ NO MOBILE (para grids de cards)
+     - Desktop: continua grid normal
+     - Mobile: vira carrossel swipe (scroll-snap)
+     ========================================================== */
+  @media (max-width: 900px) {
+
+    /* Container vira carrossel */
+    .carousel-mobile{
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 85%;
+      gap: 14px;
+
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+
+      padding: 6px 6px 12px;
+      margin: 0 -6px;
+
+      scrollbar-width: none; /* Firefox */
+    }
+    .carousel-mobile::-webkit-scrollbar{
+      height: 0; /* Chrome/Safari/Edge */
+    }
+
+    /* Cada card vira um slide */
+    .carousel-mobile .carousel-item{
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+    }
+
+    /* Opcional: deixa um respiro pro título */
+    .services .section-title,
+    .segments-section .section-title{
+      margin-bottom: 18px;
+    }
+  }
+</style>
+
+  <section class="hero" id="top">
+    <div class="container">
+      <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
+        <div class="hero-badge">
+          <i class="fas fa-check-circle"></i> Tecnologia Certificada
+        </div>
+        <h1>Sua família está 100% segura agora?</h1>
+        <p>Monitoramento 24h em Taubaté e Região. Sistemas integrados de alarme, câmeras com IA e resposta tática imediata.</p>
+        <div class="hero-btns">
+          <a href="https://wa.me/5512974101924?text=Ol%C3%A1%21%20Gostaria%20de%20uma%20avalia%C3%A7%C3%A3o%20de%20risco%20para%20meu%20im%C3%B3vel."
+             class="btn btn-gold">
+            <i class="fab fa-whatsapp"></i> Proteger Meu Imóvel Agora
+          </a>
+          <a href="/#solucoes" class="btn btn-outline">Conhecer Planos</a>
+        </div>
+        <div class="hero-note">
+          <i class="fas fa-lock"></i> Avaliação de risco sem compromisso.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="stats-strip">
+      <div class="stats-grid">
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="0">
+          <h3>+10</h3>
+          <p>Anos de Excelência</p>
+        </div>
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+          <h3>5.000+</h3>
+          <p>Projetos Instalados</p>
+        </div>
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+          <h3>24/7</h3>
+          <p>Central Ativa</p>
+        </div>
+        <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
+          <h3>15min</h3>
+          <p>Tempo Médio Resposta</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="services" id="solucoes">
+    <div class="container">
+      <div class="section-title" data-aos="fade-up">
+        <span>Nossas Soluções</span>
+        <h2>Ecossistema de Segurança</h2>
+      </div>
+
+      <!-- ✅ Desktop: grid normal | ✅ Mobile: carrossel -->
+      <div class="services-grid carousel-mobile">
+
+        <div class="service-card carousel-item" data-aos="fade-up" data-aos-delay="0">
+          <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
+          <h3>Monitoramento 24h</h3>
+          <ul>
+            <li><a href="/monitoramento-24-horas">Monitoramento Patrimonial</a></li>
+            <li><a href="/monitoramento-24-horas">Monitoramento Eletrônico</a></li>
+            <li><a href="/monitoramento-24-horas">Monitoramento Perimetral</a></li>
+            <li><a href="/monitoramento-24-horas">Prevenção de Incêndios</a></li>
+            <li><a href="/monitoramento-24-horas">Chegada Assistida</a></li>
+            <li><a href="/monitoramento-24-horas">Help / Pânico</a></li>
+          </ul>
+          <a href="/monitoramento-24-horas" class="learn-more">Ver detalhes</a>
+        </div>
+
+        <div class="service-card carousel-item" data-aos="fade-up" data-aos-delay="100">
+          <div class="card-icon"><i class="fas fa-fire-extinguisher"></i></div>
+          <h3>Detecção de Incêndios</h3>
+          <ul>
+            <li><a href="/deteccao-de-incendios">Gestão de Detecção</a></li>
+            <li><a href="/deteccao-de-incendios">Gestão de Incêndios</a></li>
+            <li><a href="/deteccao-de-incendios">Portas Corta Fogo</a></li>
+            <li><a href="/deteccao-de-incendios">Iluminação Emergência</a></li>
+          </ul>
+          <a href="/deteccao-de-incendios" class="learn-more">Ver detalhes</a>
+        </div>
+
+        <div class="service-card carousel-item" data-aos="fade-up" data-aos-delay="200">
+          <div class="card-icon"><i class="fas fa-headset"></i></div>
+          <h3>Portaria Virtual</h3>
+          <ul>
+            <li><a href="/portaria-virtual">Portaria Remota 24h</a></li>
+            <li><a href="/portaria-virtual">Gerenciamento Híbrido</a></li>
+            <li><a href="/portaria-virtual">Controle de Acesso</a></li>
+          </ul>
+          <a href="/portaria-virtual" class="learn-more">Ver detalhes</a>
+        </div>
+
+        <div class="service-card carousel-item" data-aos="fade-up" data-aos-delay="300">
+          <div class="card-icon"><i class="fas fa-water"></i></div>
+          <h3>Telemetria Predial</h3>
+          <ul>
+            <li><a href="/telemetria-predial">Nível Reservatórios</a></li>
+            <li><a href="/telemetria-predial">Alerta de Alagamentos</a></li>
+            <li><a href="/telemetria-predial">Controle de Bombas</a></li>
+          </ul>
+          <a href="/telemetria-predial" class="learn-more">Ver detalhes</a>
+        </div>
+
+        <div class="service-card carousel-item" data-aos="fade-up" data-aos-delay="400">
+          <div class="card-icon"><i class="fas fa-temperature-low"></i></div>
+          <h3>Prevenção de Perdas</h3>
+          <ul>
+            <li><a href="/prevencao-de-perdas">Monitoramento Cadeia Fria</a></li>
+            <li><a href="/prevencao-de-perdas">Monitoramento Farmacêutico</a></li>
+            <li><a href="/prevencao-de-perdas">Controle de Temperatura</a></li>
+          </ul>
+          <a href="/prevencao-de-perdas" class="learn-more">Ver detalhes</a>
+        </div>
+
+        <div class="service-card carousel-item" data-aos="fade-up" data-aos-delay="500">
+          <div class="card-icon"><i class="fas fa-heartbeat"></i></div>
+          <h3>Tele Assistência Idosos</h3>
+          <ul>
+            <li><a href="/tele-assistencia-idosos">Monitoramento Básico</a></li>
+            <li><a href="/tele-assistencia-idosos">Envio de Ambulância</a></li>
+            <li><a href="/tele-assistencia-idosos">Botão SOS Pessoal</a></li>
+          </ul>
+          <a href="/tele-assistencia-idosos" class="learn-more">Ver detalhes</a>
+        </div>
+
+        <div class="service-card carousel-item" data-aos="fade-up" data-aos-delay="600">
+          <div class="card-icon"><i class="fas fa-microchip"></i></div>
+          <h3>Automação & Segurança</h3>
+          <ul>
+            <li><a href="/automacao-e-seguranca">Segurança Eletrônica</a></li>
+            <li><a href="/automacao-e-seguranca">Automação Predial (IoT)</a></li>
+            <li><a href="/automacao-e-seguranca">Tomadas Inteligentes</a></li>
+            <li><a href="/automacao-e-seguranca">Assistência Técnica</a></li>
+          </ul>
+          <a href="/automacao-e-seguranca" class="learn-more">Ver detalhes</a>
+        </div>
+
+        <div class="service-card carousel-item" data-aos="fade-up" data-aos-delay="700">
+          <div class="card-icon"><i class="fas fa-broom"></i></div>
+          <h3>Facilities</h3>
+          <ul>
+            <li><a href="/facilities">Assistentes Virtuais</a></li>
+            <li><a href="/facilities">Portaria Presencial</a></li>
+            <li><a href="/facilities">Limpeza e Conservação</a></li>
+          </ul>
+          <a href="/facilities" class="learn-more">Ver detalhes</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="process" id="processo">
+    <div class="container">
+      <div class="section-title">
+        <span>Metodologia SEGSis</span>
+        <h2>Como Blindamos seu Patrimônio</h2>
+      </div>
+
+      <div class="process-grid">
+        <div class="process-item" data-aos="zoom-in" data-aos-delay="0">
+          <div class="process-icon"><i class="fas fa-search-location"></i></div>
+          <h4>1. Análise de Risco</h4>
+          <p>Consultor técnico visita o local para identificar vulnerabilidades e pontos cegos.</p>
+        </div>
+
+        <div class="process-item" data-aos="zoom-in" data-aos-delay="150">
+          <div class="process-icon"><i class="fas fa-tools"></i></div>
+          <h4>2. Instalação Padrão</h4>
+          <p>Equipe própria e certificada realiza a instalação sem sujeira e com acabamento premium.</p>
+        </div>
+
+        <div class="process-item" data-aos="zoom-in" data-aos-delay="300">
+          <div class="process-icon"><i class="fas fa-satellite-dish"></i></div>
+          <h4>3. Conexão 24h</h4>
+          <p>Seu sistema é conectado à nossa Central Blindada via internet e chip GPRS (backup).</p>
+        </div>
+
+        <div class="process-item" data-aos="zoom-in" data-aos-delay="450">
+          <div class="process-icon"><i class="fas fa-user-shield"></i></div>
+          <h4>4. Pronta Resposta</h4>
+          <p>Ao detectar anomalia, enviamos viatura tática imediatamente ao local.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="segments-section" id="segmentos">
+    <div class="container">
+      <div class="section-title" data-aos="fade-up">
+        <span>Nosso Foco</span>
+        <h2>Segmentos de Atuação</h2>
+      </div>
+
+      <!-- ✅ Desktop: grid normal | ✅ Mobile: carrossel -->
+      <div class="services-grid carousel-mobile">
+
+        <div class="service-card carousel-item" data-aos="fade-up" data-aos-delay="0">
+          <div class="card-icon"><i class="fas fa-home"></i></div>
+          <h3>Para sua Família e Residência</h3>
+          <ul>
+            <li><a href="/para-sua-familia-e-residencia">Monitoramento Eletrônico</a></li>
+            <li><a href="/para-sua-familia-e-residencia">Prevenção de Incêndios Básico</a></li>
+            <li><a href="/para-sua-familia-e-residencia">Controle de Acesso Básico</a></li>
+            <li><a href="/para-sua-familia-e-residencia">Chegada Assistida</a></li>
+            <li><a href="/para-sua-familia-e-residencia">Help / Pânico</a></li>
+          </ul>
+          <a href="/para-sua-familia-e-residencia" class="learn-more">Solicitar Orçamento</a>
+        </div>
+
+        <div class="service-card carousel-item" data-aos="fade-up" data-aos-delay="100">
+          <div class="card-icon"><i class="fas fa-building"></i></div>
+          <h3>Para sua Empresa</h3>
+          <ul>
+            <li><a href="/para-sua-empresa">Monitoramento Eletrônico</a></li>
+            <li><a href="/para-sua-empresa">Prevenção de Incêndios Básico</a></li>
+            <li><a href="/para-sua-empresa">Controle de Acesso Básico</a></li>
+            <li><a href="/para-sua-empresa">Chegada Assistida</a></li>
+            <li><a href="/para-sua-empresa">Help / Pânico</a></li>
+          </ul>
+          <a href="/para-sua-empresa" class="learn-more">Solicitar Orçamento</a>
+        </div>
+
+        <div class="service-card carousel-item" data-aos="fade-up" data-aos-delay="200">
+          <div class="card-icon"><i class="fas fa-industry"></i></div>
+          <h3>Para Industrial</h3>
+          <ul>
+            <li><a href="/para-industrial">Portaria Remota</a></li>
+            <li><a href="/para-industrial">Gestão Portaria Autônoma</a></li>
+            <li><a href="/para-industrial">Controle de Acesso Remoto</a></li>
+            <li><a href="/para-industrial">Monitoramento 24 Horas</a></li>
+            <li><a href="/para-industrial">Assistência Técnica</a></li>
+          </ul>
+          <a href="/para-industrial" class="learn-more">Solicitar Orçamento</a>
+        </div>
+
+        <div class="service-card carousel-item" data-aos="fade-up" data-aos-delay="300">
+          <div class="card-icon"><i class="fas fa-city"></i></div>
+          <h3>Para Condomínios</h3>
+          <ul>
+            <li><a href="/para-condominios">Portaria Remota</a></li>
+            <li><a href="/para-condominios">Gestão Portaria Autônoma</a></li>
+            <li><a href="/para-condominios">Controle de Acesso Remoto</a></li>
+            <li><a href="/para-condominios">Monitoramento 24 Horas</a></li>
+            <li><a href="/para-condominios">Assistência Técnica</a></li>
+          </ul>
+          <a href="/para-condominios" class="learn-more">Solicitar Orçamento</a>
+        </div>
+
+        <div class="service-card carousel-item" data-aos="fade-up" data-aos-delay="400">
+          <div class="card-icon"><i class="fas fa-parking"></i></div>
+          <h3>Para Estacionamentos</h3>
+          <ul>
+            <li><a href="/para-estacionamentos">Controle de Acesso Completo</a></li>
+            <li><a href="/para-estacionamentos">Cancelas Automáticas</a></li>
+            <li><a href="/para-estacionamentos">Gestão de Fluxo</a></li>
+          </ul>
+          <a href="/para-estacionamentos" class="learn-more">Solicitar Orçamento</a>
+        </div>
+
+        <div class="service-card carousel-item" data-aos="fade-up" data-aos-delay="500">
+          <div class="card-icon"><i class="fas fa-tractor"></i></div>
+          <h3>Agronegócio</h3>
+          <ul>
+            <li><a href="/agronegocio">Internet Rural</a></li>
+            <li><a href="/agronegocio">Telecomunicação de Campo</a></li>
+            <li><a href="/agronegocio">Monitoramento de Área</a></li>
+          </ul>
+          <a href="/agronegocio" class="learn-more">Solicitar Orçamento</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="brands-section">
+    <div class="container brands-title">
+      <p>Trabalhamos com as melhores marcas</p>
+    </div>
+
+    <div class="brands-slider" aria-label="Marcas parceiras">
+      <div class="brand-item"><img src="/static/img/intelbras.png" alt="Intelbras"></div>
+      <div class="brand-item"><img src="/static/img/hikvision.png" alt="Hikvision"></div>
+      <div class="brand-item"><img src="/static/img/jfl.png" alt="JFL"></div>
+      <div class="brand-item"><img src="/static/img/dahua.png" alt="Dahua"></div>
+      <div class="brand-item"><img src="/static/img/control-id.png" alt="Control iD"></div>
+      <div class="brand-item"><img src="/static/img/intelbras.png" alt="Intelbras"></div>
+      <div class="brand-item"><img src="/static/img/hikvision.png" alt="Hikvision"></div>
+      <div class="brand-item"><img src="/static/img/jfl.png" alt="JFL"></div>
+      <div class="brand-item"><img src="/static/img/dahua.png" alt="Dahua"></div>
+      <div class="brand-item"><img src="/static/img/control-id.png" alt="Control iD"></div>
+    </div>
+  </section>
+
+  <section class="testimonials">
+    <div class="container">
+      <div class="section-title">
+        <span>O que dizem nossos clientes</span>
+        <h2>Confiança Conquistada</h2>
+      </div>
+
+      <div class="testi-grid">
+        <div class="testi-card" data-aos="fade-up" data-aos-delay="0">
+          <div class="stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p class="testi-text">"Instalamos o sistema na nossa fábrica e a diferença no controle de acesso foi imediata. A equipe de suporte é muito ágil."</p>
+          <div class="client-info">
+            <div class="client-avatar" style="background-image:url('https://randomuser.me/api/portraits/men/32.jpg');background-size:cover;"></div>
+            <div class="client-details">
+              <h5>Roberto Almeida</h5>
+              <span>Gerente Industrial</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-card" data-aos="fade-up" data-aos-delay="100">
+          <div class="stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p class="testi-text">"Viajo muito e poder ver as câmeras da minha casa pelo celular com essa qualidade me traz muita paz. Recomendo!"</p>
+          <div class="client-info">
+            <div class="client-avatar" style="background-image:url('https://randomuser.me/api/portraits/women/44.jpg');background-size:cover;"></div>
+            <div class="client-details">
+              <h5>Carla Souza</h5>
+              <span>Residencial</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-card" data-aos="fade-up" data-aos-delay="200">
+          <div class="stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p class="testi-text">"Já tivemos um incidente e a viatura chegou em menos de 10 minutos. Profissionais extremamente treinados."</p>
+          <div class="client-info">
+            <div class="client-avatar" style="background-image:url('https://randomuser.me/api/portraits/men/85.jpg');background-size:cover;"></div>
+            <div class="client-details">
+              <h5>Dr. Fernando Costa</h5>
+              <span>Clínica Médica</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

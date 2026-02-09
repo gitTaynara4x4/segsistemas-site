@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block description %}Tele Assistência a Idosos SEGSis. Botão de pânico, monitoramento 24h e envio de ambulância. Cuidado e independência para quem você ama.{% endblock %}
+{% block title %}Tele Assistência Idosos | SEGSis Monitoramento{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Estilos Específicos da Página de Serviço */
+  .service-hero{
+    height:45vh;
+    min-height:350px;
+    /* Imagem de Fundo Específica de Idosos/Cuidado */
+    background-image:url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1920&q=80');
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    align-items:center;
+    position:relative;
+  }
+  .service-hero::before{
+    content:'';
+    position:absolute; top:0; left:0; right:0; bottom:0;
+    background:linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+  }
+  .service-hero-content{ position:relative; z-index:2; color:#fff; padding-top:60px; }
+  .service-hero h1{ font-size:3rem; margin-bottom:10px; }
+  .breadcrumb{
+    color:var(--gold-metallic);
+    font-weight:600;
+    text-transform:uppercase;
+    font-size:.9rem;
+  }
+
+  .details-section{ padding:80px 0; }
+  .details-grid{
+    display:grid;
+    grid-template-columns:1.2fr 0.8fr;
+    gap:50px;
+    align-items:start;
+  }
+
+  .feature-list{ list-style:none; margin-top:30px; padding-left:0; }
+  .feature-list li{
+    background:#f8fafc;
+    padding:15px 20px;
+    margin-bottom:15px;
+    border-left:4px solid var(--gold-metallic);
+    display:flex;
+    align-items:center;
+    gap:15px;
+    font-weight:500;
+    color:var(--navy-deep);
+    box-shadow:0 2px 5px rgba(0,0,0,0.05);
+  }
+  .feature-list i{ color:var(--gold-metallic); font-size:1.2rem; }
+
+  .sidebar-card{
+    background:#fff;
+    padding:40px;
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+    position:sticky;
+    top:100px;
+    border:1px solid #e2e8f0;
+  }
+
+  @media (max-width:900px){
+    .details-grid{ grid-template-columns:1fr; }
+    .service-hero h1{ font-size:2.2rem; }
+    .sidebar-card{ position:static; margin-top:40px; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <div class="top-bar"><span>CUIDADO</span> &nbsp; Segurança e carinho para sua família 24h.</div>
+
+  <section class="service-hero">
+    <div class="container">
+      <div class="service-hero-content" data-aos="fade-right">
+        <span class="breadcrumb">Soluções SEGSis</span>
+        <h1>Tele Assistência a Idosos</h1>
+        <p style="font-size:1.2rem; opacity:.9;">Independência para eles, tranquilidade para você.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="details-section">
+    <div class="container">
+      <div class="details-grid">
+
+        <div class="content-col" data-aos="fade-up">
+          <h2 style="color:var(--navy-deep); margin-bottom:20px;">Como funciona?</h2>
+
+          <div style="color:#64748b; line-height:1.8; font-size:1.05rem;">
+            <p>
+              Muitos idosos desejam manter sua independência e morar sozinhos, mas a família se preocupa com riscos de quedas ou mal súbito.
+              A Tele Assistência da SEGSis resolve isso.
+            </p>
+            <br>
+            <p>
+              Através de dispositivos vestíveis discretos (como pulseiras ou colares com botão SOS), o idoso pode solicitar ajuda imediata com um simples toque.
+              O sinal alerta nossa <strong>Central 24h</strong>, que entra em contato imediatamente, avisa os familiares cadastrados e, se necessário,
+              aciona uma <strong>ambulância</strong> para o local.
+            </p>
+            <br>
+            <p>É a tecnologia garantindo que seus pais ou avós nunca estarão realmente sozinhos.</p>
+          </div>
+
+          <h3 style="margin-top:40px; color:var(--navy-deep);">O que inclui:</h3>
+
+          <ul class="feature-list">
+            <li><i class="fas fa-heartbeat"></i> Monitoramento Básico de Bem-Estar</li>
+            <li><i class="fas fa-ambulance"></i> Tele Assistência com envio de Ambulância</li>
+            <li><i class="fas fa-hand-holding-heart"></i> Botão SOS de Fácil Acesso (Pulseira/Colar)</li>
+            <li><i class="fas fa-phone-volume"></i> Aviso imediato aos familiares em caso de emergência</li>
+          </ul>
+        </div>
+
+        <div class="sidebar-col">
+          <div class="sidebar-card">
+            <h3 style="color:var(--navy-deep); margin-bottom:15px;">Cuide de quem você ama</h3>
+            <p style="color:#64748b; margin-bottom:30px; font-size:.9rem;">Garanta segurança para seus pais hoje mesmo.</p>
+
+            <a
+              href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20quero%20saber%20mais%20sobre%20Tele%20Assistencia"
+              class="btn btn-gold btn-full"
+              style="text-align:center; display:block;"
+            >
+              <i class="fab fa-whatsapp"></i> Solicitar Plano Cuidado
+            </a>
+
+            <div style="margin-top:20px; text-align:center; font-size:.9rem; color:#64748b;">
+              <i class="fas fa-phone-alt" style="color:var(--gold-metallic)"></i> (12) 3633-4871
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

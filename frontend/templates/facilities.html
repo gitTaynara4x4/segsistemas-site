@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+
+{% block description %}Facilities SEGSis: Portaria Presencial, Limpeza Profissional e Assistentes Virtuais. Excelência operacional para sua empresa.{% endblock %}
+{% block title %}Facilities: Portaria, Limpeza e Assistentes | SEGSis{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* --- Estilos da Página Facilities --- */
+
+  /* Hero Section */
+  .service-hero {
+    height: 50vh;
+    min-height: 400px;
+    /* Imagem de fundo: Ambiente corporativo high-end */
+    background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  .service-hero::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0; bottom:0;
+    background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.6));
+  }
+  .service-hero-content {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    padding-top: 40px;
+    max-width: 700px;
+  }
+  .service-hero h1 {
+    font-size: 3.2rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+  .breadcrumb {
+    color: var(--gold-metallic);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+  }
+
+  /* Layout Geral */
+  .details-section { padding: 80px 0; background: #fff; }
+  .details-grid { display: grid; grid-template-columns: 1fr 350px; gap: 60px; align-items: start; }
+
+  /* Introdução */
+  .intro-text { margin-bottom: 60px; border-bottom: 1px solid #e2e8f0; padding-bottom: 40px; }
+  .intro-text h2 { color: var(--navy-deep); font-size: 2rem; margin-bottom: 20px; }
+  .intro-text p { color: #64748b; line-height: 1.8; font-size: 1.1rem; }
+
+  /* --- ESTILO DOS CARDS DE SERVIÇO (ZIG-ZAG) --- */
+  .service-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+    margin-bottom: 80px;
+  }
+
+  /* Inverte a ordem para o segundo item */
+  .service-row.reverse .service-img-col { order: 2; }
+  .service-row.reverse .service-text-col { order: 1; }
+
+  .service-img-col img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+  }
+  .service-img-col img:hover { transform: translateY(-5px); }
+
+  .service-text-col h3 {
+    color: var(--navy-deep);
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    position: relative;
+    display: inline-block;
+  }
+  /* Detalhe dourado abaixo do título */
+  .service-text-col h3::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: var(--gold-metallic);
+  }
+
+  .service-text-col p {
+    color: #64748b;
+    line-height: 1.7;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .service-points { list-style: none; padding: 0; }
+  .service-points li {
+    margin-bottom: 10px;
+    color: var(--navy-deep);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .service-points li i { color: var(--gold-metallic); font-size: 0.9rem; }
+
+  /* Sidebar */
+  .sidebar-card {
+    background: #f8fafc;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+    position: sticky;
+    top: 120px;
+  }
+
+  /* Responsividade */
+  @media (max-width: 1024px) {
+    .details-grid { grid-template-columns: 1fr; }
+    .sidebar-card { position: static; margin-top: 50px; }
+  }
+  @media (max-width: 768px) {
+    .service-row, .service-row.reverse {
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-bottom: 60px;
+    }
+    .service-row.reverse .service-img-col { order: unset; }
+    .service-row.reverse .service-text-col { order: unset; }
+    .service-img-col img { height: 250px; }
+    .service-hero h1 { font-size: 2.2rem; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <section class="service-hero">
+    <div class="container">
+      <div class="service-hero-content" data-aos="fade-right">
+        <span class="breadcrumb">Soluções em Facilities</span>
+        <h1>Mão de Obra Especializada</h1>
+        <p style="font-size: 1.25rem; opacity: 0.95; line-height: 1.6;">
+          Profissionais treinados, uniformizados e geridos pela SEGSis para elevar o padrão do seu negócio.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="details-section">
+    <div class="container">
+      <div class="details-grid">
+
+        <div class="content-col">
+
+          <div class="intro-text" data-aos="fade-up">
+            <h2>Por que terceirizar com a SEGSis?</h2>
+            <p>Assumimos toda a responsabilidade operacional e trabalhista. Você elimina custos com recrutamento, treinamento, gestão de folha e encargos, garantindo reposição imediata em caso de faltas ou férias. Focamos na qualidade para que você foque no seu negócio.</p>
+          </div>
+
+          <div class="service-row" data-aos="fade-up">
+            <div class="service-img-col">
+              <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80" alt="Portaria e Recepção Presencial">
+            </div>
+            <div class="service-text-col">
+              <h3>Portaria Presencial</h3>
+              <p>A primeira impressão é a que fica. Nossos porteiros e recepcionistas são treinados não apenas em segurança e controle de acesso, mas em <strong>cordialidade e postura corporativa</strong>. Eles atuam como o cartão de visitas do seu condomínio ou empresa.</p>
+              <ul class="service-points">
+                <li><i class="fas fa-check-circle"></i> Controle rigoroso de acesso (visitantes/entregas)</li>
+                <li><i class="fas fa-check-circle"></i> Recebimento e gestão de correspondências</li>
+                <li><i class="fas fa-check-circle"></i> Profissionais uniformizados e com crachá</li>
+                <li><i class="fas fa-check-circle"></i> Treinamento em situações de emergência</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="service-row reverse" data-aos="fade-up">
+            <div class="service-img-col">
+              <img src="https://images.unsplash.com/photo-1584622050111-993a426fbf0a?auto=format&fit=crop&w=800&q=80" alt="Limpeza e Conservação Profissional">
+            </div>
+            <div class="service-text-col">
+              <h3>Limpeza e Conservação</h3>
+              <p>Um ambiente limpo impacta diretamente na produtividade e na saúde. Utilizamos equipamentos adequados e produtos de linha profissional para garantir a higienização profunda de escritórios, condomínios e áreas industriais, seguindo cronogramas rigorosos.</p>
+              <ul class="service-points">
+                <li><i class="fas fa-check-circle"></i> Limpeza técnica de pisos e superfícies</li>
+                <li><i class="fas fa-check-circle"></i> Higienização de sanitários e áreas comuns</li>
+                <li><i class="fas fa-check-circle"></i> Gestão de resíduos e coleta seletiva</li>
+                <li><i class="fas fa-check-circle"></i> Cronograma diário, semanal e mensal</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="service-row" data-aos="fade-up">
+            <div class="service-img-col">
+              <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80" alt="Assistente Virtual e Suporte Remoto">
+            </div>
+            <div class="service-text-col">
+              <h3>Assistentes Virtuais</h3>
+              <p>A solução moderna para reduzir custos administrativos. Nossos assistentes virtuais operam remotamente para gerenciar agendas, atendimento ao cliente (SAC), suporte comercial e tarefas burocráticas, unindo a inteligência humana à eficiência da tecnologia.</p>
+              <ul class="service-points">
+                <li><i class="fas fa-check-circle"></i> Atendimento telefônico e WhatsApp Business</li>
+                <li><i class="fas fa-check-circle"></i> Gestão de agendas e agendamentos</li>
+                <li><i class="fas fa-check-circle"></i> Suporte administrativo sob demanda</li>
+                <li><i class="fas fa-check-circle"></i> Redução drástica de custo estrutural</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="sidebar-col">
+          <div class="sidebar-card" data-aos="fade-left">
+            <h3 style="color:var(--navy-deep); margin-bottom:15px; text-align: center;">Solicite Cotação</h3>
+            <p style="color:#64748b; margin-bottom:25px; font-size:0.9rem; text-align: center;">Personalize seu plano de facilities.</p>
+
+            <div style="margin-bottom: 20px;">
+              <label style="font-size: 0.8rem; font-weight:600; color: var(--navy-deep); margin-bottom: 5px; display: block;">Serviço de Interesse:</label>
+              <select style="width:100%; padding: 12px; border:1px solid #cbd5e1; border-radius: 6px; color: #334155; background: #fff;">
+                <option>Portaria Presencial</option>
+                <option>Limpeza e Conservação</option>
+                <option>Assistentes Virtuais</option>
+                <option>Pacote Completo</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+              <label style="font-size: 0.8rem; font-weight:600; color: var(--navy-deep); margin-bottom: 5px; display: block;">Seu WhatsApp:</label>
+              <input type="text" placeholder="(DD) 99999-9999" style="width:100%; padding: 12px; border:1px solid #cbd5e1; border-radius: 6px;">
+            </div>
+
+            <a href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20gostaria%20de%20uma%20cota%C3%A7%C3%A3o%20para%20Facilities"
+               class="btn btn-gold btn-full"
+               style="text-align:center; display:block; padding: 12px;">
+              Enviar Solicitação <i class="fas fa-arrow-right"></i>
+            </a>
+
+            <div style="margin-top:20px; padding-top: 20px; border-top: 1px solid #e2e8f0; text-align:center; font-size:0.9rem; color:#64748b;">
+              <strong style="color: var(--navy-deep);"><i class="fas fa-phone-alt"></i> (12) 3633-4871</strong>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+{% endblock %}
