@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
-{% block description %}SEGSis - Líder em Segurança Eletrônica e Monitoramento 24h desde 1996.{% endblock %}
-{% block title %}A Empresa | SEGSis Monitoramento{% endblock %}
+{% block description %}SEG Sistemas - Segurança Eletrônica e Monitoramento 24h desde 1996.{% endblock %}
+{% block title %}A Empresa | SEG Sistemas{% endblock %}
 
 {% block extra_css %}
 <link href="https://fonts.googleapis.com/css2?family=Herr+Von+Muellerhoff&display=swap" rel="stylesheet">
@@ -105,9 +105,9 @@
   .grid-reverse .content-text { order: 2; }
   .grid-reverse .img-frame { order: 1; }
 
-  /* --- QUOTE DIRETOR --- */
+  /* --- DEPOIMENTO CLIENTE --- */
   .director-quote { background: #f8fafc; padding: 80px 0; text-align: center; }
-  .quote-box { max-width: 800px; margin: 0 auto; position: relative; }
+  .quote-box { max-width: 820px; margin: 0 auto; position: relative; }
   .quote-box i { font-size: 3rem; color: var(--gold-metallic); opacity: 0.3; margin-bottom: 20px; }
   .quote-text { font-size: 1.4rem; font-style: italic; color: var(--navy-deep); line-height: 1.6; margin-bottom: 30px; font-weight: 300; }
 
@@ -117,7 +117,7 @@
   .director-details h5 { color: var(--navy-deep); font-size: 1.1rem; margin-bottom: 0; }
   .director-details span { color: #64748b; font-size: 0.9rem; }
 
-  .signature { font-family: 'Herr Von Muellerhoff', cursive; font-size: 2.5rem; color: var(--navy-deep); margin-left: 20px; opacity: 0.7; }
+  .signature { font-family: 'Herr Von Muellerhoff', cursive; font-size: 2.2rem; color: var(--navy-deep); margin-left: 20px; opacity: 0.7; }
 
   .final-cta { background: var(--navy-deep); padding: 80px 0; text-align: center; color: #fff; position: relative; overflow: hidden; }
   .final-cta::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at center, rgba(212,175,55,0.15) 0%, rgba(15,23,42,0) 70%); pointer-events: none; }
@@ -150,7 +150,7 @@
 <section class="hero-internal">
   <div class="container">
     <div data-aos="fade-up">
-      <span class="hero-breadcrumb">SEGSis Monitoramento</span>
+      <span class="hero-breadcrumb">SEG Sistemas</span>
       <h1>Solidez, Tecnologia <br>e Confiança.</h1>
     </div>
   </div>
@@ -185,8 +185,8 @@
       <div class="content-text" data-aos="fade-right">
         <span style="color:var(--gold-metallic); font-weight:700; text-transform:uppercase;">Nossa Trajetória</span>
         <h2>Desde 1996 construindo confiança</h2>
-        <p>A <strong>SEGSis Monitoramento</strong> nasceu com um propósito claro: elevar o padrão de segurança eletrônica no Vale do Paraíba. O que começou como uma empresa focada em instalações técnicas, evoluiu para se tornar um hub completo de soluções em proteção patrimonial.</p>
-        <p>Ao longo de quase três décadas, testemunhamos a revolução tecnológica do setor. Fomos pioneiros na implementação de sistemas digitais de monitoramento e na integração de inteligência artificial para análise de riscos.</p>
+        <p>A <strong>SEG Sistemas</strong> nasceu com um propósito claro: elevar o padrão de segurança eletrônica no Vale do Paraíba. O que começou como uma empresa focada em instalações técnicas, evoluiu para se tornar um hub completo de soluções em proteção patrimonial.</p>
+        <p>Ao longo de quase três décadas, acompanhamos a evolução do setor e investimos em tecnologia, processos e atendimento — com foco em reduzir riscos, aumentar a prevenção e acelerar o tempo de resposta.</p>
         <ul style="margin-top:20px; list-style:none;">
           <li style="margin-bottom:10px;"><i class="fas fa-check-circle" style="color:var(--gold-metallic); margin-right:10px;"></i> Estrutura Própria de Atendimento</li>
           <li style="margin-bottom:10px;"><i class="fas fa-check-circle" style="color:var(--gold-metallic); margin-right:10px;"></i> Frota Tática Exclusiva</li>
@@ -214,15 +214,20 @@
   <div class="container">
     <div class="quote-box" data-aos="zoom-in">
       <i class="fas fa-quote-left"></i>
-      <p class="quote-text">"Segurança não é sobre equipamentos, é sobre pessoas. Quando um cliente contrata a SEGSis, ele não está comprando apenas câmeras, ele está comprando a certeza de que haverá alguém zelando pelo sono da sua família."</p>
+
+      <p class="quote-text">"Depois que coloquei a SEG Sistemas, acabou dor de cabeça. Atendimento rápido, instalação bem feita e quando precisa eles resolvem. É a primeira empresa de segurança que eu realmente sinto que está acompanhando de verdade."</p>
 
       <div class="director-info">
-        <img src="{{ url_for('static', path='img/nilson-diretor.png') }}" alt="Diretor Nilson" class="director-avatar">
+        <img
+          src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80"
+          alt="Cliente SEG Sistemas"
+          class="director-avatar"
+        >
         <div class="director-details">
-          <h5>Nilson Gonçalves</h5>
-          <span>Diretor Executivo - SEGSis</span>
+          <h5>Cliente</h5>
+          <span>Residência — Taubaté/SP</span>
         </div>
-        <div class="signature">Nilson Gonçalves</div>
+        <div class="signature">Obrigado!</div>
       </div>
     </div>
   </div>
@@ -233,9 +238,9 @@
     <div class="content-grid grid-reverse">
       <div class="content-text" data-aos="fade-left">
         <span style="color:var(--gold-metallic); font-weight:700; text-transform:uppercase;">DNA Tecnológico</span>
-        <h2>Inteligência Artificial a favor da sua proteção</h2>
-        <p>Não acreditamos em soluções genéricas. Na <strong>SEGSis</strong>, a segurança é desenhada sob medida, unindo a expertise humana à precisão das máquinas.</p>
-        <p>Utilizamos softwares de gestão de eventos que priorizam ocorrências reais. Nossas câmeras com <em>Video Analytics</em> são capazes de distinguir um animal doméstico de um intruso, garantindo que nossa equipe de pronta resposta seja acionada apenas quando necessário.</p>
+        <h2>Tecnologia a favor da sua proteção</h2>
+        <p>Não acreditamos em soluções genéricas. Na <strong>SEG Sistemas</strong>, a segurança é desenhada sob medida, unindo a experiência humana à precisão dos sistemas.</p>
+        <p>Utilizamos softwares de gestão de eventos que priorizam ocorrências relevantes. Nossas câmeras com <em>Video Analytics</em> ajudam a reduzir falsos acionamentos e aumentam a assertividade, para a resposta ser rápida quando realmente importa.</p>
 
         <a href="https://wa.me/5512974101924?text=Quero%20saber%20sobre%20monitoramento%20inteligente" class="btn btn-gold" style="margin-top:20px;">
           Conhecer Tecnologia
@@ -243,7 +248,7 @@
       </div>
 
       <div class="img-frame" data-aos="fade-right">
-        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80" alt="Painel de Inteligência de Segurança">
+        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80" alt="Painel de Segurança e Monitoramento">
       </div>
     </div>
   </div>
@@ -279,7 +284,7 @@
     <div data-aos="zoom-in">
       <h2>Sua segurança não pode esperar.</h2>
       <p>Junte-se a mais de 1.000 famílias e empresas que dormem tranquilas no Vale do Paraíba.</p>
-      <a href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20visitei%20a%20p%C3%A1gina%20Sobre%20e%20quero%20um%20or%C3%A7amento." class="btn btn-gold">
+      <a href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20visitei%20a%20p%C3%A1gina%20A%20Empresa%20e%20quero%20um%20or%C3%A7amento." class="btn btn-gold">
         <i class="fab fa-whatsapp"></i> Falar com Especialista Agora
       </a>
     </div>

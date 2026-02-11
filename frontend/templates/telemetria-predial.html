@@ -1,141 +1,301 @@
 {% extends "base.html" %}
 
-{% block description %}Telemetria Predial SEGSis. Monitoramento inteligente de caixas d'água, bombas e alagamentos. Evite o desabastecimento.{% endblock %}
-{% block title %}Telemetria Predial | SEGSis Monitoramento{% endblock %}
+{% block description %}Telemetria Predial SEG SISTEMAS. Evite a falta d'água e a queima de bombas. Monitoramento IoT que se paga com a economia gerada.{% endblock %}
+{% block title %}Telemetria e Gestão de Água | SEG SISTEMAS{% endblock %}
 
 {% block extra_css %}
 <style>
-  /* Estilos Específicos da Página de Serviço */
-  .service-hero{
-    height:45vh;
-    min-height:350px;
-    /* Imagem de Fundo Específica de Indústria/Hidráulica */
-    background-image:url('https://images.unsplash.com/photo-1581093450021-4a7360e9a6b5?auto=format&fit=crop&w=1920&q=80');
-    background-size:cover;
-    background-position:center;
-    display:flex;
-    align-items:center;
-    position:relative;
+  /* --- ESTILOS GERAIS --- */
+  :root {
+    --gold-metallic: #d4af37;
+    --navy-deep: #0f172a;
+    --blue-tech: #0ea5e9;
+    --alert-red: #ef4444;
+    --success-green: #22c55e;
   }
-  .service-hero::before{
+
+  /* Hero Section */
+  .service-hero {
+    height: 60vh;
+    min-height: 500px;
+    /* Imagem: Tubulação Industrial (Fundo Escuro) */
+    background-image: url('https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    position: relative;
+    background-color: #0f172a;
+  }
+  .service-hero::before {
     content:'';
     position:absolute; top:0; left:0; right:0; bottom:0;
-    background:linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+    background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
   }
-  .service-hero-content{ position:relative; z-index:2; color:#fff; padding-top:60px; }
-  .service-hero h1{ font-size:3rem; margin-bottom:10px; }
-  .breadcrumb{
-    color:var(--gold-metallic);
-    font-weight:600;
-    text-transform:uppercase;
-    font-size:.9rem;
+  .service-hero-content { position: relative; z-index: 2; color: #fff; padding-top: 60px; }
+  .service-hero h1 { font-size: 3.5rem; margin-bottom: 20px; font-weight: 800; line-height: 1.1; }
+  .service-hero p { font-size: 1.25rem; opacity: 0.95; max-width: 650px; line-height: 1.6; }
+  .breadcrumb { color: var(--gold-metallic); font-weight: 700; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 2px; }
+
+  .details-section { padding: 80px 0; background: #fff; }
+  .details-grid { display: grid; grid-template-columns: 1.4fr 0.6fr; gap: 60px; align-items: start; }
+
+  /* --- IMAGENS COM FALLBACK (FUNDO DE SEGURANÇA) --- */
+  .feature-block {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 80px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .feature-block:last-child { border-bottom: none; margin-bottom: 40px; }
+  .feature-block.reverse { flex-direction: row-reverse; }
+
+  .feature-img-container {
+    flex: 1;
+    height: 300px;
+    min-width: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    position: relative;
+    
+    /* FALLBACK: Fundo cinza metálico */
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Ícone de fundo para caso a imagem falhe */
+  .feature-img-container::after {
+    content: '\f03e';
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 3rem;
+    color: #94a3b8;
+    position: absolute;
+    z-index: 1;
   }
 
-  .details-section{ padding:80px 0; }
-  .details-grid{
-    display:grid;
-    grid-template-columns:1.2fr 0.8fr;
-    gap:50px;
-    align-items:start;
+  .feature-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    position: relative;
+    z-index: 2; 
+    background-color: transparent; 
   }
 
-  .feature-list{ list-style:none; margin-top:30px; padding-left:0; }
-  .feature-list li{
-    background:#f8fafc;
-    padding:15px 20px;
-    margin-bottom:15px;
-    border-left:4px solid var(--gold-metallic);
-    display:flex;
-    align-items:center;
-    gap:15px;
-    font-weight:500;
-    color:var(--navy-deep);
-    box-shadow:0 2px 5px rgba(0,0,0,0.05);
-  }
-  .feature-list i{ color:var(--gold-metallic); font-size:1.2rem; }
+  .feature-block:hover .feature-img-container img { transform: scale(1.05); }
 
-  .sidebar-card{
-    background:#fff;
-    padding:40px;
-    border-radius:12px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.08);
-    position:sticky;
-    top:100px;
-    border:1px solid #e2e8f0;
+  /* Estilos de Texto Vendedor */
+  .feature-text { flex: 1.2; }
+  .feature-text h3 {
+    color: var(--navy-deep);
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .feature-text h3 i { color: var(--gold-metallic); font-size: 1.4rem; }
+  .feature-text p { color: #475569; line-height: 1.8; font-size: 1.05rem; margin-bottom: 15px; }
+
+  /* Tabela de ROI (Conversão) */
+  .roi-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 40px 0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .roi-table th { background: var(--navy-deep); color: #fff; padding: 15px; text-align: left; }
+  .roi-table td { padding: 15px; border-bottom: 1px solid #e2e8f0; color: #475569; }
+  .roi-table tr:last-child td { border-bottom: none; font-weight: 700; color: var(--navy-deep); background: #f8fafc; }
+  .negative { color: var(--alert-red); font-weight: 600; }
+  .positive { color: var(--success-green); font-weight: 600; }
+
+  /* Sidebar flutuante */
+  .sidebar-card {
+    background: #fff;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    position: sticky; top: 120px;
+    border: 1px solid #e2e8f0;
   }
 
-  @media (max-width:900px){
-    .details-grid{ grid-template-columns:1fr; }
-    .service-hero h1{ font-size:2.2rem; }
-    .sidebar-card{ position:static; margin-top:40px; }
+  @media (max-width: 900px) {
+    .details-grid { grid-template-columns: 1fr; }
+    .feature-block, .feature-block.reverse { flex-direction: column; gap: 20px; }
+    .feature-img-container { width: 100%; height: 250px; min-width: auto; }
+    .sidebar-card { position: static; margin-top: 40px; }
+    .service-hero h1 { font-size: 2.5rem; }
   }
 </style>
 {% endblock %}
 
 {% block content %}
 
-  <div class="top-bar"><span>TECNOLOGIA</span> &nbsp; Gestão inteligente de recursos prediais.</div>
+  <div class="top-bar"><span>TECNOLOGIA IOT</span> &nbsp; Economia real e fim dos problemas hidráulicos no condomínio.</div>
 
   <section class="service-hero">
     <div class="container">
       <div class="service-hero-content" data-aos="fade-right">
-        <span class="breadcrumb">Soluções SEGSis</span>
-        <h1>Telemetria Predial</h1>
-        <p style="font-size:1.2rem; opacity:.9;">Monitoramento IoT para evitar surpresas e desperdícios.</p>
+        <span class="breadcrumb">Automação Predial</span>
+        <h1>Fim da Falta d'Água<br>Surpresa</h1>
+        <p>
+          Transforme a gestão do seu condomínio. Nosso sistema avisa sobre vazamentos e falhas na bomba <strong>antes</strong> que os moradores fiquem sem água.
+        </p>
+        <div style="margin-top: 30px;">
+          <a href="#detalhes" class="btn btn-gold" style="padding: 15px 30px;">Ver como funciona</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="details-section">
+  <section class="details-section" id="detalhes">
     <div class="container">
       <div class="details-grid">
 
-        <div class="content-col" data-aos="fade-up">
-          <h2 style="color:var(--navy-deep); margin-bottom:20px;">Como funciona?</h2>
-
-          <div style="color:#64748b; line-height:1.8; font-size:1.05rem;">
-            <p>
-              A Telemetria Predial da SEGSis é a inteligência que faltava para a gestão do seu condomínio ou indústria.
-              Através de sensores <strong>IoT (Internet das Coisas)</strong>, monitoramos em tempo real o nível das caixas d'água,
-              cisternas e o funcionamento das bombas hidráulicas.
-            </p>
-            <br>
-            <p>
-              <strong>Evite o desabastecimento surpresa.</strong>
-              Se uma bomba travar ou o nível da água baixar drasticamente (indicando um vazamento oculto),
-              nosso sistema alerta a central e o zelador imediatamente. Isso permite uma ação rápida antes que os moradores
-              fiquem sem água ou que ocorram danos maiores.
+        <div class="content-col">
+          
+          <div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 20px; margin-bottom: 50px; border-radius: 0 8px 8px 0;">
+            <p style="margin:0; color: #92400e; font-weight: 500;">
+              <i class="fas fa-info-circle"></i> <strong>Você sabia?</strong> Uma bomba d'água queimada custa em média R$ 3.500,00 para consertar, fora o custo do caminhão-pipa emergencial. Nosso monitoramento previne esse gasto.
             </p>
           </div>
 
-          <h3 style="margin-top:40px; color:var(--navy-deep);">O que inclui:</h3>
+          <div class="feature-block" data-aos="fade-up">
+            <div class="feature-img-container">
+              <img src="https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?auto=format&fit=crop&w=800&q=80" 
+                   alt="Monitoramento de Nível de Água">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-water"></i> Nível de Reservatórios Online</h3>
+              <p>O "Zelador Virtual" da sua caixa d'água. Instalamos sensores de alta precisão que medem o volume de água em tempo real.</p>
+              <p><strong>O Diferencial:</strong> O sistema aprende o consumo padrão do prédio. Se houver uma queda brusca de nível na madrugada (sinal clássico de cano estourado ou vazamento), ele alerta a central imediatamente, economizando milhares de litros de água.</p>
+            </div>
+          </div>
 
-          <ul class="feature-list">
-            <li><i class="fas fa-water"></i> Monitoramento de Nível de Reservatórios (Caixas d'água)</li>
-            <li><i class="fas fa-exclamation-triangle"></i> Gerenciamento de Alagamentos em Garagens e Subsolos</li>
-            <li><i class="fas fa-cogs"></i> Automação e Monitoramento de Bombas Hidráulicas</li>
-            <li><i class="fas fa-chart-line"></i> Relatórios de consumo e eficiência</li>
-          </ul>
+          <div class="feature-block reverse" data-aos="fade-up">
+            <div class="feature-img-container">
+              <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80" 
+                   alt="Proteção de Bombas Hidráulicas">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-shield-alt"></i> Proteção Elétrica de Bombas</h3>
+              <p>A maioria das bombas queima por trabalhar "a seco" (sem água na entrada) ou por travamento mecânico. Nosso sistema detecta a alteração na corrente elétrica em milissegundos.</p>
+              <p>Ao identificar o erro, o sistema <strong>desliga a bomba automaticamente</strong> para evitar a queima e envia um chamado de manutenção. É a tecnologia pagando a conta do condomínio.</p>
+            </div>
+          </div>
+
+          <div class="feature-block" data-aos="fade-up">
+            <div class="feature-img-container">
+              <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80" 
+                   alt="Sensor Anti-Alagamento">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-tint-slash"></i> Sensor Anti-Alagamento</h3>
+              <p>Proteja o patrimônio dos condôminos. Sensores instalados no chão da casa de máquinas e no fosso do elevador detectam qualquer acúmulo de água.</p>
+              <p>Isso evita que um simples vazamento se torne uma inundação que danifique os carros na garagem ou queime a placa eletrônica do elevador (um prejuízo altíssimo).</p>
+            </div>
+          </div>
+          
+          <div class="feature-block reverse" data-aos="fade-up">
+            <div class="feature-img-container">
+              <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" 
+                   alt="Relatórios de Consumo">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-chart-line"></i> Gestão de Consumo</h3>
+              <p>Não espere a conta chegar para descobrir o desperdício. Com nossos relatórios detalhados, o síndico sabe exatamente quanto o prédio consome por dia e por hora.</p>
+              <p>Dados precisos para auditorias, campanhas de economia e identificação de anomalias na conta da concessionária.</p>
+            </div>
+          </div>
+
+          <div class="roi-section" data-aos="fade-up">
+            <h3 style="color:var(--navy-deep); margin-bottom: 20px;">Por que vale a pena investir?</h3>
+            <p>Veja a comparação de custos em um cenário real de falha na bomba:</p>
+            
+            <table class="roi-table">
+              <thead>
+                <tr>
+                  <th>Cenário</th>
+                  <th>Sem Telemetria (Tradicional)</th>
+                  <th>Com Telemetria SEG</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Detecção do Problema</td>
+                  <td>Só quando a água acaba (Morador reclama)</td>
+                  <td>Imediata (Alerta no celular)</td>
+                </tr>
+                <tr>
+                  <td>Dano à Bomba</td>
+                  <td>Queima total (Rebobinamento)</td>
+                  <td>Nenhum (Desligamento automático)</td>
+                </tr>
+                <tr>
+                  <td>Custo Médio Reparo</td>
+                  <td class="negative">R$ 3.500,00 + Caminhão Pipa</td>
+                  <td class="positive">R$ 0,00 (Apenas rearme)</td>
+                </tr>
+                <tr>
+                  <td>Transtorno</td>
+                  <td>Horas/Dias sem água</td>
+                  <td>Zero (Morador nem percebe)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
         </div>
 
         <div class="sidebar-col">
           <div class="sidebar-card">
-            <h3 style="color:var(--navy-deep); margin-bottom:15px;">Evite Falta d'Água</h3>
-            <p style="color:#64748b; margin-bottom:30px; font-size:.9rem;">
-              Instale sensores inteligentes e tenha controle total do seu condomínio.
+            <h3 style="color:var(--navy-deep); margin-bottom:15px; text-align: center;">Não espere a bomba queimar</h3>
+            <p style="color:#64748b; margin-bottom:30px; font-size:0.95rem; text-align: center;">
+              Solicite uma vistoria técnica gratuita e descubra quanto seu condomínio vai economizar.
             </p>
 
-            <a
-              href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20quero%20saber%20mais%20sobre%20Telemetria%20Predial"
-              class="btn btn-gold btn-full"
-              style="text-align:center; display:block;"
-            >
-              <i class="fab fa-whatsapp"></i> Solicitar Visita Técnica
+            <a href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20vi%20o%20site%20e%20quero%20cotar%20a%20Telemetria%20para%20o%20condom%C3%ADnio"
+               class="btn btn-gold btn-full"
+               style="text-align:center; display:block; padding: 18px; border-radius: 6px; background: var(--gold-metallic); color: #fff; text-decoration: none; font-weight: 700; font-size: 1rem; transition: 0.3s; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);">
+              <i class="fab fa-whatsapp"></i> PROTEGER MEU CONDOMÍNIO
             </a>
 
-            <div style="margin-top:20px; text-align:center; font-size:.9rem; color:#64748b;">
-              <i class="fas fa-phone-alt" style="color:var(--gold-metallic)"></i> (12) 3633-4871
+            <hr style="margin: 25px 0; border: 0; border-top: 1px solid #e2e8f0;">
+
+            <div style="text-align:center;">
+              <p style="font-size:0.9rem; color:#64748b; margin-bottom:5px;">Dúvidas Técnicas?</p>
+              <strong style="color:var(--navy-deep); font-size: 1.2rem;">(12) 3633-4871</strong>
             </div>
+
+            <div style="margin-top: 25px; background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+              <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 15px; font-weight: 600;">O que entregamos:</p>
+              <ul style="list-style: none; padding: 0; font-size: 0.9rem; color: #475569;">
+                <li style="margin-bottom: 10px; display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle" style="color:var(--success-green);"></i> Relatórios Web
+                </li>
+                <li style="margin-bottom: 10px; display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle" style="color:var(--success-green);"></i> Alertas WhatsApp
+                </li>
+                <li style="margin-bottom: 10px; display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle" style="color:var(--success-green);"></i> Instalação sem obra
+                </li>
+                <li style="display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle" style="color:var(--success-green);"></i> Suporte 24h
+                </li>
+              </ul>
+            </div>
+
           </div>
         </div>
 

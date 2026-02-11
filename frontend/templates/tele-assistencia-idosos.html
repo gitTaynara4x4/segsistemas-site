@@ -1,139 +1,339 @@
 {% extends "base.html" %}
 
-{% block description %}Tele Assistência a Idosos SEGSis. Botão de pânico, monitoramento 24h e envio de ambulância. Cuidado e independência para quem você ama.{% endblock %}
-{% block title %}Tele Assistência Idosos | SEGSis Monitoramento{% endblock %}
+{% block description %}Tele Assistência a Idosos SEG SISTEMAS. Botão SOS, sensor de queda, monitoramento 24h e envio de ambulância. Independência com segurança.{% endblock %}
+{% block title %}Tele Assistência e Cuidado | SEG SISTEMAS{% endblock %}
 
 {% block extra_css %}
 <style>
-  /* Estilos Específicos da Página de Serviço */
-  .service-hero{
-    height:45vh;
-    min-height:350px;
-    /* Imagem de Fundo Específica de Idosos/Cuidado */
-    background-image:url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1920&q=80');
-    background-size:cover;
-    background-position:center;
-    display:flex;
-    align-items:center;
-    position:relative;
+  /* --- ESTILOS GERAIS --- */
+  :root {
+    --gold-metallic: #d4af37;
+    --navy-deep: #0f172a;
+    --warm-orange: #ea580c;
+    --soft-bg: #fff7ed;
   }
-  .service-hero::before{
+
+  /* Hero Section */
+  .service-hero {
+    height: 65vh;
+    min-height: 550px;
+    /* Imagem Pexels: Idosa ativa e feliz usando tecnologia */
+    background-image: url('https://images.pexels.com/photos/339620/pexels-photo-339620.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    position: relative;
+    background-color: #0f172a;
+  }
+  .service-hero::before {
     content:'';
     position:absolute; top:0; left:0; right:0; bottom:0;
-    background:linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+    background: linear-gradient(to right, rgba(15,23,42,0.9), rgba(15,23,42,0.5));
   }
-  .service-hero-content{ position:relative; z-index:2; color:#fff; padding-top:60px; }
-  .service-hero h1{ font-size:3rem; margin-bottom:10px; }
-  .breadcrumb{
-    color:var(--gold-metallic);
-    font-weight:600;
-    text-transform:uppercase;
-    font-size:.9rem;
+  .service-hero-content { position: relative; z-index: 2; color: #fff; padding-top: 60px; }
+  .service-hero h1 { font-size: 3.5rem; margin-bottom: 20px; font-weight: 800; line-height: 1.1; }
+  .service-hero p { font-size: 1.25rem; opacity: 0.95; max-width: 600px; line-height: 1.6; }
+  
+  .breadcrumb { color: var(--gold-metallic); font-weight: 700; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 2px; }
+
+  .details-section { padding: 80px 0; background: #fff; }
+  .details-grid { display: grid; grid-template-columns: 1.4fr 0.6fr; gap: 60px; align-items: start; }
+
+  /* --- FEATURE BLOCKS (Zig-Zag) --- */
+  .feature-block {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 80px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .feature-block:last-child { border-bottom: none; margin-bottom: 40px; }
+  .feature-block.reverse { flex-direction: row-reverse; }
+
+  .feature-img-container {
+    flex: 1;
+    height: 320px;
+    min-width: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    position: relative;
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .feature-img-container::after {
+    content: '\f004'; /* Ícone Coração */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 3rem;
+    color: #94a3b8;
+    position: absolute;
+    z-index: 1;
   }
 
-  .details-section{ padding:80px 0; }
-  .details-grid{
-    display:grid;
-    grid-template-columns:1.2fr 0.8fr;
-    gap:50px;
-    align-items:start;
+  .feature-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    position: relative;
+    z-index: 2;
+  }
+  .feature-block:hover .feature-img-container img { transform: scale(1.05); }
+
+  .feature-text { flex: 1.2; }
+  .feature-text h3 {
+    color: var(--navy-deep);
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .feature-text h3 i { color: var(--gold-metallic); font-size: 1.4rem; }
+  .feature-text p { color: #475569; line-height: 1.8; font-size: 1.05rem; margin-bottom: 15px; }
+
+  /* --- TIMELINE (Passo a Passo) --- */
+  .timeline-section {
+    background: #f8fafc;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 50px;
+    border: 1px solid #e2e8f0;
+  }
+  .timeline-step {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .timeline-step:last-child { margin-bottom: 0; }
+  
+  .step-icon {
+    width: 50px; height: 50px;
+    background: var(--navy-deep);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    z-index: 2;
+  }
+  .step-content h4 { margin: 0 0 5px 0; color: var(--navy-deep); font-weight: 700; }
+  .step-content p { margin: 0; font-size: 0.9rem; color: #64748b; }
+  
+  /* Linha conectora */
+  .timeline-step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 24px; top: 50px; bottom: -20px;
+    width: 2px;
+    background: #cbd5e1;
   }
 
-  .feature-list{ list-style:none; margin-top:30px; padding-left:0; }
-  .feature-list li{
-    background:#f8fafc;
-    padding:15px 20px;
-    margin-bottom:15px;
-    border-left:4px solid var(--gold-metallic);
-    display:flex;
-    align-items:center;
-    gap:15px;
-    font-weight:500;
-    color:var(--navy-deep);
-    box-shadow:0 2px 5px rgba(0,0,0,0.05);
-  }
-  .feature-list i{ color:var(--gold-metallic); font-size:1.2rem; }
-
-  .sidebar-card{
-    background:#fff;
-    padding:40px;
-    border-radius:12px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.08);
-    position:sticky;
-    top:100px;
-    border:1px solid #e2e8f0;
+  /* --- SIDEBAR --- */
+  .sidebar-card {
+    background: #fff;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    position: sticky; top: 120px;
+    border: 1px solid #e2e8f0;
   }
 
-  @media (max-width:900px){
-    .details-grid{ grid-template-columns:1fr; }
-    .service-hero h1{ font-size:2.2rem; }
-    .sidebar-card{ position:static; margin-top:40px; }
+  /* Depoimento */
+  .testimonial-box {
+    background: var(--soft-bg);
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid var(--warm-orange);
+    margin-top: 30px;
+    font-style: italic;
+    color: #57534e;
+  }
+
+  @media (max-width: 900px) {
+    .details-grid { grid-template-columns: 1fr; }
+    .feature-block, .feature-block.reverse { flex-direction: column; gap: 20px; }
+    .feature-img-container { width: 100%; height: 250px; min-width: auto; }
+    .sidebar-card { position: static; margin-top: 40px; }
+    .service-hero h1 { font-size: 2.5rem; }
   }
 </style>
 {% endblock %}
 
 {% block content %}
 
-  <div class="top-bar"><span>CUIDADO</span> &nbsp; Segurança e carinho para sua família 24h.</div>
+  <div class="top-bar"><span>CUIDADO & AMOR</span> &nbsp; A tecnologia que abraça sua família quando você não está perto.</div>
 
   <section class="service-hero">
     <div class="container">
       <div class="service-hero-content" data-aos="fade-right">
-        <span class="breadcrumb">Soluções SEGSis</span>
-        <h1>Tele Assistência a Idosos</h1>
-        <p style="font-size:1.2rem; opacity:.9;">Independência para eles, tranquilidade para você.</p>
+        <span class="breadcrumb">Tele Assistência 24h</span>
+        <h1>Independência<br>com Segurança</h1>
+        <p>
+          Seus pais querem morar sozinhos. Você quer tranquilidade. Nossa solução une o melhor dos dois mundos com monitoramento humanizado e resposta rápida.
+        </p>
+        <div style="margin-top: 30px;">
+          <a href="#detalhes" class="btn btn-gold" style="padding: 15px 30px;">Conheça o Plano Cuidado</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="details-section">
+  <section class="details-section" id="detalhes">
     <div class="container">
       <div class="details-grid">
 
-        <div class="content-col" data-aos="fade-up">
-          <h2 style="color:var(--navy-deep); margin-bottom:20px;">Como funciona?</h2>
-
-          <div style="color:#64748b; line-height:1.8; font-size:1.05rem;">
-            <p>
-              Muitos idosos desejam manter sua independência e morar sozinhos, mas a família se preocupa com riscos de quedas ou mal súbito.
-              A Tele Assistência da SEGSis resolve isso.
+        <div class="content-col">
+          
+          <div style="margin-bottom: 50px;">
+            <h2 style="color:var(--navy-deep); font-weight: 700; margin-bottom: 15px;">Por que contratar?</h2>
+            <p style="color: #475569; font-size: 1.1rem; line-height: 1.6;">
+              Quedas no banheiro, mal-estar súbito ou simplesmente a sensação de insegurança são os maiores inimigos da terceira idade. Nosso sistema não é apenas um alarme; é uma <strong>linha direta de vida</strong> que garante que o socorro chegue, mesmo que o idoso não consiga falar ou alcançar o telefone.
             </p>
-            <br>
-            <p>
-              Através de dispositivos vestíveis discretos (como pulseiras ou colares com botão SOS), o idoso pode solicitar ajuda imediata com um simples toque.
-              O sinal alerta nossa <strong>Central 24h</strong>, que entra em contato imediatamente, avisa os familiares cadastrados e, se necessário,
-              aciona uma <strong>ambulância</strong> para o local.
-            </p>
-            <br>
-            <p>É a tecnologia garantindo que seus pais ou avós nunca estarão realmente sozinhos.</p>
           </div>
 
-          <h3 style="margin-top:40px; color:var(--navy-deep);">O que inclui:</h3>
+          <div class="feature-block" data-aos="fade-up">
+            <div class="feature-img-container">
+              <img src="https://images.pexels.com/photos/3768131/pexels-photo-3768131.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                   alt="Botão SOS à prova d'água">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-fingerprint"></i> Botão SOS (Pulseira ou Colar)</h3>
+              <p>Discreto, leve e fácil de usar. O idoso carrega o botão consigo o tempo todo, como um relógio ou pingente.</p>
+              <ul style="margin-top:10px; padding-left:20px; color:#475569; line-height:1.6;">
+                <li><strong>À Prova d'Água:</strong> Pode (e deve) ser usado no banho, local onde ocorre a maioria das quedas.</li>
+                <li><strong>Bateria de Longa Duração:</strong> Não precisa carregar todo dia.</li>
+                <li><strong>Alcance Estendido:</strong> Funciona na casa toda e até no jardim.</li>
+              </ul>
+            </div>
+          </div>
 
-          <ul class="feature-list">
-            <li><i class="fas fa-heartbeat"></i> Monitoramento Básico de Bem-Estar</li>
-            <li><i class="fas fa-ambulance"></i> Tele Assistência com envio de Ambulância</li>
-            <li><i class="fas fa-hand-holding-heart"></i> Botão SOS de Fácil Acesso (Pulseira/Colar)</li>
-            <li><i class="fas fa-phone-volume"></i> Aviso imediato aos familiares em caso de emergência</li>
-          </ul>
+          <div class="feature-block reverse" data-aos="fade-up">
+            <div class="feature-img-container">
+              <img src="https://images.pexels.com/photos/8867431/pexels-photo-8867431.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                   alt="Central de Monitoramento Humanizada">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-headset"></i> Atendimento Humanizado 24h</h3>
+              <p>Ao apertar o botão, o idoso não fala com um robô. Ele fala com um <strong>profissional treinado</strong> da SEG SISTEMAS através de um viva-voz potente instalado na casa.</p>
+              <p>Nós conversamos, acalmamos a situação, avaliamos a gravidade e avisamos imediatamente os familiares cadastrados (filhos, netos, vizinhos).</p>
+            </div>
+          </div>
+
+          <div class="feature-block" data-aos="fade-up">
+            <div class="feature-img-container">
+              <img src="https://images.pexels.com/photos/6520084/pexels-photo-6520084.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                   alt="Envio de Ambulância">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-ambulance"></i> Envio de Socorro Médico</h3>
+              <p>Se a família estiver longe ou presa no trânsito, nós agimos. Em casos de emergência confirmada, acionamos o serviço de ambulância (pública ou privada, conforme o plano) para ir até o local.</p>
+              <p style="color:var(--navy-deep); font-weight:600;">Nunca deixamos o idoso sozinho esperando.</p>
+            </div>
+          </div>
+
+          <h3 style="color:var(--navy-deep); margin-bottom: 25px;">Protocolo de Emergência:</h3>
+          <div class="timeline-section" data-aos="fade-up">
+            <div class="timeline-step">
+              <div class="step-icon"><i class="fas fa-exclamation"></i></div>
+              <div class="step-content">
+                <h4>1. Botão Acionado</h4>
+                <p>O idoso aperta o botão ou o sensor de queda detecta o impacto.</p>
+              </div>
+            </div>
+            
+            <div class="timeline-step">
+              <div class="step-icon"><i class="fas fa-phone-volume"></i></div>
+              <div class="step-content">
+                <h4>2. Contato Imediato</h4>
+                <p>A Central abre o viva-voz no aparelho base e fala com o idoso em segundos.</p>
+              </div>
+            </div>
+
+            <div class="timeline-step">
+              <div class="step-icon"><i class="fas fa-users"></i></div>
+              <div class="step-content">
+                <h4>3. Família Avisada</h4>
+                <p>Ligamos para a lista de contatos de emergência até alguém atender.</p>
+              </div>
+            </div>
+
+            <div class="timeline-step">
+              <div class="step-icon"><i class="fas fa-ambulance"></i></div>
+              <div class="step-content">
+                <h4>4. Resgate Enviado</h4>
+                <p>Se necessário, deslocamos ambulância ou apoio tático para abrir a porta.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-section" style="margin-top: 50px;">
+            <h3 style="color:var(--navy-deep); margin-bottom: 20px;">Dúvidas Frequentes</h3>
+            
+            <details style="margin-bottom: 10px; border: 1px solid #e2e8f0; padding: 10px; border-radius: 6px;">
+              <summary style="font-weight: 600; cursor: pointer; color: var(--navy-deep);">Precisa de linha telefônica fixa?</summary>
+              <p style="margin-top: 10px; color: #64748b; font-size: 0.95rem;">Não necessariamente. Temos modelos que funcionam com chip de celular (GPRS/4G), garantindo funcionamento mesmo em casas sem telefone fixo.</p>
+            </details>
+
+            <details style="margin-bottom: 10px; border: 1px solid #e2e8f0; padding: 10px; border-radius: 6px;">
+              <summary style="font-weight: 600; cursor: pointer; color: var(--navy-deep);">Funciona se acabar a luz?</summary>
+              <p style="margin-top: 10px; color: #64748b; font-size: 0.95rem;">Sim! O console central possui uma bateria de backup de longa duração que mantém o sistema operante mesmo durante falhas de energia.</p>
+            </details>
+          </div>
+
         </div>
 
         <div class="sidebar-col">
           <div class="sidebar-card">
-            <h3 style="color:var(--navy-deep); margin-bottom:15px;">Cuide de quem você ama</h3>
-            <p style="color:#64748b; margin-bottom:30px; font-size:.9rem;">Garanta segurança para seus pais hoje mesmo.</p>
+            <h3 style="color:var(--navy-deep); margin-bottom:15px; text-align: center;">Segurança para eles, paz para você</h3>
+            <p style="color:#64748b; margin-bottom:30px; font-size:0.95rem; text-align: center;">
+              Planos acessíveis para garantir a proteção de quem sempre cuidou de você.
+            </p>
 
-            <a
-              href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20quero%20saber%20mais%20sobre%20Tele%20Assistencia"
-              class="btn btn-gold btn-full"
-              style="text-align:center; display:block;"
-            >
-              <i class="fab fa-whatsapp"></i> Solicitar Plano Cuidado
+            <a href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20gostaria%20de%20um%20or%C3%A7amento%20para%20Tele%20Assist%C3%AAncia"
+               class="btn btn-gold btn-full"
+               style="text-align:center; display:block; padding: 18px; border-radius: 6px; background: var(--gold-metallic); color: #fff; text-decoration: none; font-weight: 700; font-size: 1rem; transition: 0.3s; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);">
+              <i class="fab fa-whatsapp"></i> COTAR PLANO CUIDADO
             </a>
 
-            <div style="margin-top:20px; text-align:center; font-size:.9rem; color:#64748b;">
-              <i class="fas fa-phone-alt" style="color:var(--gold-metallic)"></i> (12) 3633-4871
+            <div class="testimonial-box">
+              <p style="font-size: 0.9rem; margin-bottom: 10px;">"Minha mãe caiu no banho mês passado. Se não fosse o botão da SEG, ela teria ficado horas no chão. O atendimento foi impecável."</p>
+              <strong style="font-size: 0.85rem; color: var(--navy-deep);">- Mariana R., Filha e Cliente</strong>
             </div>
+
+            <hr style="margin: 25px 0; border: 0; border-top: 1px solid #e2e8f0;">
+
+            <div style="text-align:center;">
+              <p style="font-size:0.9rem; color:#64748b; margin-bottom:5px;">Dúvidas?</p>
+              <strong style="color:var(--navy-deep); font-size: 1.2rem;">(12) 3633-4871</strong>
+            </div>
+
+            <div style="margin-top: 25px; background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+              <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 15px; font-weight: 600;">Incluso no Pacote:</p>
+              <ul style="list-style: none; padding: 0; font-size: 0.9rem; color: #475569;">
+                <li style="margin-bottom: 10px; display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle" style="color:var(--success-green);"></i> Console Viva-Voz
+                </li>
+                <li style="margin-bottom: 10px; display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle" style="color:var(--success-green);"></i> 1 Botão (Colar ou Pulso)
+                </li>
+                <li style="margin-bottom: 10px; display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle" style="color:var(--success-green);"></i> Monitoramento 24h
+                </li>
+                <li style="display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle" style="color:var(--success-green);"></i> App de Acompanhamento
+                </li>
+              </ul>
+            </div>
+
           </div>
         </div>
 

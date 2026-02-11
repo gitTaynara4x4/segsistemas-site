@@ -8,7 +8,7 @@ from fastapi.templating import Jinja2Templates
 # APP
 # ============================================================
 app = FastAPI(
-    title="SEGSis Site",
+    title="SEG SISTEMAS Site",
     docs_url="/api/docs",
     openapi_url="/api/openapi.json"
 )
@@ -43,12 +43,12 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 # ============================================================
 # (Opcional) Debug de caminhos no terminal
 # ============================================================
-print("=== SEGSis PATH DEBUG ===")
+print("=== SEG SISTEMAS PATH DEBUG ===")
 print("BASE_DIR     :", BASE_DIR)
 print("FRONTEND_DIR :", FRONTEND_DIR)
 print("TEMPLATES_DIR:", TEMPLATES_DIR)
 print("STATIC_DIR   :", STATIC_DIR)
-print("=========================")
+print("===============================")
 
 # ============================================================
 # 3) ROTAS (PÁGINAS)
@@ -77,9 +77,9 @@ async def monitoramento(request: Request):
 async def incendio(request: Request):
     return templates.TemplateResponse("deteccao-de-incendios.html", {"request": request})
 
-@app.get("/portaria-virtual", response_class=HTMLResponse)
-async def portaria(request: Request):
-    return templates.TemplateResponse("portaria-virtual.html", {"request": request})
+@app.get("/rastreamento-veicular", response_class=HTMLResponse)
+async def rastreamento(request: Request):
+    return templates.TemplateResponse("rastreamento-veicular.html", {"request": request})
 
 @app.get("/telemetria-predial", response_class=HTMLResponse)
 async def telemetria(request: Request):
@@ -100,6 +100,10 @@ async def automacao(request: Request):
 @app.get("/facilities", response_class=HTMLResponse)
 async def facilities(request: Request):
     return templates.TemplateResponse("facilities.html", {"request": request})
+
+@app.get("/portaria-virtual", response_class=HTMLResponse)
+async def portaria(request: Request):
+    return templates.TemplateResponse("portaria-virtual.html", {"request": request})
 
 # Segmentos (Landing Pages)
 @app.get("/para-sua-familia-e-residencia", response_class=HTMLResponse)

@@ -1,143 +1,298 @@
 {% extends "base.html" %}
 
-{% block description %}Prevenção de Perdas SEGSis. Monitoramento de temperatura para farmácias, laboratórios e cadeia fria. Conformidade com ANVISA.{% endblock %}
-{% block title %}Prevenção de Perdas | SEGSis Monitoramento{% endblock %}
+{% block description %}Prevenção de Perdas SEG SISTEMAS. Adequação à RDC 430 ANVISA. Monitoramento de temperatura para farmácias e laboratórios com relatórios auditáveis.{% endblock %}
+{% block title %}Monitoramento de Cadeia Fria e ANVISA | SEG SISTEMAS{% endblock %}
 
 {% block extra_css %}
 <style>
-  /* Estilos Específicos da Página de Serviço */
-  .service-hero{
-    height:45vh;
-    min-height:350px;
-    /* Imagem de Fundo Específica de Farmácia/Laboratório */
-    background-image:url('https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=1920&q=80');
-    background-size:cover;
-    background-position:center;
-    display:flex;
-    align-items:center;
-    position:relative;
+  /* --- ESTILOS GERAIS --- */
+  :root {
+    --gold-metallic: #d4af37;
+    --navy-deep: #0f172a;
+    --blue-tech: #0ea5e9;
+    --alert-red: #ef4444;
+    --success-green: #22c55e;
   }
-  .service-hero::before{
+
+  /* Hero Section */
+  .service-hero {
+    height: 60vh;
+    min-height: 500px;
+    /* Imagem Pexels: Farmacêutico / Laboratório Tecnológico */
+    background-image: url('https://images.pexels.com/photos/3938022/pexels-photo-3938022.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    position: relative;
+    background-color: #0f172a;
+  }
+  .service-hero::before {
     content:'';
     position:absolute; top:0; left:0; right:0; bottom:0;
-    background:linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+    background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
   }
-  .service-hero-content{ position:relative; z-index:2; color:#fff; padding-top:60px; }
-  .service-hero h1{ font-size:3rem; margin-bottom:10px; }
-  .breadcrumb{
-    color:var(--gold-metallic);
-    font-weight:600;
-    text-transform:uppercase;
-    font-size:.9rem;
+  .service-hero-content { position: relative; z-index: 2; color: #fff; padding-top: 60px; }
+  .service-hero h1 { font-size: 3.2rem; margin-bottom: 20px; font-weight: 800; line-height: 1.1; }
+  .service-hero p { font-size: 1.25rem; opacity: 0.95; max-width: 650px; line-height: 1.6; }
+  .breadcrumb { color: var(--gold-metallic); font-weight: 700; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 2px; }
+
+  .details-section { padding: 80px 0; background: #fff; }
+  .details-grid { display: grid; grid-template-columns: 1.4fr 0.6fr; gap: 60px; align-items: start; }
+
+  /* --- FEATURE BLOCKS --- */
+  .feature-block {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 80px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .feature-block:last-child { border-bottom: none; margin-bottom: 40px; }
+  .feature-block.reverse { flex-direction: row-reverse; }
+
+  .feature-img-container {
+    flex: 1;
+    height: 300px;
+    min-width: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    position: relative;
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .feature-img-container::after {
+    content: '\f2c9'; /* Ícone Termômetro */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 3rem;
+    color: #94a3b8;
+    position: absolute;
+    z-index: 1;
   }
 
-  .details-section{ padding:80px 0; }
-  .details-grid{
-    display:grid;
-    grid-template-columns:1.2fr 0.8fr;
-    gap:50px;
-    align-items:start;
+  .feature-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    position: relative;
+    z-index: 2;
+  }
+  .feature-block:hover .feature-img-container img { transform: scale(1.05); }
+
+  .feature-text { flex: 1.2; }
+  .feature-text h3 {
+    color: var(--navy-deep);
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .feature-text h3 i { color: var(--gold-metallic); font-size: 1.4rem; }
+  .feature-text p { color: #475569; line-height: 1.8; font-size: 1.05rem; margin-bottom: 15px; }
+
+  /* Destaque de Autoridade (RDC) */
+  .authority-box {
+    background: #f0fdf4;
+    border-left: 4px solid #16a34a;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 0 8px 8px 0;
   }
 
-  .feature-list{ list-style:none; margin-top:30px; padding-left:0; }
-  .feature-list li{
-    background:#f8fafc;
-    padding:15px 20px;
-    margin-bottom:15px;
-    border-left:4px solid var(--gold-metallic);
-    display:flex;
-    align-items:center;
-    gap:15px;
-    font-weight:500;
-    color:var(--navy-deep);
-    box-shadow:0 2px 5px rgba(0,0,0,0.05);
+  /* FAQ Section */
+  .faq-section { margin-top: 60px; }
+  .faq-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
   }
-  .feature-list i{ color:var(--gold-metallic); font-size:1.2rem; }
+  .faq-item h4 { color: var(--navy-deep); margin-bottom: 10px; font-size: 1.1rem; font-weight: 700; }
+  .faq-item p { margin: 0; color: #64748b; font-size: 0.95rem; }
 
-  .sidebar-card{
-    background:#fff;
-    padding:40px;
-    border-radius:12px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.08);
-    position:sticky;
-    top:100px;
-    border:1px solid #e2e8f0;
+  /* Tabela de Riscos */
+  .risk-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 40px 0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .risk-table th { background: var(--navy-deep); color: #fff; padding: 15px; text-align: left; }
+  .risk-table td { padding: 15px; border-bottom: 1px solid #e2e8f0; color: #475569; }
+  .risk-table tr:last-child td { border-bottom: none; font-weight: 700; }
+  .alert-badge { background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+  .safe-badge { background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+
+  /* Sidebar */
+  .sidebar-card {
+    background: #fff;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    position: sticky; top: 120px;
+    border: 1px solid #e2e8f0;
   }
 
-  @media (max-width:900px){
-    .details-grid{ grid-template-columns:1fr; }
-    .service-hero h1{ font-size:2.2rem; }
-    .sidebar-card{ position:static; margin-top:40px; }
+  @media (max-width: 900px) {
+    .details-grid { grid-template-columns: 1fr; }
+    .feature-block, .feature-block.reverse { flex-direction: column; gap: 20px; }
+    .feature-img-container { width: 100%; height: 250px; min-width: auto; }
+    .sidebar-card { position: static; margin-top: 40px; }
+    .service-hero h1 { font-size: 2.2rem; }
   }
 </style>
 {% endblock %}
 
 {% block content %}
 
-  <div class="top-bar"><span>CONTROLE TOTAL</span> &nbsp; Proteja seus ativos mais valiosos 24h.</div>
+  <div class="top-bar"><span>CADEIA FRIA & ANVISA</span> &nbsp; Tecnologia de ponta para Farmácias e Indústrias.</div>
 
   <section class="service-hero">
     <div class="container">
       <div class="service-hero-content" data-aos="fade-right">
-        <span class="breadcrumb">Soluções SEGSis</span>
-        <h1>Prevenção de Perdas</h1>
-        <p style="font-size:1.2rem; opacity:.9;">Monitoramento crítico de temperatura e cadeia fria.</p>
+        <span class="breadcrumb">Prevenção de Perdas</span>
+        <h1>Seu Estoque<br>100% Seguro</h1>
+        <p>
+          Monitoramento inteligente de temperatura. Evite multas da ANVISA e o descarte de milhares de reais em mercadorias.
+        </p>
+        <div style="margin-top: 30px;">
+          <a href="#detalhes" class="btn btn-gold" style="padding: 15px 30px;">Ver como Funciona</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="details-section">
+  <section class="details-section" id="detalhes">
     <div class="container">
       <div class="details-grid">
 
-        <div class="content-col" data-aos="fade-up">
-          <h2 style="color:var(--navy-deep); margin-bottom:20px;">Como funciona?</h2>
-
-          <div style="color:#64748b; line-height:1.8; font-size:1.05rem;">
-            <p>
-              Esta é uma solução crítica para <strong>farmácias, laboratórios, bancos de sangue e indústrias alimentícias</strong>.
-              Uma falha na refrigeração pode significar a perda de milhares de reais em mercadorias e riscos à saúde pública.
-            </p>
-            <br>
-            <p>
-              Monitoramos a temperatura de suas geladeiras, freezers e câmaras frias em tempo real. Se a temperatura oscilar e sair
-              da faixa segura (padrão estabelecido), o sistema gera alertas imediatos para que a equipe possa agir e salvar o estoque.
-            </p>
-            <br>
-            <p>
-              Além do alerta, o sistema gera relatórios históricos de temperatura, essenciais para auditorias e fiscalizações da
-              <strong>ANVISA</strong>.
+        <div class="content-col">
+          
+          <div style="background: #fff1f2; border-left: 4px solid #e11d48; padding: 25px; margin-bottom: 50px; border-radius: 0 8px 8px 0;">
+            <h4 style="color: #be123c; margin-top:0; font-weight:700; display:flex; align-items:center; gap:10px;">
+              <i class="fas fa-exclamation-triangle"></i> Atenção Farmacêutica
+            </h4>
+            <p style="margin:0; color: #881337;">
+              A <strong>RDC 430/2020 da ANVISA</strong> exige controle rigoroso de temperatura. O registro manual em papel não oferece segurança real e deixa seu estabelecimento vulnerável a multas pesadas e perda de carga.
             </p>
           </div>
 
-          <h3 style="margin-top:40px; color:var(--navy-deep);">O que inclui:</h3>
+          <div class="feature-block" data-aos="fade-up">
+            <div class="feature-img-container">
+              <img src="https://images.pexels.com/photos/3938023/pexels-photo-3938023.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                   alt="Monitoramento de Cadeia Fria">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-snowflake"></i> Cadeia Fria Blindada</h3>
+              <p>Não dependa da sorte. Instalamos sensores IoT dentro de suas câmaras e geladeiras. Eles enviam dados a cada minuto para a nuvem.</p>
+              <p><strong>A Diferença SEG:</strong> Se a temperatura variar 0,1°C fora do padrão, nosso sistema dispara alertas (Ligação, SMS e WhatsApp) para você e sua equipe agirem <strong>antes</strong> da perda do produto.</p>
+            </div>
+          </div>
 
-          <ul class="feature-list">
-            <li><i class="fas fa-snowflake"></i> Monitoramento de Cadeia Fria (Vacinas e Alimentos)</li>
-            <li><i class="fas fa-prescription-bottle-alt"></i> Monitoramento Farmacêutico Especializado</li>
-            <li><i class="fas fa-thermometer-half"></i> Controle de Temperatura e Umidade</li>
-            <li><i class="fas fa-file-medical-alt"></i> Relatórios de conformidade (ANVISA)</li>
-          </ul>
+          <div class="feature-block reverse" data-aos="fade-up">
+            <div class="feature-img-container">
+              <img src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                   alt="Relatórios de Conformidade">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-file-contract"></i> Adequação à RDC 430</h3>
+              <p>Chega de planilhas de papel preenchidas às pressas. O sistema gera automaticamente:</p>
+              <ul style="margin-top:10px; padding-left:20px; color:#475569; line-height:1.6;">
+                <li>Gráficos de oscilação térmica;</li>
+                <li>Histórico inalterável (Blockchain like) para auditoria;</li>
+                <li>Certificados de calibração dos sensores.</li>
+              </ul>
+              
+              <div class="authority-box" style="margin-top:15px;">
+                <p style="margin:0; color:#166534; font-size:0.95rem;">
+                  <strong>Tranquilidade na Fiscalização:</strong> Tenha todos os dados exigidos pelo fiscal sanitário na palma da mão, prontos para imprimir ou enviar por e-mail.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-block" data-aos="fade-up">
+            <div class="feature-img-container">
+              <img src="https://images.pexels.com/photos/1148820/pexels-photo-1148820.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                   alt="Monitoramento de Servidores">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-server"></i> Proteção para CPD e TI</h3>
+              <p>Para empresas de tecnologia e escritórios, o superaquecimento do servidor é fatal. Monitoramos a temperatura da sala de TI e alertamos caso o ar-condicionado falhe durante a madrugada ou finais de semana.</p>
+            </div>
+          </div>
+
+          <div class="faq-section" data-aos="fade-up">
+            <h3 style="color:var(--navy-deep); margin-bottom: 25px;">Dúvidas Comuns</h3>
+            
+            <div class="faq-item">
+              <h4>Se faltar energia, o sistema continua funcionando?</h4>
+              <p>Sim! Nossos módulos possuem bateria interna de backup. Você será o primeiro a saber que a energia caiu, permitindo acionar um gerador ou transferir as mercadorias.</p>
+            </div>
+
+            <div class="faq-item">
+              <h4>Precisa furar a geladeira para instalar?</h4>
+              <p>Não. Utilizamos sensores com cabos chatos especiais (flat cables) ou tecnologia sem fio que passam pela borracha de vedação sem danificar o equipamento ou comprometer a térmica.</p>
+            </div>
+
+            <div class="faq-item">
+              <h4>O sistema atende normas da ANVISA?</h4>
+              <p>Sim, 100%. Nosso software foi desenhado seguindo as diretrizes da RDC 430/2020 para transporte e armazenagem de medicamentos.</p>
+            </div>
+          </div>
+
         </div>
 
         <div class="sidebar-col">
           <div class="sidebar-card">
-            <h3 style="color:var(--navy-deep); margin-bottom:15px;">Proteja seu Estoque</h3>
-            <p style="color:#64748b; margin-bottom:30px; font-size:.9rem;">
-              Não corra riscos com falhas de refrigeração. Fale com um especialista.
+            <h3 style="color:var(--navy-deep); margin-bottom:15px; text-align: center;">Evite Multas e Prejuízos</h3>
+            <p style="color:#64748b; margin-bottom:30px; font-size:0.95rem; text-align: center;">
+              Solicite um orçamento agora e blinde seu estoque contra falhas.
             </p>
 
-            <a
-              href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20quero%20saber%20mais%20sobre%20Prevencao%20de%20Perdas"
-              class="btn btn-gold btn-full"
-              style="text-align:center; display:block;"
-            >
-              <i class="fab fa-whatsapp"></i> Solicitar Orçamento
+            <a href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20tenho%20interesse%20no%20monitoramento%20ANVISA%20para%20minha%20empresa"
+               class="btn btn-gold btn-full"
+               style="text-align:center; display:block; padding: 18px; border-radius: 6px; background: var(--gold-metallic); color: #fff; text-decoration: none; font-weight: 700; font-size: 1rem; transition: 0.3s; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);">
+              <i class="fab fa-whatsapp"></i> FALAR COM CONSULTOR
             </a>
 
-            <div style="margin-top:20px; text-align:center; font-size:.9rem; color:#64748b;">
-              <i class="fas fa-phone-alt" style="color:var(--gold-metallic)"></i> (12) 3633-4871
+            <hr style="margin: 25px 0; border: 0; border-top: 1px solid #e2e8f0;">
+
+            <div style="text-align:center;">
+              <p style="font-size:0.9rem; color:#64748b; margin-bottom:5px;">Plantão Técnico:</p>
+              <strong style="color:var(--navy-deep); font-size: 1.2rem;">(12) 3633-4871</strong>
             </div>
+
+            <div style="margin-top: 25px; background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+              <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 15px; font-weight: 600;">Quem Atendemos:</p>
+              <ul style="list-style: none; padding: 0; font-size: 0.9rem; color: #475569;">
+                <li style="margin-bottom: 10px; display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle" style="color:var(--success-green);"></i> Farmácias
+                </li>
+                <li style="margin-bottom: 10px; display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle" style="color:var(--success-green);"></i> Laboratórios
+                </li>
+                <li style="margin-bottom: 10px; display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle" style="color:var(--success-green);"></i> Bancos de Sangue
+                </li>
+                <li style="display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle" style="color:var(--success-green);"></i> Indústria Alimentícia
+                </li>
+              </ul>
+            </div>
+
           </div>
         </div>
 

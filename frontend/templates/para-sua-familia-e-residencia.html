@@ -1,216 +1,331 @@
 {% extends "base.html" %}
 
-{% block description %}Segurança Residencial SEGSis. Monitoramento, Alarme, Chegada Assistida e Botão de Pânico para proteger sua família.{% endblock %}
-{% block title %}Para sua Família e Residência | SEGSis Monitoramento{% endblock %}
+{% block description %}Segurança Residencial SEG SISTEMAS. Proteja sua família com monitoramento 24h, chegada assistida e botão de pânico. A tranquilidade que seu lar merece.{% endblock %}
+{% block title %}Segurança para sua Família e Residência | SEG SISTEMAS{% endblock %}
 
 {% block extra_css %}
 <style>
   /* --- ESTILOS GERAIS DA PÁGINA --- */
-  :root{
-    --gold-metallic:#d4af37;
-    --navy-deep:#0f172a;
+  :root {
+    --gold-metallic: #d4af37;
+    --navy-deep: #0f172a;
+    --soft-blue: #f0f9ff;
+    --alert-red: #e11d48;
+    --success-green: #16a34a;
   }
 
-  .service-hero{
-    height:50vh;
-    min-height:400px;
-    /* Imagem: Família segura em casa / Ambiente residencial aconchegante */
-    background-image:url('https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1920&q=80');
-    background-size:cover;
-    background-position:center;
-    display:flex;
-    align-items:center;
-    position:relative;
+  /* Hero Section Emocional */
+  .service-hero {
+    height: 65vh;
+    min-height: 550px;
+    background-image: url('https://cdn.mos.cms.futurecdn.net/vo27oGFXFBJUyyV7tCeTgT.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    position: relative;
+    background-color: #0f172a;
   }
-  .service-hero::before{
+  .service-hero::before {
     content:'';
     position:absolute; top:0; left:0; right:0; bottom:0;
-    background:linear-gradient(to right, rgba(2,6,23,0.9), rgba(15,23,42,0.4));
+    background: linear-gradient(to right, rgba(15,23,42,0.85), rgba(15,23,42,0.3));
   }
-  .service-hero-content{ position:relative; z-index:2; color:#fff; padding-top:60px; }
-  .service-hero h1{ font-size:3.5rem; margin-bottom:10px; line-height:1.1; font-weight:700; }
-  .breadcrumb{ color:var(--gold-metallic); font-weight:700; text-transform:uppercase; font-size:.9rem; letter-spacing:2px; }
+  .service-hero-content { position: relative; z-index: 2; color: #fff; padding-top: 60px; max-width: 800px; }
+  .service-hero h1 { font-size: 3.8rem; margin-bottom: 20px; line-height: 1.1; font-weight: 800; letter-spacing: -1px; }
+  .service-hero p { font-size: 1.3rem; opacity: 0.95; line-height: 1.6; font-weight: 300; }
+  
+  .breadcrumb { color: var(--gold-metallic); font-weight: 700; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 2px; }
 
-  .details-section{ padding:100px 0; background:#fff; }
+  .details-section { padding: 100px 0; background: #fff; }
+  .details-grid { display: grid; grid-template-columns: 1.4fr 0.6fr; gap: 60px; align-items: start; }
 
-  /* Layout Grid: Conteúdo Principal + Sidebar */
-  .details-grid{ display:grid; grid-template-columns:1.4fr .6fr; gap:60px; align-items:start; }
-
-  /* Sidebar Flutuante */
-  .sidebar-card{
-    background:#f8fafc;
-    padding:40px;
-    border-radius:12px;
-    box-shadow:0 20px 40px -10px rgba(0,0,0,.1);
-    position:sticky;
-    top:120px;
-    border:1px solid #e2e8f0;
-  }
-
-  /* --- ESTILOS DOS BLOCOS DE CONTEÚDO (ZIG-ZAG) --- */
-  .feature-block{
-    display:flex;
-    align-items:center;
-    gap:40px;
-    margin-bottom:80px;
-    padding-bottom:40px;
-    border-bottom:1px solid #f1f5f9;
-  }
-  .feature-block:last-child{ border-bottom:none; margin-bottom:0; }
-  .feature-block.reverse{ flex-direction:row-reverse; }
-
-  .feature-img{
-    flex:1;
-    height:280px;
-    border-radius:12px;
-    overflow:hidden;
-    box-shadow:0 15px 30px rgba(0,0,0,.1);
-    position:relative;
+  /* Sidebar flutuante de alta conversão */
+  .sidebar-card {
+    background: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    position: sticky; top: 120px;
+    border: 1px solid #e2e8f0;
   }
 
-  .feature-img img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    transition:transform .5s ease;
+  /* --- BLOCOS ZIG-ZAG ROBUSTOS --- */
+  .feature-block {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    margin-bottom: 100px;
+    padding-bottom: 50px;
+    border-bottom: 1px solid #f1f5f9;
   }
-  .feature-block:hover .feature-img img{ transform:scale(1.05); }
+  .feature-block:last-child { border-bottom: none; margin-bottom: 0; }
+  .feature-block.reverse { flex-direction: row-reverse; }
 
-  .feature-text{ flex:1.2; }
-  .feature-text h3{
-    color:var(--navy-deep);
-    font-size:1.6rem;
-    margin-bottom:15px;
-    display:flex;
-    align-items:center;
-    font-weight:700;
+  .feature-img-container {
+    flex: 1;
+    height: 350px;
+    min-width: 350px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    position: relative;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  .feature-text h3 i{ color:var(--gold-metallic); margin-right:12px; font-size:1.3rem; }
-  .feature-text p{ color:#475569; line-height:1.8; text-align:justify; font-size:1.05rem; }
-
-  /* Destaque para o tópico Help/Pânico */
-  .panic-highlight{
-    background:#fff1f2;
-    border-left:4px solid #e11d48;
-    padding:20px;
-    border-radius:0 8px 8px 0;
-    margin-top:15px;
+  
+  .feature-img-container::after {
+    content: '\f3ed'; /* Ícone Shield */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 4rem;
+    color: #cbd5e1;
+    position: absolute;
+    z-index: 1;
   }
 
-  @media (max-width:900px){
-    .details-grid{ grid-template-columns:1fr; }
-    .sidebar-card{ position:static; margin-top:40px; }
-    .feature-block, .feature-block.reverse{ flex-direction:column; gap:20px; margin-bottom:50px; }
-    .feature-img{ width:100%; height:220px; }
-    .service-hero h1{ font-size:2.5rem; }
+  .feature-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 2;
+  }
+  .feature-block:hover .feature-img-container img { transform: scale(1.08); }
+
+  .feature-text { flex: 1.2; }
+  .feature-text h3 {
+    color: var(--navy-deep);
+    font-size: 2rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .feature-text h3 i { color: var(--gold-metallic); margin-right: 15px; font-size: 1.5rem; }
+  .feature-text p { color: #475569; line-height: 1.8; text-align: justify; font-size: 1.1rem; margin-bottom: 15px; }
+
+  /* Diferencial Financeiro/Comparativo */
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 40px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  }
+  .comparison-table th { background: var(--navy-deep); color: #fff; padding: 15px; text-align: left; }
+  .comparison-table td { padding: 15px; border-bottom: 1px solid #f1f5f9; color: #475569; font-size: 0.95rem; }
+  .comparison-table tr:last-child td { border-bottom: none; }
+  .check-icon { color: var(--success-green); font-weight: 700; }
+
+  /* Novas seções */
+  .stats-section {
+    padding: 80px 0;
+    background: var(--soft-blue);
+    text-align: center;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .stat-item h3 { font-size: 3rem; color: var(--gold-metallic); margin: 0; }
+  .stat-item p { font-size: 1.1rem; color: var(--navy-deep); margin: 10px 0 0; }
+
+  .testimonials-section {
+    padding: 100px 0;
+    background: #fff;
+  }
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+  .testimonial-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    text-align: center;
+    border: 1px solid #e2e8f0;
+  }
+  .testimonial-card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+  }
+  .testimonial-card .stars { color: var(--gold-metallic); margin-bottom: 15px; }
+  .testimonial-card p { font-style: italic; color: #475569; margin-bottom: 20px; }
+
+  @media (max-width: 900px) {
+    .details-grid { grid-template-columns: 1fr; }
+    .sidebar-card { position: static; margin-top: 40px; padding: 25px; }
+    .feature-block, .feature-block.reverse { flex-direction: column; gap: 30px; margin-bottom: 60px; }
+    .feature-img-container { width: 100%; height: 280px; min-width: auto; }
+    .service-hero h1 { font-size: 2.8rem; }
+    .stats-grid, .testimonials-grid { grid-template-columns: 1fr; }
   }
 </style>
 {% endblock %}
 
 {% block content %}
 
-  <div class="top-bar"><span>PROTEÇÃO FAMILIAR</span> &nbsp; Tecnologias pensadas para a segurança do seu lar.</div>
+  <div class="top-bar"><span>FAMÍLIA EM PRIMEIRO LUGAR</span> &nbsp; Proteção completa para o seu maior patrimônio.</div>
 
   <section class="service-hero">
     <div class="container">
       <div class="service-hero-content" data-aos="fade-right">
-        <span class="breadcrumb">Residencial</span>
-        <h1>Segurança para sua<br>Família e Residência</h1>
-        <p style="font-size:1.2rem; opacity:.95; max-width:600px; margin-top:15px;">
-          Muito mais que um alarme. Um ecossistema completo de proteção para garantir que sua casa seja o lugar mais seguro do mundo.
+        <span class="breadcrumb">Segurança Residencial</span>
+        <h1>Seu Lar Seguro,<br>Sua Família Protegida.</h1>
+        <p>
+          Não instale apenas um alarme que faz barulho. Tenha um sistema de inteligência conectado à nossa Central 24h que age antes mesmo do perigo chegar.
         </p>
+        <div style="margin-top: 35px;">
+           <a href="#detalhes" class="btn btn-gold" style="padding: 18px 40px; font-size: 1.1rem; font-weight: 700; border-radius: 50px;">Descobrir Soluções</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="details-section">
+  <section class="details-section" id="detalhes">
     <div class="container">
       <div class="details-grid">
 
         <div class="content-col">
+          
+          <h2 style="color:var(--navy-deep); font-weight:800; font-size: 2.4rem; margin-bottom: 50px; letter-spacing: -1px;">Segurança em Camadas</h2>
 
           <div class="feature-block" data-aos="fade-up">
-            <div class="feature-img">
-              <img src="https://images.unsplash.com/photo-1558002038-109177381792?auto=format&fit=crop&w=800&q=80" alt="Monitoramento Residencial">
+            <div class="feature-img-container">
+              <img src="https://home-cdn.reolink.us/wp-content/uploads/2023/05/120855461683881746.2653.png" alt="Central de Monitoramento 24h Profissional">
             </div>
             <div class="feature-text">
-              <h3><i class="fas fa-shield-alt"></i> Monitoramento Eletrônico</h3>
-              <p>É a base da nossa proteção. Instalamos sensores de presença e abertura em pontos estratégicos da sua casa, conectados à nossa Central 24h. Se houver qualquer tentativa de intrusão, o alarme dispara e nossa equipe recebe o alerta em segundos, iniciando o protocolo de segurança imediatamente.</p>
+              <h3><i class="fas fa-shield-alt"></i> Monitoramento 24h Real</h3>
+              <p>Esqueça os sistemas de alarme comuns que dependem de você olhar o celular. Nossa Central de Operações monitora seu imóvel 24 horas por dia, 365 dias por ano.</p>
+              <p><strong>Diferencial SEG:</strong> Caso o alarme dispare, nossa equipe inicia o protocolo em segundos, enviando uma viatura de pronto atendimento imediatamente ao local.</p>
             </div>
           </div>
 
           <div class="feature-block reverse" data-aos="fade-up">
-            <div class="feature-img">
-              <img src="https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80" alt="Sensor de Fumaça Residencial">
-            </div>
-            <div class="feature-text">
-              <h3><i class="fas fa-fire-extinguisher"></i> Prevenção de Incêndios</h3>
-              <p>Muitos acidentes domésticos acontecem à noite ou quando a casa está vazia. Integramos <strong>sensores de fumaça</strong> ao seu painel de alarme. Diferente de um detector comum que apenas apita, o nosso avisa a Central de Monitoramento, que pode acionar o Corpo de Bombeiros mesmo que você não esteja em casa.</p>
-            </div>
-          </div>
-
-          <div class="feature-block" data-aos="fade-up">
-            <div class="feature-img">
-              <img src="https://images.unsplash.com/photo-1534975587779-79a0b925b64c?auto=format&fit=crop&w=800&q=80" alt="Video Porteiro">
-            </div>
-            <div class="feature-text">
-              <h3><i class="fas fa-door-open"></i> Controle de Acesso Básico</h3>
-              <p>Segurança é saber quem está do lado de fora antes de abrir a porta. Oferecemos soluções de <strong>Vídeo Porteiros</strong> e fechaduras digitais. Você visualiza a imagem de quem toca a campainha direto no seu celular ou em uma tela interna, garantindo que você e seus filhos nunca abram o portão para estranhos.</p>
-            </div>
-          </div>
-
-          <div class="feature-block reverse" data-aos="fade-up">
-            <div class="feature-img">
-              <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=800&q=80" alt="Chegada de Carro na Garagem">
+            <div class="feature-img-container">
+              <img src="https://images.vivintcdn.com/global/Blog%202024/House%20Exteriors/arriving-at-home-night.jpg" alt="Chegada Assistida: pessoa chegando de carro na garagem à noite com segurança">
             </div>
             <div class="feature-text">
               <h3><i class="fas fa-car-side"></i> Chegada Assistida</h3>
-              <p>O momento de entrar na garagem é estatisticamente um dos mais vulneráveis. Com a <strong>Chegada Assistida</strong>, você liga para nossa central minutos antes de chegar em casa. Um operador fica monitorando suas câmeras externas em tempo real até que você entre e feche o portão em segurança.</p>
+              <p>O momento de entrar na garagem é o segundo mais vulnerável do dia. Com a SEG SISTEMAS, você nunca entra sozinho.</p>
+              <p>Basta um toque no app ou uma ligação minutos antes de chegar em casa. Nossos operadores acompanham sua entrada pelas câmeras externas em tempo real.</p>
             </div>
           </div>
 
           <div class="feature-block" data-aos="fade-up">
-            <div class="feature-img">
-              <img src="https://images.unsplash.com/photo-1512428559087-560fa5ce7829?auto=format&fit=crop&w=800&q=80" alt="Botão de Emergência Celular">
+            <div class="feature-img-container">
+              <img src="https://www.ravemobilesafety.com/wp-content/uploads/2021/07/PanicButton-Hand.jpg" alt="Botão de Pânico Silencioso no App">
             </div>
             <div class="feature-text">
-              <h3><i class="fas fa-exclamation-circle" style="color:#e11d48"></i> Help / Pânico</h3>
-              <p>Em situações extremas, você não tem tempo de discar números. Disponibilizamos botões de pânico (físicos ou no App) que enviam um <strong>pedido de socorro silencioso</strong> para nossa central.</p>
-
-              <div class="panic-highlight">
-                <p style="margin-bottom:0; font-size:0.95rem; color:#881337;">
-                  <strong>Ideal para:</strong> Casos de invasão (coação), emergências médicas súbitas ou situações de risco iminente. A ajuda é enviada sem acionar sirenes no local.
+              <h3><i class="fas fa-exclamation-triangle" style="color:var(--alert-red)"></i> Help / Pânico Silencioso</h3>
+              <p>Em uma emergência médica ou situação de coação, o tempo é seu maior inimigo. Disponibilizamos botões de pânico físicos e digitais.</p>
+              <div style="background: #fff1f2; border-left: 4px solid var(--alert-red); padding: 20px; border-radius: 0 10px 10px 0;">
+                <p style="margin-bottom:0; font-size:1rem; color:#881337; font-weight: 600;">
+                   Ao ser acionado, o socorro é enviado em prioridade máxima, sem alarme sonoro, para não agitar a situação.
                 </p>
               </div>
             </div>
+          </div>
+
+          <div class="feature-block reverse" data-aos="fade-up">
+            <div class="feature-img-container">
+              <img src="https://www.securityalarm.com/wp-content/uploads/2023/02/360822599.jpg" alt="Controle Total do Sistema pelo Celular">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-mobile-alt"></i> Controle Total pelo Celular</h3>
+              <p>Tenha as chaves da sua casa no seu bolso. Com o App SEG Home, você controla tudo de onde estiver no mundo:</p>
+              <ul style="list-style: none; padding: 0; color: #475569; line-height: 2;">
+                <li><i class="fas fa-check-circle" style="color:var(--gold-metallic); margin-right: 10px;"></i> Arme e desarme remoto com relatórios;</li>
+                <li><i class="fas fa-check-circle" style="color:var(--gold-metallic); margin-right: 10px;"></i> Visualize as câmeras ao vivo em HD;</li>
+                <li><i class="fas fa-check-circle" style="color:var(--gold-metallic); margin-right: 10px;"></i> Receba notificações imediatas.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="margin-top: 60px;" data-aos="fade-up">
+            <h3 style="color:var(--navy-deep); font-weight:700;">Alarme Comum vs. Proteção SEG SISTEMAS</h3>
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th>Funcionalidade</th>
+                  <th>Alarme Tradicional</th>
+                  <th>SEG Monitoramento</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Atendimento em caso de disparo</td>
+                  <td>Depende de você olhar o celular</td>
+                  <td class="check-icon"><i class="fas fa-check"></i> Equipe age em segundos</td>
+                </tr>
+                <tr>
+                  <td>Chegada Assistida</td>
+                  <td>Não possui</td>
+                  <td class="check-icon"><i class="fas fa-check"></i> Escolta Virtual incluída</td>
+                </tr>
+                <tr>
+                  <td>Manutenção dos Equipamentos</td>
+                  <td>Custo do cliente</td>
+                  <td class="check-icon"><i class="fas fa-check"></i> Manutenção Preventiva</td>
+                </tr>
+                <tr>
+                  <td>Backup de Comunicação (GPRS)</td>
+                  <td>Raro/Pago à parte</td>
+                  <td class="check-icon"><i class="fas fa-check"></i> Incluso no plano</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
         </div>
 
         <div class="sidebar-col">
           <div class="sidebar-card">
-            <h3 style="color:var(--navy-deep); margin-bottom:15px; text-align:center;">Proteja seu Lar</h3>
-            <p style="color:#64748b; margin-bottom:30px; font-size:0.95rem; text-align:center;">Fale com um consultor e blinde sua residência hoje mesmo.</p>
+            <h3 style="color:var(--navy-deep); margin-bottom:15px; text-align:center; font-weight: 800;">Solicite um Orçamento</h3>
+            <p style="color:#64748b; margin-bottom:30px; font-size:1rem; text-align:center;">Proteja seu lar com quem é especialista em segurança eletrônica.</p>
 
-            <a href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20quero%20proteger%20minha%20resid%C3%AAncia"
+            <a href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20vi%20o%20site%20e%20quero%20um%20or%C3%A7amento%20para%20minha%20casa"
                class="btn btn-gold btn-full"
-               style="text-align:center; display:block; padding:15px; border-radius:6px; background:var(--gold-metallic); color:#fff; text-decoration:none; font-weight:600; transition:.3s;">
-              <i class="fab fa-whatsapp"></i> Solicitar Orçamento
+               style="text-align:center; display:block; padding:20px; border-radius:10px; background:var(--gold-metallic); color:#fff; text-decoration:none; font-weight:700; font-size: 1.1rem; transition:.3s; box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);">
+              <i class="fab fa-whatsapp"></i> QUERO PROTEGER MINHA FAMÍLIA
             </a>
 
-            <hr style="margin:25px 0; border:0; border-top:1px solid #e2e8f0;">
+            <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e2e8f0;">
 
             <div style="text-align:center;">
-              <p style="font-size:0.9rem; color:#64748b; margin-bottom:5px;">Central de Atendimento:</p>
-              <strong style="color:var(--navy-deep); font-size:1.2rem;">(12) 3633-4871</strong>
+              <p style="font-size:0.9rem; color:#64748b; margin-bottom:5px;">Consultoria Gratuita:</p>
+              <strong style="color:var(--navy-deep); font-size:1.4rem;">(12) 3633-4871</strong>
             </div>
 
-            <div style="margin-top:20px; background:#fff; padding:15px; border-radius:8px; border:1px solid #e2e8f0;">
-              <p style="font-size:0.85rem; color:#64748b; margin-bottom:10px; font-weight:600;">O que está incluso?</p>
-              <ul style="list-style:none; padding:0; font-size:0.85rem; color:#475569;">
-                <li style="margin-bottom:5px;"><i class="fas fa-check" style="color:var(--gold-metallic); margin-right:5px;"></i> App de Controle Total</li>
-                <li style="margin-bottom:5px;"><i class="fas fa-check" style="color:var(--gold-metallic); margin-right:5px;"></i> Manutenção Preventiva</li>
-                <li><i class="fas fa-check" style="color:var(--gold-metallic); margin-right:5px;"></i> Conexão GPRS (Backup)</li>
+            <div style="margin-top:30px; background:var(--soft-blue); padding:20px; border-radius:15px; border: 1px solid #bae6fd;">
+              <p style="font-size:0.9rem; color:var(--navy-deep); margin-bottom:15px; font-weight: 700; text-transform: uppercase;">Benefícios Exclusivos:</p>
+              <ul style="list-style:none; padding:0; font-size:0.95rem; color:#0369a1;">
+                <li style="margin-bottom:12px; display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle"></i> Viatura de Apoio 24h
+                </li>
+                <li style="margin-bottom:12px; display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle"></i> Sensores Pet Immunity
+                </li>
+                <li style="margin-bottom:12px; display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle"></i> Garantia Total Equipamentos
+                </li>
+                <li style="display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle"></i> Relatórios Mensais
+                </li>
               </ul>
             </div>
 
@@ -218,6 +333,74 @@
         </div>
 
       </div>
+    </div>
+  </section>
+
+  <!-- Seção de Estatísticas -->
+  <section class="stats-section">
+    <div class="container">
+      <h2 style="text-align:center; color:var(--navy-deep); font-weight:800; font-size:2.4rem; margin-bottom:50px;">Nossos Números</h2>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <h3>500+</h3>
+          <p>Famílias Protegidas</p>
+        </div>
+        <div class="stat-item">
+          <h3>24/7</h3>
+          <p>Monitoramento Real</p>
+        </div>
+        <div class="stat-item">
+          <h3>15+</h3>
+          <p>Anos de Experiência</p>
+        </div>
+        <div class="stat-item">
+          <h3>99%</h3>
+          <p>Clientes Satisfeitos</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seção de Depoimentos -->
+  <section class="testimonials-section">
+    <div class="container">
+      <h2 style="text-align:center; color:var(--navy-deep); font-weight:800; font-size:2.4rem; margin-bottom:50px;">O que nossos clientes dizem</h2>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <img src="https://posterprintshop.com/wp-content/uploads/2025/04/family-portrait-printing-1200x675.webp" alt="Família Silva">
+          <div class="stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p>"Desde que instalamos o sistema da SEG, finalmente dormimos tranquilos. A chegada assistida é incrível!"</p>
+          <strong>Família Silva</strong><br><small>São José do Rio Preto</small>
+        </div>
+        <div class="testimonial-card">
+          <img src="https://images.bannerbear.com/direct/4mGpW3zwpg0ZK0AxQw/requests/000/088/720/029/nyLXxdvaNQgewDmgz9wePZm1E/4abc77cde95a318e67136e15c0ccde4d0d5fbcd0.jpg" alt="Família Oliveira">
+          <div class="stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p>"O botão de pânico silencioso nos deu segurança total. Recomendo para todas as famílias!"</p>
+          <strong>Família Oliveira</strong><br><small>Ribeirão Preto</small>
+        </div>
+        <div class="testimonial-card">
+          <img src="https://posterprintshop.com/wp-content/uploads/2025/04/family-portrait-printing-1200x675.webp" alt="Família Santos">
+          <div class="stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p>"Monitoramento 24h de verdade. Já acionaram a viatura uma vez e chegou em minutos. Excelente!"</p>
+          <strong>Família Santos</strong><br><small>Catanduva</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background: var(--navy-deep); padding: 80px 0; text-align: center; color: #fff;">
+    <div class="container">
+        <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 20px;">Não espere acontecer para se prevenir.</h2>
+        <p style="font-size: 1.2rem; opacity: 0.8; max-width: 700px; margin: 0 auto 40px;">
+            Oferecemos uma análise de risco gratuita para a sua residência. Descubra os pontos vulneráveis do seu imóvel hoje mesmo.
+        </p>
+        <a href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20gostaria%20de%20uma%20an%C3%A1lise%20de%20risco%20gratuita" class="btn btn-gold" style="padding: 20px 50px; font-size: 1.2rem;">Agendar Análise Gratuita</a>
     </div>
   </section>
 

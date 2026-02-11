@@ -1,109 +1,278 @@
 {% extends "base.html" %}
 
-{% block description %}Automação e Segurança Eletrônica SEGSis. Casa inteligente, IoT, CFTV e alarmes integrados no seu celular.{% endblock %}
-{% block title %}Automação e Segurança | SEGSis Monitoramento{% endblock %}
+{% block description %}Automação e Segurança Eletrônica SEG SISTEMAS. Transforme sua casa em uma Smart Home. Controle luzes, ar-condicionado, câmeras e alarmes pelo celular.{% endblock %}
+{% block title %}Automação e Segurança Smart | SEG SISTEMAS{% endblock %}
 
 {% block extra_css %}
 <style>
-  /* Estilos Específicos da Página de Serviço */
+  /* --- ESTILOS GERAIS --- */
+  :root {
+    --gold-metallic: #d4af37;
+    --navy-deep: #0f172a;
+    --tech-purple: #6366f1;
+    --soft-bg: #f8fafc;
+  }
+
+  /* Hero Section */
   .service-hero {
-    height: 45vh;
-    min-height: 350px;
-    /* Imagem de Fundo Específica de Casa Inteligente/Tech */
-    background-image: url('https://images.unsplash.com/photo-1558002038-109177381792?auto=format&fit=crop&w=1920&q=80');
+    height: 60vh;
+    min-height: 500px;
+    /* Imagem Pexels: Casa Moderna / Tablet de Controle */
+    background-image: url('https://images.pexels.com/photos/4255486/pexels-photo-4255486.jpeg?auto=compress&cs=tinysrgb&w=1600');
     background-size: cover;
     background-position: center;
     display: flex;
     align-items: center;
     position: relative;
+    background-color: #0f172a;
   }
   .service-hero::before {
-    content:''; position:absolute; top:0; left:0; right:0; bottom:0;
-    background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+    content:'';
+    position:absolute; top:0; left:0; right:0; bottom:0;
+    background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.6));
   }
   .service-hero-content { position: relative; z-index: 2; color: #fff; padding-top: 60px; }
-  .service-hero h1 { font-size: 3rem; margin-bottom: 10px; }
-  .breadcrumb { color: var(--gold-metallic); font-weight: 600; text-transform: uppercase; font-size: 0.9rem; }
+  .service-hero h1 { font-size: 3.5rem; margin-bottom: 20px; font-weight: 800; line-height: 1.1; }
+  .service-hero p { font-size: 1.25rem; opacity: 0.95; max-width: 650px; line-height: 1.6; }
+  
+  .breadcrumb { color: var(--gold-metallic); font-weight: 700; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 2px; }
 
-  .details-section { padding: 80px 0; }
-  .details-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 50px; align-items: start; }
+  .details-section { padding: 80px 0; background: #fff; }
+  .details-grid { display: grid; grid-template-columns: 1.4fr 0.6fr; gap: 60px; align-items: start; }
 
-  .feature-list { list-style: none; margin-top: 30px; }
-  .feature-list li {
-    background: #f8fafc;
-    padding: 15px 20px;
-    margin-bottom: 15px;
-    border-left: 4px solid var(--gold-metallic);
-    display: flex; align-items: center; gap: 15px;
-    font-weight: 500; color: var(--navy-deep);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  /* --- FEATURE BLOCKS (Zig-Zag) --- */
+  .feature-block {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 80px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid #f1f5f9;
   }
-  .feature-list i { color: var(--gold-metallic); font-size: 1.2rem; }
+  .feature-block:last-child { border-bottom: none; margin-bottom: 40px; }
+  .feature-block.reverse { flex-direction: row-reverse; }
 
+  .feature-img-container {
+    flex: 1;
+    height: 320px;
+    min-width: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    position: relative;
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Ícone de fundo (Fallback) */
+  .feature-img-container::after {
+    content: '\f0eb'; /* Ícone Lâmpada/Ideia */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 3rem;
+    color: #94a3b8;
+    position: absolute;
+    z-index: 1;
+  }
+
+  .feature-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    position: relative;
+    z-index: 2;
+  }
+  .feature-block:hover .feature-img-container img { transform: scale(1.05); }
+
+  .feature-text { flex: 1.2; }
+  .feature-text h3 {
+    color: var(--navy-deep);
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .feature-text h3 i { color: var(--gold-metallic); font-size: 1.4rem; }
+  .feature-text p { color: #475569; line-height: 1.8; font-size: 1.05rem; margin-bottom: 15px; }
+
+  /* Highlight Box */
+  .tech-highlight {
+    background: #eff6ff;
+    border-left: 4px solid var(--tech-purple);
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 0 8px 8px 0;
+  }
+
+  /* FAQ Section */
+  .faq-section { margin-top: 60px; }
+  .faq-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  .faq-item h4 { color: var(--navy-deep); margin-bottom: 10px; font-size: 1.1rem; font-weight: 700; }
+  .faq-item p { margin: 0; color: #64748b; font-size: 0.95rem; }
+
+  /* Sidebar */
   .sidebar-card {
-    background: #fff; padding: 40px; border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    position: sticky; top: 100px; border: 1px solid #e2e8f0;
+    background: #fff;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    position: sticky; top: 120px;
+    border: 1px solid #e2e8f0;
   }
 
   @media (max-width: 900px) {
     .details-grid { grid-template-columns: 1fr; }
-    .service-hero h1 { font-size: 2.2rem; }
+    .feature-block, .feature-block.reverse { flex-direction: column; gap: 20px; }
+    .feature-img-container { width: 100%; height: 250px; min-width: auto; }
     .sidebar-card { position: static; margin-top: 40px; }
+    .service-hero h1 { font-size: 2.5rem; }
   }
 </style>
 {% endblock %}
 
 {% block content %}
 
+  <div class="top-bar"><span>CASA INTELIGENTE & SEGURANÇA</span> &nbsp; O controle total do seu patrimônio na palma da mão.</div>
+
   <section class="service-hero">
     <div class="container">
       <div class="service-hero-content" data-aos="fade-right">
-        <span class="breadcrumb">Soluções SEGSis</span>
-        <h1>Automação e Segurança</h1>
-        <p style="font-size: 1.2rem; opacity: 0.9;">Conforto, controle e proteção na palma da sua mão.</p>
+        <span class="breadcrumb">Smart Home</span>
+        <h1>Sua Casa no<br>Piloto Automático</h1>
+        <p>
+          Integre alarmes, câmeras e automação em um único aplicativo. Mais conforto, economia de energia e segurança máxima para sua família.
+        </p>
+        <div style="margin-top: 30px;">
+          <a href="#detalhes" class="btn btn-gold" style="padding: 15px 30px;">Ver Funcionalidades</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="details-section">
+  <section class="details-section" id="detalhes">
     <div class="container">
       <div class="details-grid">
 
-        <div class="content-col" data-aos="fade-up">
-          <h2 style="color:var(--navy-deep); margin-bottom:20px;">Como funciona?</h2>
-
-          <div style="color:#64748b; line-height:1.8; font-size:1.05rem;">
-            <p>Imagine controlar a segurança e o conforto do seu imóvel de qualquer lugar do mundo. A SEGSis integra sistemas de alarme e câmeras de alta definição com dispositivos de <strong>Casa Inteligente (IoT)</strong>.</p>
-            <br>
-            <p>Você pode acender luzes remotamente para simular presença durante viagens, receber alertas se uma porta ficou aberta, controlar o ar-condicionado e visualizar suas câmeras, tudo pelo mesmo aplicativo. Transformamos ambientes comuns em espaços conectados, eficientes e muito mais seguros.</p>
+        <div class="content-col">
+          
+          <div style="margin-bottom: 50px;">
+            <h2 style="color:var(--navy-deep); font-weight: 700; margin-bottom: 15px;">Segurança Eletrônica 4.0</h2>
+            <p style="color: #475569; font-size: 1.1rem; line-height: 1.6;">
+              Esqueça os sistemas antigos e complicados. A SEG SISTEMAS une a robustez do <strong>CFTV e Alarmes</strong> com a inteligência da <strong>IoT (Internet das Coisas)</strong>. O resultado? Uma casa que "pensa" e protege você ativamente.
+            </p>
           </div>
 
-          <h3 style="margin-top:40px; color:var(--navy-deep);">O que inclui:</h3>
+          <div class="feature-block" data-aos="fade-up">
+            <div class="feature-img-container">
+              <img src="https://images.pexels.com/photos/7005694/pexels-photo-7005694.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                   alt="App de Controle Total">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-mobile-alt"></i> Tudo em 1 Único App</h3>
+              <p>Chega de abrir 5 aplicativos diferentes. Com nossa solução, você arma o alarme, visualiza as câmeras em tempo real e apaga as luzes na mesma tela.</p>
+              <p>Receba notificações instantâneas com <strong>vídeo verificação</strong>: se o alarme disparar, você recebe um clipe de vídeo do momento exato da intrusão.</p>
+            </div>
+          </div>
 
-          <ul class="feature-list">
-            <li><i class="fas fa-shield-alt"></i> Segurança Eletrônica Integrada (Alarme/CFTV)</li>
-            <li><i class="fas fa-laptop-house"></i> Automação Predial e Residencial (IoT)</li>
-            <li><i class="fas fa-plug"></i> Tomadas e Interruptores Inteligentes</li>
-            <li><i class="fas fa-microphone"></i> Configuração de Assistentes Virtuais (Alexa/Google)</li>
-            <li><i class="fas fa-tools"></i> Assistência Técnica Especializada</li>
-          </ul>
+          <div class="feature-block reverse" data-aos="fade-up">
+            <div class="feature-img-container">
+              <img src="https://images.pexels.com/photos/430208/pexels-photo-430208.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                   alt="Câmeras de Segurança Inteligentes">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-video"></i> CFTV com Inteligência</h3>
+              <p>Nossas câmeras não apenas gravam; elas analisam. Com tecnologia de <strong>detecção de humanos e veículos</strong>, você elimina os alarmes falsos causados por animais ou chuva.</p>
+              <p>Veja tudo em Full HD, com visão noturna colorida e áudio bidirecional (fale com quem está no portão pelo celular).</p>
+            </div>
+          </div>
+
+          <div class="feature-block" data-aos="fade-up">
+            <div class="feature-img-container">
+              <img src="https://images.pexels.com/photos/7772626/pexels-photo-7772626.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                   alt="Casa Inteligente e Alexa">
+            </div>
+            <div class="feature-text">
+              <h3><i class="fas fa-magic"></i> Automação & Cenas</h3>
+              <p>Crie "Cenas" personalizadas para sua rotina. Vai viajar? Ative o <strong>Modo Viagem</strong>: o sistema arma o alarme e acende/apaga as luzes aleatoriamente à noite para simular presença.</p>
+              
+              <div class="tech-highlight">
+                <p style="margin:0; color:#4338ca; font-size:0.95rem;">
+                  <strong>Comando de Voz:</strong> "Alexa, ativar modo cinema". As luzes diminuem, a persiana fecha e o alarme perimetral é ativado. Compatível com Google Home e Alexa.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-section" data-aos="fade-up">
+            <h3 style="color:var(--navy-deep); margin-bottom: 25px;">Perguntas Frequentes</h3>
+            
+            <div class="faq-item">
+              <h4>Preciso quebrar paredes para instalar?</h4>
+              <p>Na maioria dos casos, não. Utilizamos dispositivos sem fio (Wi-Fi e Zigbee) que são instalados nas caixas de passagem existentes, mantendo a estética da sua casa intacta.</p>
+            </div>
+
+            <div class="faq-item">
+              <h4>Se a internet cair, o alarme funciona?</h4>
+              <p>Sim. O sistema de segurança possui redundância e opera localmente. A sirene irá disparar em caso de intrusão mesmo sem internet, garantindo sua proteção.</p>
+            </div>
+
+            <div class="faq-item">
+              <h4>Consigo economizar energia?</h4>
+              <p>Com certeza. Você pode programar o ar-condicionado para desligar se a janela ficar aberta ou verificar se esqueceu luzes acesas pelo celular, reduzindo drasticamente a conta de luz.</p>
+            </div>
+          </div>
+
         </div>
 
         <div class="sidebar-col">
           <div class="sidebar-card">
-            <h3 style="color:var(--navy-deep); margin-bottom:15px;">Casa do Futuro?</h3>
-            <p style="color:#64748b; margin-bottom:30px; font-size:0.9rem;">Não, é o presente. Automatize sua segurança hoje mesmo.</p>
+            <h3 style="color:var(--navy-deep); margin-bottom:15px; text-align: center;">Transforme sua Casa</h3>
+            <p style="color:#64748b; margin-bottom:30px; font-size:0.95rem; text-align: center;">
+              Modernidade, economia e segurança em um projeto exclusivo.
+            </p>
 
-            <a href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20quero%20saber%20mais%20sobre%20Automacao"
+            <a href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20quero%20um%20projeto%20de%20Automa%C3%A7%C3%A3o%20e%20Seguran%C3%A7a"
                class="btn btn-gold btn-full"
-               style="text-align:center; display:block;">
-              <i class="fab fa-whatsapp"></i> Solicitar Projeto Smart
+               style="text-align:center; display:block; padding: 18px; border-radius: 6px; background: var(--gold-metallic); color: #fff; text-decoration: none; font-weight: 700; font-size: 1rem; transition: 0.3s; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);">
+              <i class="fab fa-whatsapp"></i> QUERO MINHA SMART HOME
             </a>
 
-            <div style="margin-top:20px; text-align:center; font-size:0.9rem; color:#64748b;">
-              <i class="fas fa-phone-alt" style="color:var(--gold-metallic)"></i> (12) 3633-4871
+            <hr style="margin: 25px 0; border: 0; border-top: 1px solid #e2e8f0;">
+
+            <div style="text-align:center;">
+              <p style="font-size:0.9rem; color:#64748b; margin-bottom:5px;">Fale com um Especialista:</p>
+              <strong style="color:var(--navy-deep); font-size: 1.2rem;">(12) 3633-4871</strong>
             </div>
+
+            <div style="margin-top: 25px; background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+              <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 15px; font-weight: 600;">O que integramos:</p>
+              <ul style="list-style: none; padding: 0; font-size: 0.9rem; color: #475569;">
+                <li style="margin-bottom: 10px; display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle" style="color:var(--success-green);"></i> Iluminação Inteligente
+                </li>
+                <li style="margin-bottom: 10px; display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle" style="color:var(--success-green);"></i> Fechaduras Digitais
+                </li>
+                <li style="margin-bottom: 10px; display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle" style="color:var(--success-green);"></i> Câmeras Wi-Fi
+                </li>
+                <li style="display:flex; align-items:center; gap:10px;">
+                  <i class="fas fa-check-circle" style="color:var(--success-green);"></i> Sensores de Presença
+                </li>
+              </ul>
+            </div>
+
           </div>
         </div>
 
