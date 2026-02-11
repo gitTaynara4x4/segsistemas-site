@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -50,6 +50,10 @@ print("TEMPLATES_DIR:", TEMPLATES_DIR)
 print("STATIC_DIR   :", STATIC_DIR)
 print("===============================")
 
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return RedirectResponse(url="/static/img/favicon.png")
+
 # ============================================================
 # 3) ROTAS (PÁGINAS)
 # ============================================================
@@ -62,6 +66,11 @@ async def root(request: Request):
 @app.get("/inicio", response_class=HTMLResponse)
 async def inicio(request: Request):
     return templates.TemplateResponse("inicio.html", {"request": request})
+
+#ARTIGOS
+@app.get("/artigos", response_class=HTMLResponse)
+async def inicio(request: Request):
+    return templates.TemplateResponse("artigos.html", {"request": request})
 
 # Institucional
 @app.get("/empresa", response_class=HTMLResponse)
