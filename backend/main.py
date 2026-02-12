@@ -76,6 +76,12 @@ async def inicio(request: Request):
 async def artigos(request: Request):
     return templates.TemplateResponse("artigos.html", {"request": request})
 
+# Parceiros
+@app.get("/parceiros", response_class=HTMLResponse)
+async def artigos(request: Request):
+    return templates.TemplateResponse("parceiros.html", {"request": request})
+
+
 # Institucional
 @app.get("/empresa", response_class=HTMLResponse)
 async def empresa(request: Request):
