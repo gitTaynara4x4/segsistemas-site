@@ -67,7 +67,7 @@ async def root(request: Request):
 async def inicio(request: Request):
     return templates.TemplateResponse("inicio.html", {"request": request})
 
-#ARTIGOS
+#artigos
 @app.get("/artigos", response_class=HTMLResponse)
 async def inicio(request: Request):
     return templates.TemplateResponse("artigos.html", {"request": request})
