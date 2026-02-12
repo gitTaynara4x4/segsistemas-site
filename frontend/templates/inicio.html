@@ -5,6 +5,40 @@
 {% block content %}
 
 <style>
+  /* ✅ Só escurecer a IMAGEM do hero (sem mexer no conteúdo) */
+  .hero{
+    position: relative !important;
+    min-height: 78vh !important;
+    display: flex !important;
+    align-items: center !important;
+
+    background-image: url("https://empresasminister.com.br/wp-content/uploads/2022/01/entenda-como-funciona-o-monitoramento-de-alarmes-e-cameras-para-seguranca.png") !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+  }
+
+  /* ✅ Overlay MAIS ESCURO: escurece só o fundo (imagem), não “filtro” no texto */
+  .hero::before{
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: rgba(0,0,0,0.72) !important; /* <<< mais escuro */
+    z-index: 0 !important;
+  }
+
+  /* Conteúdo por cima do overlay */
+  .hero .container,
+  .hero .hero-content{
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  /* Mobile */
+  @media (max-width: 900px){
+    .hero{ min-height: 70vh !important; }
+  }
+
   /* ==========================================================
      CARROSSEL SÓ NO MOBILE (para grids de cards)
      - Desktop: continua grid normal
