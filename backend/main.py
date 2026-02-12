@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -33,11 +33,11 @@ TEMPLATES_DIR = os.path.join(FRONTEND_DIR, "templates")
 STATIC_DIR = os.path.join(FRONTEND_DIR, "static")
 
 # ============================================================
-# 2) TEMPLATES + STATIC (ESSA LINHA RESOLVE url_for('static',...))
+# 2) TEMPLATES + STATIC
 # ============================================================
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
-# IMPORTANTE: name="static" é obrigatório para url_for('static', filename=...)
+# IMPORTANTE: name="static" é obrigatório para url_for('static',...)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 # ============================================================
@@ -50,9 +50,13 @@ print("TEMPLATES_DIR:", TEMPLATES_DIR)
 print("STATIC_DIR   :", STATIC_DIR)
 print("===============================")
 
+# ============================================================
+# FAVICON (sem RedirectResponse -> evita mixed content)
+# ============================================================
 @app.get("/favicon.ico", include_in_schema=False)
 async def favicon():
-    return RedirectResponse(url="/static/img/favicon.png")
+    favicon_path = os.path.join(STATIC_DIR, "img", "favicon.png")
+    return FileResponse(favicon_path, media_type="image/png")
 
 # ============================================================
 # 3) ROTAS (PÁGINAS)
@@ -67,9 +71,9 @@ async def root(request: Request):
 async def inicio(request: Request):
     return templates.TemplateResponse("inicio.html", {"request": request})
 
-#artigos
+# Artigos
 @app.get("/artigos", response_class=HTMLResponse)
-async def inicio(request: Request):
+async def artigos(request: Request):
     return templates.TemplateResponse("artigos.html", {"request": request})
 
 # Institucional
