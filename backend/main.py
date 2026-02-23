@@ -129,6 +129,10 @@ async def portaria(request: Request):
 async def familia(request: Request):
     return templates.TemplateResponse("para-sua-familia-e-residencia.html", {"request": request})
 
+@app.get("/obrigado", response_class=HTMLResponse)
+async def obrigado(request: Request):
+    return templates.TemplateResponse("obrigado.html", {"request": request})
+    
 @app.get("/para-sua-empresa", response_class=HTMLResponse)
 async def empresa_lp(request: Request):
     return templates.TemplateResponse("para-sua-empresa.html", {"request": request})
