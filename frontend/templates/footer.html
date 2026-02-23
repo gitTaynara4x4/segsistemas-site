@@ -20,7 +20,7 @@
         </div>
         <div class="info-line">
           <i class="fas fa-envelope"></i>
-          <span> callcenter.segsis@gmail.com</span>
+          <span>comercial@segsis.com.br</span>
         </div>
         <div class="info-line">
           <i class="fas fa-map-marker-alt"></i>
@@ -29,29 +29,80 @@
       </div>
 
       <div class="contact-form-area">
-        <form>
+        <!-- ✅ FORM COM IDS + SUBMIT CONTROLADO -->
+        <form id="leadForm">
           <div class="form-group">
             <label>Nome Completo</label>
-            <input type="text" class="form-control" placeholder="Seu nome">
+            <input id="lead_nome" name="nome" type="text" class="form-control" placeholder="Seu nome" required>
           </div>
+
           <div class="form-group">
             <label>Seu WhatsApp</label>
-            <input type="text" class="form-control" placeholder="(12) 99999-9999">
+            <input id="lead_whats" name="whats" type="text" class="form-control" placeholder="(12) 99999-9999" required>
           </div>
+
           <div class="form-group">
             <label>Tipo de Imóvel</label>
-            <select class="form-control">
+            <select id="lead_tipo" name="tipo" class="form-control">
               <option>Residencial</option>
               <option>Comercial/Empresa</option>
               <option>Condomínio</option>
             </select>
           </div>
+
           <div class="form-group">
             <label>Mensagem (Opcional)</label>
-            <input type="text" class="form-control" placeholder="Ex: Gostaria de orçamento para câmeras">
+            <input id="lead_msg" name="msg" type="text" class="form-control" placeholder="Ex: Gostaria de orçamento para câmeras">
           </div>
-          <button type="submit" class="btn btn-gold btn-full">Enviar Solicitação</button>
+
+          <button id="lead_submit" type="submit" class="btn btn-gold btn-full">Enviar Solicitação</button>
         </form>
+
+        <!-- ✅ SCRIPT: abre WhatsApp + redireciona /obrigado -->
+        <script>
+        (function () {
+          const form = document.getElementById('leadForm');
+          if (!form) return;
+
+          function v(id){ return (document.getElementById(id)?.value || '').trim(); }
+
+          form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const nome  = v('lead_nome');
+            const whats = v('lead_whats');
+            const tipo  = v('lead_tipo');
+            const msg   = v('lead_msg');
+
+            // (Opcional) validação simples
+            if (!nome || !whats) {
+              alert('Por favor, preencha Nome e WhatsApp.');
+              return;
+            }
+
+            const linhas = [
+              'Olá! Quero orçamento/visita técnica.',
+              `Nome: ${nome}`,
+              `WhatsApp: ${whats}`,
+              `Tipo: ${tipo}`
+            ];
+            if (msg) linhas.push(`Mensagem: ${msg}`);
+
+            const texto = encodeURIComponent(linhas.join('\n'));
+
+            // Número SEG (ajuste se quiser)
+            const wa = `https://wa.me/5512974101924?text=${texto}`;
+
+            // Abre WhatsApp (lead real)
+            window.open(wa, '_blank', 'noopener,noreferrer');
+
+            // Vai para /obrigado (conversão)
+            setTimeout(function () {
+              window.location.href = '/obrigado';
+            }, 250);
+          });
+        })();
+        </script>
       </div>
     </div>
   </div>
@@ -65,8 +116,7 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <h2>SEG <span>Sistemas</span></h2>
-
+        <h2>SEG<span>Sis</span></h2>
         <p>Referência em segurança eletrônica e monitoramento no Vale do Paraíba. Tecnologia de ponta aliada a táticas eficientes de resposta.</p>
         <div class="footer-social">
           <i class="fab fa-instagram"></i>
@@ -106,7 +156,7 @@
       </div>
     </div>
     <div class="copyright">
-      <p>© 2026 SEG SISTEMAS Monitoramento. Todos os direitos reservados. CNPJ: 00.000.000/0001-00</p>
+      <p>© 2026 SEGSis Monitoramento. Todos os direitos reservados. CNPJ: 00.000.000/0001-00</p>
     </div>
   </div>
 </footer>
