@@ -1,6 +1,6 @@
 import os
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi import FastAPI, Request, Form
+from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -78,9 +78,8 @@ async def artigos(request: Request):
 
 # Parceiros
 @app.get("/parceiros", response_class=HTMLResponse)
-async def artigos(request: Request):
+async def parceiros(request: Request):
     return templates.TemplateResponse("parceiros.html", {"request": request})
-
 
 # Institucional
 @app.get("/empresa", response_class=HTMLResponse)
@@ -129,10 +128,6 @@ async def portaria(request: Request):
 async def familia(request: Request):
     return templates.TemplateResponse("para-sua-familia-e-residencia.html", {"request": request})
 
-@app.get("/obrigado", response_class=HTMLResponse)
-async def obrigado(request: Request):
-    return templates.TemplateResponse("obrigado.html", {"request": request})
-    
 @app.get("/para-sua-empresa", response_class=HTMLResponse)
 async def empresa_lp(request: Request):
     return templates.TemplateResponse("para-sua-empresa.html", {"request": request})
@@ -152,6 +147,23 @@ async def estacionamentos(request: Request):
 @app.get("/agronegocio", response_class=HTMLResponse)
 async def agronegocio(request: Request):
     return templates.TemplateResponse("agronegocio.html", {"request": request})
+
+# ✅ Obrigado (conversão)
+@app.get("/obrigado", response_class=HTMLResponse)
+async def obrigado(request: Request):
+    return templates.TemplateResponse("obrigado.html", {"request": request})
+
+# ✅ (Opcional) endpoint para receber form tradicional se você quiser usar depois
+# Hoje o footer abre WhatsApp e manda pra /obrigado via JS, então esse /lead é extra.
+@app.post("/lead")
+async def lead(
+    nome: str = Form(...),
+    whats: str = Form(...),
+    tipo: str = Form(...),
+    msg: str = Form(""),
+):
+    print("NOVO LEAD:", {"nome": nome, "whats": whats, "tipo": tipo, "msg": msg})
+    return RedirectResponse(url="/obrigado", status_code=303)
 
 # Health Check
 @app.get("/api/health")
