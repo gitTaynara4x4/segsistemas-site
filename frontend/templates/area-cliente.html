@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+
+{% block title %}Área do Cliente | SEG Sistemas{% endblock %}
+{% block description %}Área do Cliente SEG Sistemas para preenchimento seguro de dados cadastrais e acompanhamento de contratos.{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="/static/css/area-cliente.css">
+{% endblock %}
+
+{% block content %}
+<section class="portal-page" id="areaClientePublica">
+  <div class="container portal-container">
+    <div class="portal-hero" data-aos="fade-up">
+      <div class="portal-hero-copy">
+        <span class="portal-kicker">Área do Cliente SEG</span>
+        <h1>Finalize seus dados cadastrais com segurança</h1>
+        <p>
+          Use o link e a senha provisória enviados pela equipe SEG para preencher as informações necessárias para emissão do contrato.
+        </p>
+      </div>
+
+      <div class="portal-hero-card">
+        <div class="hero-card-icon">
+          <i class="fas fa-shield-halved"></i>
+        </div>
+        <strong>Ambiente seguro</strong>
+        <span>O acesso é temporário e protegido por senha provisória.</span>
+      </div>
+    </div>
+
+    <div class="portal-grid">
+      <aside class="portal-side" data-aos="fade-right">
+        <div class="side-card brand-card">
+          <img src="/static/img/logo-seg.png" alt="SEG Sistemas" class="side-logo">
+          <h2>SEG Sistemas</h2>
+          <p>Segurança eletrônica, monitoramento e tecnologia para proteger seu patrimônio.</p>
+        </div>
+
+        <div class="side-card steps-card">
+          <h3>Como funciona</h3>
+          <div class="step-item is-active" data-step="1">
+            <span>1</span>
+            <div>
+              <strong>Validar acesso</strong>
+              <small>Informe a senha recebida.</small>
+            </div>
+          </div>
+          <div class="step-item" data-step="2">
+            <span>2</span>
+            <div>
+              <strong>Preencher dados</strong>
+              <small>Confira PF/PJ e endereço.</small>
+            </div>
+          </div>
+          <div class="step-item" data-step="3">
+            <span>3</span>
+            <div>
+              <strong>Enviar para análise</strong>
+              <small>A equipe SEG seguirá com o contrato.</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-card support-card">
+          <h3>Precisa de ajuda?</h3>
+          <p>Fale com nossa equipe pelo WhatsApp.</p>
+          <a href="https://wa.me/5512974101924" target="_blank" rel="noopener" class="support-link">
+            <i class="fab fa-whatsapp"></i>
+            Chamar no WhatsApp
+          </a>
+        </div>
+      </aside>
+
+      <div class="portal-main" data-aos="fade-left">
+        <div class="portal-alert" id="portalAlert" hidden></div>
+
+        <article class="portal-card token-card" id="tokenCard">
+          <div class="card-head">
+            <div>
+              <span class="portal-kicker">Acesso provisório</span>
+              <h2>Digite sua senha para continuar</h2>
+              <p id="tokenStatusText">Verificando o link recebido...</p>
+            </div>
+            <span class="status-pill" id="statusPill">Verificando</span>
+          </div>
+
+          <div class="token-info" id="tokenInfo" hidden>
+            <div>
+              <small>Token</small>
+              <strong id="tokenHint">---</strong>
+            </div>
+            <div>
+              <small>Expira em</small>
+              <strong id="tokenExpires">---</strong>
+            </div>
+          </div>
+
+          <form class="portal-auth-form" id="authForm">
+            <div class="field-group">
+              <label for="senha_provisoria">Senha provisória</label>
+              <div class="password-wrap">
+                <input id="senha_provisoria" name="senha_provisoria" type="password" inputmode="numeric" autocomplete="one-time-code" placeholder="Digite a senha recebida" required>
+                <button type="button" id="toggleSenha" aria-label="Mostrar ou ocultar senha">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+              <small>A senha foi enviada junto com o link de acesso.</small>
+            </div>
+
+            <button class="btn btn-gold btn-full" type="submit" id="btnEntrar">
+              <i class="fas fa-unlock-keyhole"></i>
+              Entrar na Área do Cliente
+            </button>
+          </form>
+        </article>
+
+        <article class="portal-card cliente-card" id="clienteCard" hidden>
+          <div class="cliente-card-top">
+            <div>
+              <span class="portal-kicker">Cliente</span>
+              <h2 id="clienteNome">---</h2>
+              <p id="clienteResumo">---</p>
+            </div>
+            <span class="client-code" id="clienteCodigo">---</span>
+          </div>
+        </article>
+
+        <form class="portal-card dados-form" id="dadosForm" hidden>
+          <div class="card-head form-title-head">
+            <div>
+              <span class="portal-kicker">Dados para contrato</span>
+              <h2>Confira e complete seu cadastro</h2>
+              <p>Preencha com atenção. Essas informações serão usadas pela equipe administrativa para emissão do contrato.</p>
+            </div>
+          </div>
+
+          <section class="form-section">
+            <div class="section-title-inline">
+              <h3>Tipo de cadastro</h3>
+              <p>Selecione se o contrato será em pessoa física ou jurídica.</p>
+            </div>
+
+            <div class="form-row three-cols">
+              <div class="field-group">
+                <label for="tipo_pessoa">Tipo de pessoa *</label>
+                <select id="tipo_pessoa" name="tipo_pessoa" required>
+                  <option value="PF">Pessoa Física</option>
+                  <option value="PJ">Pessoa Jurídica</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <section class="form-section pf-section">
+            <div class="section-title-inline">
+              <h3>Pessoa Física</h3>
+              <p>Dados pessoais do titular ou contratante.</p>
+            </div>
+
+            <div class="form-row">
+              <div class="field-group">
+                <label for="nome_completo">Nome completo *</label>
+                <input id="nome_completo" name="nome_completo" type="text" autocomplete="name">
+              </div>
+              <div class="field-group">
+                <label for="cpf">CPF *</label>
+                <input id="cpf" name="cpf" type="text" inputmode="numeric">
+              </div>
+            </div>
+
+            <div class="form-row three-cols">
+              <div class="field-group">
+                <label for="rg">RG *</label>
+                <input id="rg" name="rg" type="text">
+              </div>
+              <div class="field-group">
+                <label for="nacionalidade">Nacionalidade</label>
+                <input id="nacionalidade" name="nacionalidade" type="text" placeholder="Brasileira">
+              </div>
+              <div class="field-group">
+                <label for="profissao">Profissão</label>
+                <input id="profissao" name="profissao" type="text">
+              </div>
+            </div>
+
+            <div class="form-row three-cols">
+              <div class="field-group">
+                <label for="estado_civil">Estado civil</label>
+                <input id="estado_civil" name="estado_civil" type="text">
+              </div>
+              <div class="field-group">
+                <label for="data_nascimento">Data de nascimento</label>
+                <input id="data_nascimento" name="data_nascimento" type="date">
+              </div>
+              <div class="field-group">
+                <label for="telefone_pessoal">Telefone pessoal *</label>
+                <input id="telefone_pessoal" name="telefone_pessoal" type="text" autocomplete="tel">
+              </div>
+            </div>
+
+            <div class="form-row single-col">
+              <div class="field-group">
+                <label for="email_pessoal">E-mail pessoal *</label>
+                <input id="email_pessoal" name="email_pessoal" type="email" autocomplete="email">
+              </div>
+            </div>
+          </section>
+
+          <section class="form-section pj-section" id="pjSection" hidden>
+            <div class="section-title-inline">
+              <h3>Pessoa Jurídica</h3>
+              <p>Dados da empresa e do representante legal.</p>
+            </div>
+
+            <div class="form-row">
+              <div class="field-group">
+                <label for="razao_social">Razão social *</label>
+                <input id="razao_social" name="razao_social" type="text">
+              </div>
+              <div class="field-group">
+                <label for="cnpj">CNPJ *</label>
+                <input id="cnpj" name="cnpj" type="text" inputmode="numeric">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field-group">
+                <label for="email_empresa">E-mail da empresa *</label>
+                <input id="email_empresa" name="email_empresa" type="email">
+              </div>
+              <div class="field-group">
+                <label for="telefone_whatsapp_empresa">WhatsApp da empresa *</label>
+                <input id="telefone_whatsapp_empresa" name="telefone_whatsapp_empresa" type="text">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field-group">
+                <label for="representante_nome">Nome do representante *</label>
+                <input id="representante_nome" name="representante_nome" type="text">
+              </div>
+              <div class="field-group">
+                <label for="representante_cpf">CPF do representante *</label>
+                <input id="representante_cpf" name="representante_cpf" type="text" inputmode="numeric">
+              </div>
+            </div>
+
+            <div class="form-row three-cols">
+              <div class="field-group">
+                <label for="representante_rg">RG do representante</label>
+                <input id="representante_rg" name="representante_rg" type="text">
+              </div>
+              <div class="field-group">
+                <label for="representante_nacionalidade">Nacionalidade</label>
+                <input id="representante_nacionalidade" name="representante_nacionalidade" type="text">
+              </div>
+              <div class="field-group">
+                <label for="representante_profissao">Profissão</label>
+                <input id="representante_profissao" name="representante_profissao" type="text">
+              </div>
+            </div>
+
+            <div class="form-row three-cols">
+              <div class="field-group">
+                <label for="representante_estado_civil">Estado civil</label>
+                <input id="representante_estado_civil" name="representante_estado_civil" type="text">
+              </div>
+              <div class="field-group">
+                <label for="representante_data_nascimento">Data de nascimento</label>
+                <input id="representante_data_nascimento" name="representante_data_nascimento" type="date">
+              </div>
+              <div class="field-group">
+                <label for="representante_telefone_pessoal">Telefone pessoal</label>
+                <input id="representante_telefone_pessoal" name="representante_telefone_pessoal" type="text">
+              </div>
+            </div>
+
+            <div class="form-row single-col">
+              <div class="field-group">
+                <label for="representante_email_pessoal">E-mail pessoal do representante</label>
+                <input id="representante_email_pessoal" name="representante_email_pessoal" type="email">
+              </div>
+            </div>
+          </section>
+
+          <section class="form-section">
+            <div class="section-title-inline">
+              <h3>Endereço do imóvel</h3>
+              <p>Endereço onde o sistema será instalado, monitorado ou atendido.</p>
+            </div>
+
+            <div class="form-row address-row">
+              <div class="field-group">
+                <label for="endereco_rua">Rua *</label>
+                <input id="endereco_rua" name="endereco_rua" type="text" autocomplete="address-line1">
+              </div>
+              <div class="field-group number-field">
+                <label for="endereco_numero">Número *</label>
+                <input id="endereco_numero" name="endereco_numero" type="text">
+              </div>
+            </div>
+
+            <div class="form-row three-cols">
+              <div class="field-group">
+                <label for="endereco_bairro">Bairro *</label>
+                <input id="endereco_bairro" name="endereco_bairro" type="text">
+              </div>
+              <div class="field-group">
+                <label for="endereco_cidade">Cidade *</label>
+                <input id="endereco_cidade" name="endereco_cidade" type="text" autocomplete="address-level2">
+              </div>
+              <div class="field-group">
+                <label for="endereco_uf">UF *</label>
+                <input id="endereco_uf" name="endereco_uf" type="text" maxlength="2" autocomplete="address-level1">
+              </div>
+            </div>
+
+            <div class="form-row single-col">
+              <div class="field-group cep-field">
+                <label for="endereco_cep">CEP *</label>
+                <input id="endereco_cep" name="endereco_cep" type="text" autocomplete="postal-code">
+              </div>
+            </div>
+          </section>
+
+          <section class="form-section">
+            <div class="section-title-inline">
+              <h3>Observações</h3>
+              <p>Use este campo caso precise informar algo para a equipe administrativa.</p>
+            </div>
+
+            <div class="field-group">
+              <label for="observacoes_contrato">Observações para contrato</label>
+              <textarea id="observacoes_contrato" name="observacoes_contrato" rows="4"></textarea>
+            </div>
+          </section>
+
+          <div class="form-actions">
+            <button class="btn btn-outline portal-btn-outline" type="button" id="btnSalvarRascunho">
+              <i class="fas fa-floppy-disk"></i>
+              Salvar rascunho
+            </button>
+            <button class="btn btn-gold" type="button" id="btnFinalizar">
+              <i class="fas fa-paper-plane"></i>
+              Finalizar e enviar para análise
+            </button>
+          </div>
+        </form>
+
+        <article class="portal-card success-card" id="successCard" hidden>
+          <div class="success-icon">
+            <i class="fas fa-check"></i>
+          </div>
+          <h2>Dados enviados com sucesso</h2>
+          <p>
+            Recebemos suas informações. A equipe SEG vai analisar os dados e seguir com a emissão do contrato.
+          </p>
+          <a class="btn btn-gold" href="/">
+            Voltar para o site
+          </a>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  window.SEG_AREA_CLIENTE = {
+    apiBase: ""
+  };
+</script>
+<script type="module" src="/static/js/pages/area-cliente.js"></script>
+{% endblock %}

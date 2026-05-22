@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Funcionários | Painel Interno SEG</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="icon" type="image/png" href="/static/img/favicon.png">
+  <link rel="stylesheet" href="/static/css/interno.css">
+</head>
+<body class="interno-app-body">
+  <div class="interno-shell">
+    <aside class="interno-sidebar">
+      <a href="/interno/dashboard" class="sidebar-logo" aria-label="Painel Interno SEG">
+        <img src="/static/img/logo-seg.png" alt="SEG Sistemas">
+        <span>Interno</span>
+      </a>
+
+      <nav class="sidebar-nav" aria-label="Menu interno">
+        <a href="/interno/dashboard">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="/interno/funcionarios" class="active">
+          <i class="fa-solid fa-users"></i>
+          <span>Funcionários</span>
+        </a>
+        <span class="nav-disabled">
+          <i class="fa-solid fa-clock"></i>
+          <span>Plantão</span>
+          <small>Parte 3</small>
+        </span>
+        <span class="nav-disabled">
+          <i class="fa-solid fa-book-open"></i>
+          <span>Manual</span>
+          <small>Depois</small>
+        </span>
+        <span class="nav-disabled">
+          <i class="fa-solid fa-clipboard-list"></i>
+          <span>Ocorrências</span>
+          <small>Depois</small>
+        </span>
+      </nav>
+
+      <form method="post" action="/interno/logout" class="logout-form">
+        <button type="submit">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Sair
+        </button>
+      </form>
+    </aside>
+
+    <main class="interno-main" id="funcionarios-page">
+      <header class="interno-topbar">
+        <div>
+          <p class="eyebrow">Parte 2</p>
+          <h1>Funcionários</h1>
+        </div>
+
+        <div class="user-chip">
+          <span class="user-avatar">{{ (user.nome or user.username or 'S')[:1] }}</span>
+          <div>
+            <strong>{{ user.nome }}</strong>
+            <small>{{ user.perfil }}</small>
+          </div>
+        </div>
+      </header>
+
+      <section class="page-intro-card">
+        <div>
+          <span class="status-dot"></span>
+          <p class="eyebrow">Cadastro interno</p>
+          <h2>Cadastre quem pode acessar o painel interno da SEG.</h2>
+          <p>
+            Nesta etapa vamos guardar os funcionários em JSON local. Depois, quando entrarmos
+            em plantão e ponto, cada entrada, saída, ocorrência e passagem de turno será ligada
+            ao funcionário logado.
+          </p>
+        </div>
+      </section>
+
+      <section class="stats-row" aria-label="Resumo de funcionários">
+        <article class="stat-card">
+          <small>Total</small>
+          <strong data-func-stat="total">0</strong>
+        </article>
+        <article class="stat-card">
+          <small>Ativos</small>
+          <strong data-func-stat="ativos">0</strong>
+        </article>
+        <article class="stat-card">
+          <small>Inativos</small>
+          <strong data-func-stat="inativos">0</strong>
+        </article>
+        <article class="stat-card">
+          <small>Plantonistas</small>
+          <strong data-func-stat="plantonistas">0</strong>
+        </article>
+      </section>
+
+      <section class="content-grid two-cols">
+        <article class="panel-card form-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Ficha</p>
+              <h2 id="func-form-title">Novo funcionário</h2>
+            </div>
+            <button type="button" class="btn-ghost" id="btn-cancel-edit" hidden>
+              Cancelar edição
+            </button>
+          </div>
+
+          <form class="funcionario-form" id="funcionario-form" autocomplete="off">
+            <input type="hidden" id="funcionario-id" value="">
+
+            <label class="field-group">
+              <span>Nome completo *</span>
+              <div class="input-wrap clean">
+                <i class="fa-solid fa-user"></i>
+                <input id="func-nome" name="nome" type="text" placeholder="Ex: João da Silva" required>
+              </div>
+            </label>
+
+            <div class="form-row">
+              <label class="field-group">
+                <span>Telefone</span>
+                <div class="input-wrap clean">
+                  <i class="fa-solid fa-phone"></i>
+                  <input id="func-telefone" name="telefone" type="text" placeholder="(12) 99999-9999">
+                </div>
+              </label>
+
+              <label class="field-group">
+                <span>E-mail</span>
+                <div class="input-wrap clean">
+                  <i class="fa-solid fa-envelope"></i>
+                  <input id="func-email" name="email" type="email" placeholder="nome@segsis.com.br">
+                </div>
+              </label>
+            </div>
+
+            <div class="form-row">
+              <label class="field-group">
+                <span>Cargo</span>
+                <div class="input-wrap clean">
+                  <i class="fa-solid fa-id-badge"></i>
+                  <input id="func-cargo" name="cargo" type="text" placeholder="Ex: Plantonista noturno">
+                </div>
+              </label>
+
+              <label class="field-group">
+                <span>Tipo *</span>
+                <div class="select-wrap">
+                  <i class="fa-solid fa-briefcase"></i>
+                  <select id="func-tipo" name="tipo" required>
+                    {% for key, label in tipos.items() %}
+                      <option value="{{ key }}">{{ label }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </label>
+            </div>
+
+            <div class="form-row">
+              <label class="field-group">
+                <span>Usuário de login *</span>
+                <div class="input-wrap clean">
+                  <i class="fa-solid fa-at"></i>
+                  <input id="func-usuario" name="usuario" type="text" placeholder="Ex: joao" required>
+                </div>
+              </label>
+
+              <label class="field-group">
+                <span>Permissão *</span>
+                <div class="select-wrap">
+                  <i class="fa-solid fa-key"></i>
+                  <select id="func-permissao" name="permissao" required>
+                    {% for key, label in permissoes.items() %}
+                      <option value="{{ key }}">{{ label }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </label>
+            </div>
+
+            <label class="field-group">
+              <span>Senha <small id="senha-help">*</small></span>
+              <div class="input-wrap clean">
+                <i class="fa-solid fa-lock"></i>
+                <input id="func-senha" name="senha" type="password" placeholder="Senha de acesso ao painel">
+                <button type="button" class="toggle-password" data-toggle-target="func-senha" aria-label="Mostrar senha">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+              <small class="field-hint">Ao editar, deixe vazio para manter a senha atual.</small>
+            </label>
+
+            <label class="checkbox-line">
+              <input id="func-ativo" name="ativo" type="checkbox" checked>
+              <span>Funcionário ativo e autorizado a acessar o painel interno</span>
+            </label>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-primary" id="btn-save-func">
+                <i class="fa-solid fa-floppy-disk"></i>
+                Salvar funcionário
+              </button>
+            </div>
+
+            <div class="form-message" id="func-form-message" hidden></div>
+          </form>
+        </article>
+
+        <article class="panel-card list-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Lista</p>
+              <h2>Funcionários cadastrados</h2>
+            </div>
+            <button type="button" class="btn-ghost" id="btn-reload-func">
+              <i class="fa-solid fa-rotate"></i>
+              Atualizar
+            </button>
+          </div>
+
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="search" id="func-search" placeholder="Buscar por nome, usuário, cargo ou telefone">
+          </div>
+
+          <div class="empty-state" id="func-empty" hidden>
+            <i class="fa-solid fa-users"></i>
+            <h3>Nenhum funcionário cadastrado ainda.</h3>
+            <p>Cadastre o primeiro plantonista ou responsável pelo formulário ao lado.</p>
+          </div>
+
+          <div class="funcionarios-list" id="funcionarios-list"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/js/pages/interno.js"></script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Login Interno | SEG Sistemas</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="icon" type="image/png" href="/static/img/favicon.png">
+  <link rel="stylesheet" href="/static/css/interno.css">
+</head>
+<body class="interno-login-body">
+  <main class="login-page">
+    <section class="login-brand-card" aria-label="SEG Sistemas">
+      <div class="login-brand-top">
+        <img src="/static/img/logo-seg.png" alt="SEG Sistemas" class="login-logo">
+        <span class="login-badge">Área interna</span>
+      </div>
+
+      <div class="login-brand-content">
+        <p class="eyebrow">Controle interno SEG</p>
+        <h1>Monitoramento com responsabilidade registrada.</h1>
+        <p>
+          Acesse o painel interno para acompanhar rotinas da equipe,
+          plantões e próximos controles operacionais da SEG Sistemas.
+        </p>
+      </div>
+
+      <div class="login-feature-list">
+        <div class="login-feature-item">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Acesso restrito a funcionários autorizados</span>
+        </div>
+        <div class="login-feature-item">
+          <i class="fa-solid fa-clock"></i>
+          <span>Base para controle de plantão e ponto interno</span>
+        </div>
+        <div class="login-feature-item">
+          <i class="fa-solid fa-clipboard-check"></i>
+          <span>Preparado para manuais, ocorrências e relatórios</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="login-form-card" aria-label="Entrar no painel interno">
+      <div class="form-header">
+        <a href="/" class="back-site">
+          <i class="fa-solid fa-arrow-left"></i>
+          Voltar ao site
+        </a>
+        <h2>Entrar no painel</h2>
+        <p>Use seu usuário interno da SEG para continuar.</p>
+      </div>
+
+      {% if erro %}
+      <div class="login-alert" role="alert">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>{{ erro }}</span>
+      </div>
+      {% endif %}
+
+      <form class="login-form" method="post" action="/interno/login" autocomplete="on">
+        <input type="hidden" name="next" value="{{ next }}">
+
+        <label class="field-group" for="usuario">
+          <span>Usuário</span>
+          <div class="input-wrap">
+            <i class="fa-solid fa-user"></i>
+            <input
+              id="usuario"
+              name="usuario"
+              type="text"
+              value="{{ usuario or '' }}"
+              placeholder="Digite seu usuário"
+              autocomplete="username"
+              required
+              autofocus
+            >
+          </div>
+        </label>
+
+        <label class="field-group" for="senha">
+          <span>Senha</span>
+          <div class="input-wrap">
+            <i class="fa-solid fa-lock"></i>
+            <input
+              id="senha"
+              name="senha"
+              type="password"
+              placeholder="Digite sua senha"
+              autocomplete="current-password"
+              required
+            >
+            <button class="toggle-password" type="button" data-toggle-password aria-label="Mostrar senha">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        </label>
+
+        <button class="login-submit" type="submit">
+          Entrar
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+
+      <div class="login-note">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>Este painel é privado e destinado apenas ao uso interno da SEG.</span>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/js/pages/interno.js"></script>
+</body>
+</html>

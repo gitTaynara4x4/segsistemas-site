@@ -1,0 +1,319 @@
+{% extends "base.html" %}
+
+{% block description %}Blog SEG SISTEMAS. Artigos técnicos sobre Portaria Remota, Cerca Elétrica (Norma ABNT), Vizinhança Solidária e dados do mercado de segurança eletrônica em Taubaté.{% endblock %}
+{% block title %}Central de Notícias e Inteligência em Segurança | SEG SISTEMAS{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* --- ESTILOS GERAIS --- */
+  :root {
+    --gold-metallic: #d4af37;
+    --navy-deep: #0f172a;
+    --tech-blue: #3b82f6;
+    --success-green: #16a34a;
+    --alert-red: #ef4444;
+    --bg-light: #f8fafc;
+  }
+
+  /* Hero Section */
+  .service-hero {
+    height: 60vh;
+    min-height: 500px;
+    background-image: url('https://images.pexels.com/photos/3760067/pexels-photo-3760067.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    position: relative;
+    background-color: #0f172a;
+  }
+  .service-hero::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0; bottom:0;
+    background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.6));
+  }
+  .service-hero-content { position: relative; z-index: 2; color: #fff; padding-top: 60px; max-width: 800px; }
+  .service-hero h1 { font-size: 3.5rem; margin-bottom: 20px; font-weight: 800; line-height: 1.1; }
+  .service-hero p { font-size: 1.25rem; opacity: 0.95; max-width: 650px; line-height: 1.6; }
+  
+  .breadcrumb { color: var(--gold-metallic); font-weight: 700; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 2px; }
+
+  /* Layout Principal */
+  .details-section { padding: 80px 0; background: #fff; }
+  .details-grid { display: grid; grid-template-columns: 1.4fr 0.6fr; gap: 60px; align-items: start; }
+
+  /* --- BLOCOS DE CONTEÚDO (Artigos Expandidos) --- */
+  .feature-block {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 100px; /* Mais espaço entre artigos */
+    padding-bottom: 60px;
+    border-bottom: 1px solid #f1f5f9;
+    align-items: flex-start; /* Alinhamento ao topo para textos longos */
+  }
+  .feature-block:last-child { border-bottom: none; margin-bottom: 40px; }
+  .feature-block.reverse { flex-direction: row-reverse; }
+
+  .feature-img-container {
+    flex: 0.8; /* Imagem um pouco menor para dar espaço ao texto */
+    height: 400px; /* Imagem mais alta */
+    min-width: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    position: sticky; /* Imagem acompanha o texto */
+    top: 100px; 
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+  }
+  
+  .feature-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .feature-block:hover .feature-img-container img { transform: scale(1.05); }
+
+  /* Texto do Artigo (SEO Otimizado) */
+  .feature-text { flex: 1.4; }
+  .feature-text .category-tag {
+    display: inline-block;
+    background: #eff6ff;
+    color: var(--tech-blue);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+  }
+  .feature-text h3 {
+    color: var(--navy-deep);
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    font-weight: 800;
+    line-height: 1.3;
+  }
+  .feature-text p { 
+    color: #475569; 
+    line-height: 1.8; 
+    font-size: 1.05rem; 
+    margin-bottom: 20px; 
+    text-align: justify; 
+  }
+  
+  /* Box de Curiosidade/Dados */
+  .info-box {
+    background: #f8fafc;
+    border-left: 4px solid var(--gold-metallic);
+    padding: 20px;
+    margin: 25px 0;
+    font-size: 0.95rem;
+    color: var(--navy-deep);
+  }
+  .info-box strong { color: var(--navy-deep); font-weight: 700; }
+
+  /* Botão Ler Mais */
+  .btn-article {
+    background: var(--navy-deep);
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.3s;
+    margin-top: 10px;
+  }
+  .btn-article:hover { background: var(--gold-metallic); transform: translateY(-3px); }
+
+  /* Sidebar */
+  .sidebar-card {
+    background: #fff;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    position: sticky; top: 120px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 30px;
+  }
+
+  /* Lista de Posts Recentes */
+  .recent-posts-list { list-style: none; padding: 0; }
+  .recent-posts-list li { margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 15px; }
+  .recent-posts-list li:last-child { border: none; }
+  .recent-posts-list h5 { margin: 0 0 5px; font-size: 1rem; color: var(--navy-deep); font-weight: 700; }
+  .recent-posts-list a { text-decoration: none; color: inherit; transition: 0.3s; }
+  .recent-posts-list a:hover { color: var(--gold-metallic); }
+  .recent-posts-list span { font-size: 0.8rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+
+  @media (max-width: 900px) {
+    .details-grid { grid-template-columns: 1fr; }
+    .feature-block, .feature-block.reverse { flex-direction: column; gap: 30px; }
+    .feature-img-container { width: 100%; height: 250px; min-width: auto; position: static; }
+    .sidebar-card { position: static; margin-top: 40px; }
+    .service-hero h1 { font-size: 2.5rem; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <div class="top-bar"><span>INTELIGÊNCIA EM SEGURANÇA</span> &nbsp; Conteúdos técnicos e análises de mercado para proteger seu patrimônio.</div>
+
+  <section class="service-hero">
+    <div class="container">
+      <div class="service-hero-content" data-aos="fade-right">
+        <span class="breadcrumb">Portal de Notícias</span>
+        <h1>Blog de Segurança<br>SEG SISTEMAS</h1>
+        <p>
+          Acesse análises aprofundadas sobre Portaria Remota, normativas de Cercas Elétricas (ABNT), estratégias de Vizinhança Solidária e tendências do mercado de segurança eletrônica no Brasil.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="details-section">
+    <div class="container">
+      <div class="details-grid">
+
+        <div class="content-col">
+          
+          <h2 style="color:var(--navy-deep); margin-bottom:50px; font-weight:800; font-size: 2.2rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px;">
+            Destaques e Análises Técnicas
+          </h2>
+
+          <article class="feature-block" data-aos="fade-up">
+            <div class="feature-img-container">
+              <img src="https://images.pexels.com/photos/5380642/pexels-photo-5380642.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Portaria Remota Economia">
+            </div>
+            <div class="feature-text">
+              <span class="category-tag">Gestão Condominial</span>
+              <h3>Portaria Remota: A Matemática da Economia e Segurança (Dados 2025)</h3>
+              <p>
+                A migração para a portaria virtual não é apenas uma tendência tecnológica, é uma necessidade financeira. Estudos do setor (ABESE) indicam que condomínios que adotam o sistema registram uma <strong>redução média de 50% a 60%</strong> na taxa condominial. Isso ocorre pela eliminação completa do passivo trabalhista, encargos de folha, férias e 13º salário de porteiros presenciais.
+              </p>
+              <p>
+                Além da economia, o fator segurança é amplificado pelo uso de tecnologias como o <strong>"Dedo de Pânico"</strong>. Ao cadastrar uma digital específica (ex: dedo mindinho), o morador pode simular um acesso normal enquanto o sistema envia um alerta silencioso de coação para a Central 24h, que aciona a polícia imediatamente.
+              </p>
+              <div class="info-box">
+                <i class="fas fa-chart-line"></i> <strong>Dado de Mercado:</strong> Estima-se que mais de 14 mil condomínios no Brasil já operam sem porteiro físico, priorizando a segurança eletrônica monitorada.
+              </div>
+              <a href="https://www.facebook.com/segvigilanciaeletronica/posts/voc%C3%AA-sabia-uma-solu%C3%A7%C3%A3o-que-promete-aliar-o-aumento-no-n%C3%ADvel-de-seguran%C3%A7a-e-redu%C3%A7/502599120281168/" target="_blank" class="btn-article">Ler Análise Completa <i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </article>
+
+          <article class="feature-block reverse" data-aos="fade-up">
+            <div class="feature-img-container">
+              <img src="https://images.pexels.com/photos/1031641/pexels-photo-1031641.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Cerca Elétrica Industrial">
+            </div>
+            <div class="feature-text">
+              <span class="category-tag">Segurança Perimetral</span>
+              <h3>Cerca Elétrica: O que diz a norma ABNT IEC 60335-2-76?</h3>
+              <p>
+                A instalação de cercas elétricas não é tarefa para amadores. Para ser legal e segura, ela deve seguir rigorosamente a norma internacional <strong>IEC 60335-2-76</strong>, adaptada no Brasil. O equipamento (eletrificador) deve ter certificação do INMETRO e a instalação deve respeitar uma altura mínima de 2,50 metros do solo em áreas públicas.
+              </p>
+              <p>
+                A função da cerca elétrica moderna vai além do choque pulsativo (que não é letal, mas inibe pela dor). Ela atua como um sistema de alarme perimetral. Se um fio for cortado ou aterrado, o disparo é imediato na central de monitoramento. Modelos como o <strong>ECR-18i Plus</strong> oferecem ajuste de sensibilidade para evitar alarmes falsos causados por vegetação.
+              </p>
+              <div class="info-box">
+                <i class="fas fa-exclamation-triangle"></i> <strong>Atenção:</strong> A ausência de placas de advertência ("Perigo: Cerca Elétrica") a cada 10 metros pode gerar multas pesadas para o proprietário do imóvel.
+              </div>
+              <a href="https://www.facebook.com/segvigilanciaeletronica/posts/%EF%B8%8Fo-uso-de-cercas-el%C3%A9tricas-em-sua-resid%C3%AAncia-aumenta-a-prote%C3%A7%C3%A3o-dificultando-em-/468855160322231/" target="_blank" class="btn-article">Ver Especificações <i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </article>
+
+          <article class="feature-block" data-aos="fade-up">
+            <div class="feature-img-container">
+              <img src="https://images.pexels.com/photos/207962/pexels-photo-207962.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Vizinhança Segura">
+            </div>
+            <div class="feature-text">
+              <span class="category-tag">Prevenção Comunitária</span>
+              <h3>Vizinhança Solidária: Como blindar sua rua contra furtos</h3>
+              <p>
+                Com o aumento dos índices de criminalidade em bairros residenciais, o projeto "Vizinhança Solidária" tornou-se uma ferramenta vital. A premissa é simples: vizinhos conectados protegem uns aos outros. Mas para funcionar, é preciso organização e tecnologia.
+              </p>
+              <p>
+                Recomendamos a criação de grupos de comunicação focados estritamente em segurança (sem "bom dia" ou correntes), onde qualquer movimentação atípica de veículos ou pedestres é relatada. A integração com sistemas de <strong>câmeras colaborativas</strong> permite que todos os moradores visualizem a rua em tempo real pelo celular, criando um "cinturão virtual" de vigilância.
+              </p>
+              <ul style="list-style: none; padding: 0; margin-top: 15px;">
+                <li style="margin-bottom: 8px;"><i class="fas fa-check" style="color:var(--success-green)"></i> Placas de identificação visual na rua;</li>
+                <li style="margin-bottom: 8px;"><i class="fas fa-check" style="color:var(--success-green)"></i> Sirene comunitária acionada por controle remoto;</li>
+                <li><i class="fas fa-check" style="color:var(--success-green)"></i> Contato direto com o batalhão da PM local.</li>
+              </ul>
+              <a href="https://www.facebook.com/segvigilanciaeletronica/posts/estamos-vendo-cada-vez-mais-postagens-e-reclama%C3%A7%C3%B5es-de-pessoas-que-tiveram-suas-/443216322886115/" target="_blank" class="btn-article">Guia de Implementação <i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </article>
+
+          <article class="feature-block reverse" data-aos="fade-up">
+            <div class="feature-img-container">
+              <img src="https://images.pexels.com/photos/669615/pexels-photo-669615.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Gráficos de Mercado">
+            </div>
+            <div class="feature-text">
+              <span class="category-tag">Inteligência de Mercado</span>
+              <h3>O Boom do Mercado de Segurança Eletrônica no Brasil</h3>
+              <p>
+                Dados da Associação Brasileira das Empresas de Sistemas Eletrônicos de Segurança (ABESE) mostram que o setor faturou mais de <strong>R$ 14 bilhões</strong> no último ano, com um crescimento constante acima de dois dígitos. Isso reflete uma mudança cultural: a segurança deixou de ser um "luxo" para se tornar um item essencial de infraestrutura.
+              </p>
+              <p>
+                Para 2025/2026, a tendência dominante é a <strong>Inteligência Artificial (IA)</strong> aplicada a câmeras. Sistemas que detectam automaticamente invasões, leitura de placas (LPR) e comportamento suspeito estão se tornando o padrão, substituindo a gravação passiva. Empresas que não investem em tecnologia de ponta estão ficando obsoletas.
+              </p>
+              <a href="https://www.facebook.com/segvigilanciaeletronica/posts/em-2015-o-setor-de-seguran%C3%A7a-privada-movimentou-em-torno-de-r-20-bilh%C3%B5es-mas-est/530138640860549/" target="_blank" class="btn-article">Análise Econômica <i class="fas fa-external-link-alt"></i></a>
+            </div>
+          </article>
+
+        </div>
+
+        <div class="sidebar-col">
+          
+          <div class="sidebar-card">
+            <h3 style="color:var(--navy-deep); margin-bottom:20px; font-size:1.2rem; font-weight: 700; border-bottom: 2px solid var(--gold-metallic); padding-bottom: 10px;">Ofertas do Mês</h3>
+            <ul class="recent-posts-list">
+              <li>
+                <a href="https://www.facebook.com/segvigilanciaeletronica/posts/kit-para-alarme-residencial-jflconsulte-valores-e-condi%C3%A7%C3%B5es/500872047120542/" target="_blank">
+                  <h5>Kit Alarme JFL Residencial</h5>
+                  <span><i class="fas fa-tag"></i> Consulte Condições</span>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/segvigilanciaeletronica/photos/kit-cerca-el%C3%A9trica-para-residenciasconsulte-valores-e-condi%C3%A7%C3%B5es/500874057120341/" target="_blank">
+                  <h5>Kit Cerca Elétrica Completo</h5>
+                  <span><i class="fas fa-tag"></i> Instalação Imediata</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="sidebar-card">
+            <h3 style="color:var(--navy-deep); margin-bottom:15px; text-align: center;">Sobre a SEG</h3>
+            <div style="text-align: center; margin-bottom: 15px;">
+              <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--navy-deep);"></i>
+            </div>
+            <p style="color:#64748b; margin-bottom:25px; font-size:0.9rem; text-align: center;">
+              Há mais de 20 anos protegendo o Vale do Paraíba. Especialistas em projetos de alta complexidade para indústrias e condomínios.
+            </p>
+
+            <a href="https://wa.me/5512974101924"
+               class="btn-article"
+               style="width: 100%; justify-content: center; background: var(--gold-metallic);">
+              <i class="fab fa-whatsapp"></i> Falar com Especialista
+            </a>
+
+            <hr style="margin: 25px 0; border: 0; border-top: 1px solid #e2e8f0;">
+
+            <div style="text-align:center;">
+              <p style="font-size:0.9rem; color:#64748b; margin-bottom:10px;">Carreiras:</p>
+              <a href="https://www.facebook.com/segvigilanciaeletronica/posts/voc%C3%AA-gosta-de-desafios-%C3%A9-bom-no-atendimento-ao-p%C3%BAblico-tem-boa-argumenta%C3%A7%C3%A3o-ent%C3%A3/500646803809733/" target="_blank" style="color:var(--navy-deep); font-weight:700; text-decoration:none; border: 1px solid var(--navy-deep); padding: 8px 15px; border-radius: 4px; display: inline-block;">Ver Vagas Disponíveis</a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

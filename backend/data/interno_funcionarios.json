@@ -1,0 +1,22 @@
+{
+  "versao": 1,
+  "atualizado_em": "2026-05-22T02:50:35.305288+00:00",
+  "funcionarios": [
+    {
+      "id": 1,
+      "nome": "taynara",
+      "telefone": "31986419237",
+      "email": "taynara@gail.com",
+      "cargo": "plantonista",
+      "tipo": "plantonista",
+      "usuario": "tay",
+      "permissao": "operador",
+      "ativo": true,
+      "senha_hash": "pbkdf2_sha256$160000$kK5QMgUBbje2Hbh8GfyIkg$yLUmb23XnEY57jXkmPgFO1zW93gk6mCzyS7dxJUAhsk",
+      "criado_em": "2026-05-22T02:50:20.275987+00:00",
+      "atualizado_em": "2026-05-22T02:50:20.275987+00:00",
+      "ultimo_login_em": "2026-05-22T02:50:35.305001+00:00",
+      "criado_por": "admin"
+    }
+  ]
+}

@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+
+{% block description %}Parceiros Tecnológicos SEG SISTEMAS. Intelbras, Hikvision, JFL, Dahua e Control iD. Equipamentos de segurança homologados com garantia e suporte técnico.{% endblock %}
+{% block title %}Parceiros e Marcas Homologadas | SEG SISTEMAS{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* --- ESTILOS GERAIS --- */
+  :root {
+    --gold-metallic: #d4af37;
+    --navy-deep: #0f172a;
+    --tech-blue: #2563eb;
+    --success-green: #16a34a;
+    --gray-bg: #f8fafc;
+  }
+
+  /* Hero Section High-Tech */
+  .service-hero {
+    height: 60vh;
+    min-height: 500px;
+    /* Imagem: Sala de monitoramento profissional */
+    background-image: url('https://thumbs.dreamstime.com/b/security-center-monitoring-multiple-screens-showing-surveillance-cameras-footage-modern-security-control-room-showing-multiple-381096525.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    position: relative;
+    background-color: #0f172a;
+  }
+  .service-hero::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0; bottom:0;
+    background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.7));
+  }
+  .service-hero-content { position: relative; z-index: 2; color: #fff; padding-top: 60px; max-width: 800px; }
+  .service-hero h1 { font-size: 3.5rem; margin-bottom: 20px; font-weight: 800; line-height: 1.1; letter-spacing: -1px; }
+  .service-hero p { font-size: 1.25rem; opacity: 0.95; max-width: 650px; line-height: 1.6; font-weight: 300; }
+  
+  .breadcrumb { color: var(--gold-metallic); font-weight: 700; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 2px; }
+
+  /* Layout Principal */
+  .details-section { padding: 100px 0; background: #fff; }
+  .details-grid { display: grid; grid-template-columns: 1.4fr 0.6fr; gap: 60px; align-items: start; }
+
+  /* --- BRAND BLOCK (ESTILO CARD PROFISSIONAL) --- */
+  .brand-block {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 60px;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, border-color 0.3s;
+  }
+  .brand-block:hover { transform: translateY(-5px); border-color: var(--gold-metallic); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1); }
+
+  .brand-header {
+    display: flex;
+    align-items: center;
+    padding: 30px;
+    background: var(--gray-bg);
+    border-bottom: 1px solid #e2e8f0;
+    gap: 20px;
+  }
+
+  /* LOGOTIPOS EM CSS (Nunca quebram) */
+  .logo-box {
+    background: #fff;
+    padding: 15px 30px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-weight: 900;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    min-width: 180px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+  .logo-intelbras { color: #00a335; border-left: 5px solid #00a335; }
+  .logo-hikvision { color: #d71920; border-left: 5px solid #d71920; }
+  .logo-jfl { color: #ef4444; border-left: 5px solid #ef4444; }
+  .logo-dahua { color: #0ea5e9; border-left: 5px solid #0ea5e9; }
+  .logo-controlid { color: #2563eb; border-left: 5px solid #2563eb; font-family: sans-serif; }
+
+  .brand-title-area h3 { margin: 0; color: var(--navy-deep); font-size: 1.5rem; font-weight: 800; }
+  .brand-title-area span { color: #64748b; font-size: 0.9rem; font-weight: 600; text-transform: uppercase; }
+
+  .brand-body {
+    display: flex;
+    padding: 30px;
+    gap: 40px;
+  }
+  .brand-img-container {
+    flex: 0.8;
+    min-width: 250px;
+    height: 250px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    background: #e2e8f0;
+  }
+  .brand-img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+  .brand-block:hover .brand-img-container img { transform: scale(1.05); }
+
+  .brand-content { flex: 1.2; }
+  .brand-content p { color: #475569; line-height: 1.7; margin-bottom: 20px; font-size: 1.05rem; }
+
+  .tech-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tech-item { background: #f1f5f9; padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; color: var(--navy-deep); font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .tech-item i { color: var(--gold-metallic); }
+
+  /* Sidebar */
+  .sidebar-card {
+    background: #fff;
+    padding: 35px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    position: sticky; top: 120px;
+    border: 1px solid #e2e8f0;
+  }
+
+  @media (max-width: 900px) {
+    .details-grid { grid-template-columns: 1fr; }
+    .brand-header { flex-direction: column; align-items: flex-start; }
+    .brand-body { flex-direction: column; }
+    .brand-img-container { width: 100%; height: 200px; }
+    .tech-grid { grid-template-columns: 1fr; }
+    .sidebar-card { position: static; margin-top: 40px; }
+    .service-hero h1 { font-size: 2.5rem; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+  <div class="top-bar"><span>TECNOLOGIA HOMOLOGADA</span> &nbsp; As melhores marcas globais ao seu alcance.</div>
+
+  <section class="service-hero">
+    <div class="container">
+      <div class="service-hero-content" data-aos="fade-right">
+        <span class="breadcrumb">Ecossistema de Parceiros</span>
+        <h1>Tecnologia de<br>Alta Performance</h1>
+        <p>
+          Segurança não aceita falhas. Trabalhamos exclusivamente com fabricantes líderes mundiais, garantindo equipamentos robustos, inovadores e com garantia estendida.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="details-section">
+    <div class="container">
+      <div class="details-grid">
+
+        <div class="content-col">
+          
+          <div style="margin-bottom: 50px;">
+            <h2 style="color:var(--navy-deep); font-weight:800; font-size: 2.2rem; margin-bottom: 15px;">Nossa Curadoria Técnica</h2>
+            <p style="color:#64748b; font-size: 1.1rem; line-height: 1.6;">
+              Não instalamos qualquer equipamento. Cada marca abaixo passou por rigorosos testes da engenharia da SEG SISTEMAS para garantir durabilidade, suporte a peças de reposição e resistência ao clima brasileiro.
+            </p>
+          </div>
+
+          <div class="brand-block" data-aos="fade-up">
+            <div class="brand-header">
+              <div class="logo-box logo-intelbras">intelbras</div>
+              <div class="brand-title-area">
+                <h3>Intelbras</h3>
+                <span>Líder Nacional em Segurança</span>
+              </div>
+            </div>
+            <div class="brand-body">
+              <div class="brand-img-container">
+                <img src="https://backend.intelbras.com/sites/default/files/2024-10/1000-series-full-hd-ip-camera-vip-1230-b-g5.jpg" alt="Câmera Intelbras VIP 1230 B G5">
+              </div>
+              <div class="brand-content">
+                <p>A gigante brasileira é nossa principal parceira para projetos integrados. Seus equipamentos são desenvolvidos especificamente para a realidade do Brasil, com proteção contra surtos elétricos e excelente custo-benefício.</p>
+                <div class="tech-grid">
+                  <div class="tech-item"><i class="fas fa-video"></i> Linha Multi-HD 4K</div>
+                  <div class="tech-item"><i class="fas fa-phone-alt"></i> Interfonia Condominial</div>
+                  <div class="tech-item"><i class="fas fa-network-wired"></i> Redes e Switches</div>
+                  <div class="tech-item"><i class="fas fa-shield-alt"></i> Alarmes Monitorados</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="brand-block" data-aos="fade-up">
+            <div class="brand-header">
+              <div class="logo-box logo-hikvision">HIKVISION</div>
+              <div class="brand-title-area">
+                <h3>Hikvision</h3>
+                <span>Líder Mundial em IA</span>
+              </div>
+            </div>
+            <div class="brand-body">
+              <div class="brand-img-container">
+                <img src="https://i0.wp.com/securityaffairs.com/wp-content/uploads/2021/09/Hikvision.png?fit=860%2C561&ssl=1" alt="Câmeras profissionais Hikvision">
+              </div>
+              <div class="brand-content">
+                <p>Maior fabricante de vídeo do mundo. Utilizamos Hikvision quando o projeto exige Inteligência Artificial avançada, como leitura de placas, contagem de pessoas e visão noturna colorida (ColorVu).</p>
+                <div class="tech-grid">
+                  <div class="tech-item"><i class="fas fa-eye"></i> ColorVu (Visão Noturna)</div>
+                  <div class="tech-item"><i class="fas fa-brain"></i> AcuSense (IA)</div>
+                  <div class="tech-item"><i class="fas fa-car"></i> Leitura de Placas (LPR)</div>
+                  <div class="tech-item"><i class="fas fa-fire"></i> Câmeras Térmicas</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="brand-block" data-aos="fade-up">
+            <div class="brand-header">
+              <div class="logo-box logo-jfl">JFL</div>
+              <div class="brand-title-area">
+                <h3>JFL Alarmes</h3>
+                <span>Referência em Cercas Elétricas</span>
+              </div>
+            </div>
+            <div class="brand-body">
+              <div class="brand-img-container">
+                <img src="https://i.ytimg.com/vi/xy7aayxKcHM/maxresdefault.jpg" alt="Central eletrificadora JFL Alarmes">
+              </div>
+              <div class="brand-content">
+                <p>Sinônimo de robustez. A JFL fabrica os eletrificadores de cerca mais confiáveis do mercado, projetados para resistir a sol e chuva por anos sem disparos falsos. Indispensável para proteção perimetral.</p>
+                <div class="tech-grid">
+                  <div class="tech-item"><i class="fas fa-bolt"></i> Eletrificadores Potentes</div>
+                  <div class="tech-item"><i class="fas fa-dog"></i> Sensores Pet Immunity</div>
+                  <div class="tech-item"><i class="fas fa-mobile"></i> App Active Mobile</div>
+                  <div class="tech-item"><i class="fas fa-cloud"></i> Integração Cloud</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="brand-block" data-aos="fade-up">
+            <div class="brand-header">
+              <div class="logo-box logo-controlid">Control iD</div>
+              <div class="brand-title-area">
+                <h3>Control iD</h3>
+                <span>Design e Biometria</span>
+              </div>
+            </div>
+            <div class="brand-body">
+              <div class="brand-img-container">
+                <img src="https://callmc.com/wp-content/uploads/2025/07/MCA-Assa-Abloy-ControlID-FI-1.jpg" alt="Dispositivos de reconhecimento facial Control iD">
+              </div>
+              <div class="brand-content">
+                <p>Revolucionou o controle de acesso com equipamentos de design premiado e algoritmos de reconhecimento facial ultrarrápidos. Ideal para recepções de alto padrão, condomínios de luxo e empresas modernas.</p>
+                <div class="tech-grid">
+                  <div class="tech-item"><i class="fas fa-id-card"></i> Reconhecimento Facial</div>
+                  <div class="tech-item"><i class="fas fa-fingerprint"></i> Biometria Digital</div>
+                  <div class="tech-item"><i class="fas fa-dungeon"></i> Catracas de Design</div>
+                  <div class="tech-item"><i class="fas fa-server"></i> Software Web</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="brand-block" data-aos="fade-up">
+            <div class="brand-header">
+              <div class="logo-box logo-dahua">Dahua</div>
+              <div class="brand-title-area">
+                <h3>Dahua Technology</h3>
+                <span>Inovação em Vídeo</span>
+              </div>
+            </div>
+            <div class="brand-body">
+              <div class="brand-img-container">
+                <img src="https://cctvdirect.co.uk/cdn/shop/articles/Dahua_review_and_features.jpg?v=1659428327" alt="Câmeras profissionais Dahua Technology">
+              </div>
+              <div class="brand-content">
+                <p>Pioneira mundial em soluções de vídeo AIoT. A Dahua oferece equipamentos de altíssima performance para grandes projetos, como monitoramento urbano e grandes indústrias, com foco em análise de dados.</p>
+                <div class="tech-grid">
+                  <div class="tech-item"><i class="fas fa-globe"></i> Cidades Inteligentes</div>
+                  <div class="tech-item"><i class="fas fa-video"></i> Câmeras PTZ</div>
+                  <div class="tech-item"><i class="fas fa-hdd"></i> Gravadores Enterprise</div>
+                  <div class="tech-item"><i class="fas fa-robot"></i> Vídeo Analítico</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="sidebar-col">
+          <div class="sidebar-card">
+            <h3 style="color:var(--navy-deep); margin-bottom:15px; text-align: center;">Garantia SEG</h3>
+            <p style="color:#64748b; margin-bottom:30px; font-size:0.9rem; text-align: center;">
+              Ao contratar a SEG, você tem a certeza de equipamentos originais.
+            </p>
+
+            <div style="text-align: center; margin-bottom: 25px;">
+              <i class="fas fa-certificate" style="font-size: 3.5rem; color: var(--gold-metallic);"></i>
+            </div>
+
+            <ul style="list-style: none; padding: 0; font-size: 0.95rem; color: #475569;">
+              <li style="margin-bottom: 12px; display:flex; align-items:center; gap:10px;">
+                <i class="fas fa-check-circle" style="color:var(--success-green);"></i> Revenda Autorizada
+              </li>
+              <li style="margin-bottom: 12px; display:flex; align-items:center; gap:10px;">
+                <i class="fas fa-check-circle" style="color:var(--success-green);"></i> Técnicos Certificados
+              </li>
+              <li style="margin-bottom: 12px; display:flex; align-items:center; gap:10px;">
+                <i class="fas fa-check-circle" style="color:var(--success-green);"></i> Peças de Reposição
+              </li>
+              <li style="display:flex; align-items:center; gap:10px;">
+                <i class="fas fa-check-circle" style="color:var(--success-green);"></i> Suporte Pós-Venda
+              </li>
+            </ul>
+
+            <hr style="margin: 25px 0; border: 0; border-top: 1px solid #e2e8f0;">
+
+            <a href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20quero%20um%20projeto%20com%20equipamentos%20de%20primeira%20linha"
+               class="btn btn-gold btn-full"
+               style="text-align:center; display:block; padding: 15px; border-radius: 6px; background: var(--gold-metallic); color: #fff; text-decoration: none; font-weight: 700; font-size: 1rem; transition: 0.3s; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);">
+              <i class="fab fa-whatsapp"></i> COTAR PROJETO
+            </a>
+
+            <div style="margin-top: 25px; text-align: center; background: #fff1f2; padding: 15px; border-radius: 8px; border: 1px solid #fecdd3;">
+              <p style="font-size: 0.8rem; color: #991b1b; margin: 0; font-weight: 600;">
+                <i class="fas fa-exclamation-triangle"></i> Cuidado com equipamentos "sem marca" (White Label). Eles não possuem garantia no Brasil.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

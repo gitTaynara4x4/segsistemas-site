@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Painel Interno | SEG Sistemas</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="icon" type="image/png" href="/static/img/favicon.png">
+  <link rel="stylesheet" href="/static/css/interno.css">
+</head>
+<body class="interno-app-body">
+  <div class="interno-shell">
+    <aside class="interno-sidebar">
+      <a href="/interno/dashboard" class="sidebar-logo" aria-label="Painel Interno SEG">
+        <img src="/static/img/logo-seg.png" alt="SEG Sistemas">
+        <span>Interno</span>
+      </a>
+
+      <nav class="sidebar-nav" aria-label="Menu interno">
+        <a href="/interno/dashboard" class="active">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="/interno/funcionarios">
+          <i class="fa-solid fa-users"></i>
+          <span>Funcionários</span>
+        </a>
+        <span class="nav-disabled">
+          <i class="fa-solid fa-clock"></i>
+          <span>Plantão</span>
+          <small>Parte 3</small>
+        </span>
+        <span class="nav-disabled">
+          <i class="fa-solid fa-book-open"></i>
+          <span>Manual</span>
+          <small>Depois</small>
+        </span>
+        <span class="nav-disabled">
+          <i class="fa-solid fa-clipboard-list"></i>
+          <span>Ocorrências</span>
+          <small>Depois</small>
+        </span>
+      </nav>
+
+      <form method="post" action="/interno/logout" class="logout-form">
+        <button type="submit">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Sair
+        </button>
+      </form>
+    </aside>
+
+    <main class="interno-main">
+      <header class="interno-topbar">
+        <div>
+          <p class="eyebrow">Área interna SEG</p>
+          <h1>Dashboard interno</h1>
+        </div>
+
+        <div class="user-chip">
+          <span class="user-avatar">{{ (user.nome or user.username or 'S')[:1] }}</span>
+          <div>
+            <strong>{{ user.nome }}</strong>
+            <small>{{ user.perfil }}</small>
+          </div>
+        </div>
+      </header>
+
+      <section class="welcome-card">
+        <div>
+          <span class="status-dot"></span>
+          <p class="eyebrow">Painel interno ativo</p>
+          <h2>Controle interno da SEG começando do jeito certo.</h2>
+          <p>
+            A Parte 1 criou o acesso privado. A Parte 2 adiciona cadastro de funcionários
+            para preparar o controle de plantão, ponto interno, passagem de turno,
+            assinatura, manual e relatórios.
+          </p>
+        </div>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="dashboard-card ready">
+          <div class="card-icon">
+            <i class="fa-solid fa-lock"></i>
+          </div>
+          <h3>Login interno</h3>
+          <p>Área privada ativa com sessão por cookie e botão de sair.</p>
+          <span class="card-status">Concluído</span>
+        </article>
+
+        <article class="dashboard-card ready">
+          <div class="card-icon">
+            <i class="fa-solid fa-user-tie"></i>
+          </div>
+          <h3>Funcionários</h3>
+          <p>
+            {{ funcionarios_resumo.ativos }} ativo(s), {{ funcionarios_resumo.inativos }} inativo(s),
+            {{ funcionarios_resumo.total }} cadastrado(s) no total.
+          </p>
+          <a href="/interno/funcionarios" class="card-link">Abrir cadastro</a>
+        </article>
+
+        <article class="dashboard-card muted">
+          <div class="card-icon">
+            <i class="fa-solid fa-business-time"></i>
+          </div>
+          <h3>Controle de plantão</h3>
+          <p>Entrada, saída, confirmação e responsabilidade do turno.</p>
+          <span class="card-status">Parte 3</span>
+        </article>
+
+        <article class="dashboard-card muted">
+          <div class="card-icon">
+            <i class="fa-solid fa-file-signature"></i>
+          </div>
+          <h3>Assinatura</h3>
+          <p>Confirmação simples ou assinatura desenhada na tela.</p>
+          <span class="card-status">Etapa futura</span>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/js/pages/interno.js"></script>
+</body>
+</html>
