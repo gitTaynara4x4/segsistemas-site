@@ -5,6 +5,7 @@ import json
 import os
 import time
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 from urllib import parse as urllib_parse
 from urllib import request as urllib_request
 from urllib.error import HTTPError, URLError
@@ -38,6 +39,7 @@ STATIC_DIR = os.path.join(FRONTEND_DIR, "static")
 BACKEND_DIR = os.path.join(BASE_DIR, "backend")
 INTERNO_DATA_DIR = os.path.join(BACKEND_DIR, "data")
 INTERNO_FUNCIONARIOS_FILE = os.path.join(INTERNO_DATA_DIR, "interno_funcionarios.json")
+INTERNO_PLANTOES_FILE = os.path.join(INTERNO_DATA_DIR, "interno_plantoes.json")
 
 # ============================================================
 # 2) TEMPLATES + STATIC
@@ -62,6 +64,7 @@ VALORA_API_BASE = (
 # ============================================================
 INTERNO_COOKIE_NAME = "seg_interno_session"
 INTERNO_SESSION_TTL_SECONDS = int(os.getenv("SEG_INTERNO_SESSION_TTL_SECONDS", "28800"))  # 8 horas
+SEG_TZ = ZoneInfo("America/Sao_Paulo")
 
 # Admin raiz para primeiro acesso. Depois você cadastra os funcionários pela tela.
 # Configure no EasyPanel, se possível:
@@ -93,6 +96,7 @@ print("STATIC_DIR               :", STATIC_DIR)
 print("VALORA_API_BASE          :", VALORA_API_BASE)
 print("INTERNO_USER             :", INTERNO_USER)
 print("INTERNO_FUNCIONARIOS_FILE:", INTERNO_FUNCIONARIOS_FILE)
+print("INTERNO_PLANTOES_FILE    :", INTERNO_PLANTOES_FILE)
 print("================================")
 
 
@@ -101,6 +105,14 @@ print("================================")
 # ============================================================
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def _now_local() -> datetime:
+    return datetime.now(SEG_TZ)
+
+
+def _today_local_iso() -> str:
+    return _now_local().date().isoformat()
 
 
 def _safe_str(value, default: str = "") -> str:
@@ -323,6 +335,199 @@ def _validar_payload_funcionario(payload: dict, criando: bool = True) -> tuple[d
         "ativo": ativo,
         "senha": senha,
     }, None
+
+
+# ============================================================
+# HELPERS DE PLANTÕES EM JSON
+# Parte 3: controle simples de início/fim de plantão.
+# ============================================================
+def _load_plantoes() -> list[dict]:
+    _ensure_interno_data_dir()
+
+    if not os.path.exists(INTERNO_PLANTOES_FILE):
+        return []
+
+    try:
+        with open(INTERNO_PLANTOES_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        if isinstance(data, dict):
+            plantoes = data.get("plantoes") or []
+        else:
+            plantoes = data
+
+        if not isinstance(plantoes, list):
+            return []
+
+        return [p for p in plantoes if isinstance(p, dict)]
+    except Exception as exc:
+        print("[SEG INTERNO] Falha ao ler plantões:", exc)
+        return []
+
+
+def _save_plantoes(plantoes: list[dict]) -> None:
+    _ensure_interno_data_dir()
+
+    payload = {
+        "versao": 1,
+        "atualizado_em": _now_iso(),
+        "plantoes": plantoes,
+    }
+
+    tmp_file = INTERNO_PLANTOES_FILE + ".tmp"
+    with open(tmp_file, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+
+    os.replace(tmp_file, INTERNO_PLANTOES_FILE)
+
+
+def _next_plantao_id(plantoes: list[dict]) -> int:
+    maior = 0
+    for plantao in plantoes:
+        try:
+            maior = max(maior, int(plantao.get("id") or 0))
+        except Exception:
+            continue
+    return maior + 1
+
+
+def _parse_iso_datetime(value: str) -> datetime | None:
+    if not value:
+        return None
+
+    try:
+        raw = str(value).strip()
+        if raw.endswith("Z"):
+            raw = raw[:-1] + "+00:00"
+        dt = datetime.fromisoformat(raw)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt
+    except Exception:
+        return None
+
+
+def _duracao_segundos(inicio_iso: str, fim_iso: str | None = None) -> int:
+    inicio = _parse_iso_datetime(inicio_iso)
+    fim = _parse_iso_datetime(fim_iso or _now_iso())
+
+    if not inicio or not fim:
+        return 0
+
+    try:
+        segundos = int((fim - inicio).total_seconds())
+        return max(segundos, 0)
+    except Exception:
+        return 0
+
+
+def _duracao_label(segundos: int) -> str:
+    segundos = max(int(segundos or 0), 0)
+    horas = segundos // 3600
+    minutos = (segundos % 3600) // 60
+
+    if horas <= 0 and minutos <= 0:
+        return "menos de 1 min"
+
+    if horas <= 0:
+        return f"{minutos} min"
+
+    return f"{horas}h {minutos:02d}min"
+
+
+def _usuario_match_plantao(plantao: dict, user: dict) -> bool:
+    funcionario_id_user = user.get("funcionario_id")
+    funcionario_id_plantao = plantao.get("funcionario_id")
+
+    if funcionario_id_user is not None and funcionario_id_plantao is not None:
+        try:
+            return int(funcionario_id_user) == int(funcionario_id_plantao)
+        except Exception:
+            pass
+
+    return _normalizar_usuario_login(plantao.get("usuario")) == _normalizar_usuario_login(user.get("username"))
+
+
+def _plantao_publico(plantao: dict) -> dict:
+    status = _safe_lower(plantao.get("status"), "aberto")
+    iniciado_em = plantao.get("iniciado_em") or ""
+    finalizado_em = plantao.get("finalizado_em") or ""
+
+    if status == "finalizado":
+        duracao = int(plantao.get("duracao_segundos") or _duracao_segundos(iniciado_em, finalizado_em))
+    else:
+        duracao = _duracao_segundos(iniciado_em)
+
+    return {
+        "id": plantao.get("id"),
+        "status": status,
+        "status_label": "Em andamento" if status == "aberto" else "Finalizado",
+        "data_plantao": plantao.get("data_plantao") or "",
+        "funcionario_id": plantao.get("funcionario_id"),
+        "funcionario_nome": plantao.get("funcionario_nome") or "",
+        "usuario": plantao.get("usuario") or "",
+        "tipo": plantao.get("tipo") or "",
+        "permissao": plantao.get("permissao") or "",
+        "iniciado_em": iniciado_em,
+        "finalizado_em": finalizado_em,
+        "observacao_inicio": plantao.get("observacao_inicio") or "",
+        "observacao_fim": plantao.get("observacao_fim") or "",
+        "confirmacao_inicio": bool(plantao.get("confirmacao_inicio", True)),
+        "confirmacao_fim": bool(plantao.get("confirmacao_fim", False)),
+        "ip_inicio": plantao.get("ip_inicio") or "",
+        "ip_fim": plantao.get("ip_fim") or "",
+        "duracao_segundos": duracao,
+        "duracao_label": _duracao_label(duracao),
+        "criado_em": plantao.get("criado_em") or "",
+        "atualizado_em": plantao.get("atualizado_em") or "",
+    }
+
+
+def _plantao_aberto_do_usuario(plantoes: list[dict], user: dict) -> dict | None:
+    for plantao in sorted(plantoes, key=lambda p: int(p.get("id") or 0), reverse=True):
+        if _safe_lower(plantao.get("status"), "aberto") != "aberto":
+            continue
+        if _usuario_match_plantao(plantao, user):
+            return plantao
+    return None
+
+
+def _plantoes_do_dia(plantoes: list[dict], data_plantao: str | None = None) -> list[dict]:
+    dia = data_plantao or _today_local_iso()
+    itens = [p for p in plantoes if (p.get("data_plantao") or "") == dia]
+    itens.sort(key=lambda p: int(p.get("id") or 0), reverse=True)
+    return itens
+
+
+def _plantoes_resumo() -> dict:
+    plantoes = _load_plantoes()
+    hoje = _plantoes_do_dia(plantoes)
+    abertos = [p for p in hoje if _safe_lower(p.get("status"), "aberto") == "aberto"]
+    finalizados = [p for p in hoje if _safe_lower(p.get("status"), "aberto") == "finalizado"]
+
+    return {
+        "data": _today_local_iso(),
+        "total_hoje": len(hoje),
+        "abertos": len(abertos),
+        "finalizados": len(finalizados),
+    }
+
+
+def _client_ip(request: Request) -> str:
+    forwarded_for = request.headers.get("x-forwarded-for") or ""
+    if forwarded_for:
+        return forwarded_for.split(",", 1)[0].strip()
+
+    if request.client:
+        return request.client.host or ""
+
+    return ""
+
+
+def _read_json_body_safe(payload: dict) -> dict:
+    if isinstance(payload, dict):
+        return payload
+    return {}
 
 
 # ============================================================
@@ -699,6 +904,7 @@ async def interno_dashboard(request: Request):
             "request": request,
             "user": user_or_redirect,
             "funcionarios_resumo": _funcionarios_resumo(),
+            "plantoes_resumo": _plantoes_resumo(),
         },
     )
 
@@ -720,6 +926,22 @@ async def interno_funcionarios_page(request: Request):
     )
 
 
+@app.get("/interno/plantao", response_class=HTMLResponse)
+async def interno_plantao_page(request: Request):
+    user_or_redirect = _require_interno_user_html(request, "/interno/plantao")
+    if isinstance(user_or_redirect, RedirectResponse):
+        return user_or_redirect
+
+    return templates.TemplateResponse(
+        "interno-plantao.html",
+        {
+            "request": request,
+            "user": user_or_redirect,
+            "plantoes_resumo": _plantoes_resumo(),
+        },
+    )
+
+
 # ============================================================
 # ROTAS INTERNAS SEG - API
 # ============================================================
@@ -729,6 +951,149 @@ async def interno_me(request: Request):
     if isinstance(user_or_response, JSONResponse):
         return user_or_response
     return {"ok": True, "user": user_or_response}
+
+
+@app.get("/api/interno/plantao/status")
+async def api_interno_plantao_status(request: Request):
+    user_or_response = _require_interno_user_api(request)
+    if isinstance(user_or_response, JSONResponse):
+        return user_or_response
+
+    plantoes = _load_plantoes()
+    aberto = _plantao_aberto_do_usuario(plantoes, user_or_response)
+    hoje = [_plantao_publico(p) for p in _plantoes_do_dia(plantoes)]
+
+    return {
+        "ok": True,
+        "user": user_or_response,
+        "plantao_aberto": _plantao_publico(aberto) if aberto else None,
+        "plantoes_hoje": hoje,
+        "resumo": _plantoes_resumo(),
+    }
+
+
+@app.get("/api/interno/plantoes")
+async def api_interno_listar_plantoes(request: Request, data: str = Query(""), limite: int = Query(50)):
+    user_or_response = _require_interno_user_api(request)
+    if isinstance(user_or_response, JSONResponse):
+        return user_or_response
+
+    plantoes = _load_plantoes()
+    dia = _safe_str(data) or _today_local_iso()
+    limite_safe = max(1, min(int(limite or 50), 200))
+
+    itens = [_plantao_publico(p) for p in _plantoes_do_dia(plantoes, dia)[:limite_safe]]
+
+    return {
+        "ok": True,
+        "data": dia,
+        "plantoes": itens,
+        "resumo": _plantoes_resumo(),
+    }
+
+
+@app.post("/api/interno/plantao/iniciar")
+async def api_interno_iniciar_plantao(request: Request):
+    user_or_response = _require_interno_user_api(request)
+    if isinstance(user_or_response, JSONResponse):
+        return user_or_response
+
+    try:
+        payload = await request.json()
+    except Exception:
+        payload = {}
+    payload = _read_json_body_safe(payload)
+
+    confirmacao = payload.get("confirmacao")
+    if isinstance(confirmacao, str):
+        confirmacao = confirmacao.lower().strip() in {"true", "1", "sim", "ok", "confirmo"}
+    else:
+        confirmacao = bool(confirmacao)
+
+    if not confirmacao:
+        return JSONResponse(status_code=400, content={"ok": False, "detail": "Confirme que você está assumindo o plantão."})
+
+    plantoes = _load_plantoes()
+    aberto = _plantao_aberto_do_usuario(plantoes, user_or_response)
+    if aberto:
+        return JSONResponse(
+            status_code=409,
+            content={
+                "ok": False,
+                "detail": "Você já possui um plantão em andamento. Finalize antes de iniciar outro.",
+                "plantao_aberto": _plantao_publico(aberto),
+            },
+        )
+
+    now = _now_iso()
+    plantao = {
+        "id": _next_plantao_id(plantoes),
+        "status": "aberto",
+        "data_plantao": _today_local_iso(),
+        "funcionario_id": user_or_response.get("funcionario_id"),
+        "funcionario_nome": user_or_response.get("nome") or user_or_response.get("username"),
+        "usuario": user_or_response.get("username"),
+        "tipo": user_or_response.get("tipo"),
+        "permissao": user_or_response.get("permissao"),
+        "iniciado_em": now,
+        "finalizado_em": "",
+        "observacao_inicio": _safe_str(payload.get("observacao")),
+        "observacao_fim": "",
+        "confirmacao_inicio": True,
+        "confirmacao_fim": False,
+        "ip_inicio": _client_ip(request),
+        "ip_fim": "",
+        "duracao_segundos": 0,
+        "criado_em": now,
+        "atualizado_em": now,
+    }
+
+    plantoes.append(plantao)
+    _save_plantoes(plantoes)
+
+    return JSONResponse(status_code=201, content={"ok": True, "plantao": _plantao_publico(plantao)})
+
+
+@app.post("/api/interno/plantao/finalizar")
+async def api_interno_finalizar_plantao(request: Request):
+    user_or_response = _require_interno_user_api(request)
+    if isinstance(user_or_response, JSONResponse):
+        return user_or_response
+
+    try:
+        payload = await request.json()
+    except Exception:
+        payload = {}
+    payload = _read_json_body_safe(payload)
+
+    confirmacao = payload.get("confirmacao")
+    if isinstance(confirmacao, str):
+        confirmacao = confirmacao.lower().strip() in {"true", "1", "sim", "ok", "confirmo"}
+    else:
+        confirmacao = bool(confirmacao)
+
+    if not confirmacao:
+        return JSONResponse(status_code=400, content={"ok": False, "detail": "Confirme que você está finalizando o plantão."})
+
+    plantoes = _load_plantoes()
+    plantao = _plantao_aberto_do_usuario(plantoes, user_or_response)
+
+    if not plantao:
+        return JSONResponse(status_code=404, content={"ok": False, "detail": "Você não possui plantão em andamento."})
+
+    now = _now_iso()
+    plantao["status"] = "finalizado"
+    plantao["finalizado_em"] = now
+    plantao["observacao_fim"] = _safe_str(payload.get("observacao"))
+    plantao["confirmacao_fim"] = True
+    plantao["ip_fim"] = _client_ip(request)
+    plantao["duracao_segundos"] = _duracao_segundos(plantao.get("iniciado_em") or now, now)
+    plantao["atualizado_em"] = now
+    plantao["finalizado_por"] = user_or_response.get("username")
+
+    _save_plantoes(plantoes)
+
+    return {"ok": True, "plantao": _plantao_publico(plantao)}
 
 
 @app.get("/api/interno/funcionarios")
