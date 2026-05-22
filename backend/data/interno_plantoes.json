@@ -1,0 +1,27 @@
+{
+  "versao": 1,
+  "atualizado_em": "2026-05-22T04:26:22.821304+00:00",
+  "plantoes": [
+    {
+      "id": 1,
+      "status": "aberto",
+      "data_plantao": "2026-05-22",
+      "funcionario_id": 1,
+      "funcionario_nome": "taynara",
+      "usuario": "tay",
+      "tipo": "plantonista",
+      "permissao": "operador",
+      "iniciado_em": "2026-05-22T04:26:22.821025+00:00",
+      "finalizado_em": "",
+      "observacao_inicio": "Assumindo plantão do monitoramento. Sem pendências no momento.",
+      "observacao_fim": "",
+      "confirmacao_inicio": true,
+      "confirmacao_fim": false,
+      "ip_inicio": "127.0.0.1",
+      "ip_fim": "",
+      "duracao_segundos": 0,
+      "criado_em": "2026-05-22T04:26:22.821025+00:00",
+      "atualizado_em": "2026-05-22T04:26:22.821025+00:00"
+    }
+  ]
+}

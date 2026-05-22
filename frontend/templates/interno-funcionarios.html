@@ -16,45 +16,7 @@
 </head>
 <body class="interno-app-body">
   <div class="interno-shell">
-    <aside class="interno-sidebar">
-      <a href="/interno/dashboard" class="sidebar-logo" aria-label="Painel Interno SEG">
-        <img src="/static/img/logo-seg.png" alt="SEG Sistemas">
-        <span>Interno</span>
-      </a>
-
-      <nav class="sidebar-nav" aria-label="Menu interno">
-        <a href="/interno/dashboard">
-          <i class="fa-solid fa-gauge-high"></i>
-          <span>Dashboard</span>
-        </a>
-        <a href="/interno/funcionarios" class="active">
-          <i class="fa-solid fa-users"></i>
-          <span>Funcionários</span>
-        </a>
-        <span class="nav-disabled">
-          <i class="fa-solid fa-clock"></i>
-          <span>Plantão</span>
-          <small>Parte 3</small>
-        </span>
-        <span class="nav-disabled">
-          <i class="fa-solid fa-book-open"></i>
-          <span>Manual</span>
-          <small>Depois</small>
-        </span>
-        <span class="nav-disabled">
-          <i class="fa-solid fa-clipboard-list"></i>
-          <span>Ocorrências</span>
-          <small>Depois</small>
-        </span>
-      </nav>
-
-      <form method="post" action="/interno/logout" class="logout-form">
-        <button type="submit">
-          <i class="fa-solid fa-right-from-bracket"></i>
-          Sair
-        </button>
-      </form>
-    </aside>
+    {% include "partials/sidebar.html" %}
 
     <main class="interno-main" id="funcionarios-page">
       <header class="interno-topbar">

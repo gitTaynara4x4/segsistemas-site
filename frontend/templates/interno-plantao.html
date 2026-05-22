@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Plantão | Painel Interno SEG</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="icon" type="image/png" href="/static/img/favicon.png">
+  <link rel="stylesheet" href="/static/css/interno.css">
+</head>
+<body class="interno-app-body">
+  <div class="interno-shell">
+    {% include "partials/sidebar.html" %}
+
+    <main class="interno-main" id="plantao-page">
+      <header class="interno-topbar">
+        <div>
+          <p class="eyebrow">Parte 3</p>
+          <h1>Controle de plantão</h1>
+        </div>
+
+        <div class="user-chip">
+          <span class="user-avatar">{{ (user.nome or user.username or 'S')[:1] }}</span>
+          <div>
+            <strong>{{ user.nome }}</strong>
+            <small>{{ user.perfil }}</small>
+          </div>
+        </div>
+      </header>
+
+      <section class="page-intro-card plantao-intro">
+        <div>
+          <span class="status-dot"></span>
+          <p class="eyebrow">Ponto interno / responsabilidade</p>
+          <h2>Registre quem assumiu e quem finalizou o plantão.</h2>
+          <p>
+            Esta tela registra entrada, saída, horário automático, observação e confirmação do funcionário logado.
+            É um controle interno da SEG para organizar o monitoramento e a passagem de responsabilidade.
+          </p>
+        </div>
+      </section>
+
+      <section class="stats-row" aria-label="Resumo de plantões">
+        <article class="stat-card">
+          <small>Data</small>
+          <strong data-plantao-stat="data">{{ plantoes_resumo.data }}</strong>
+        </article>
+        <article class="stat-card">
+          <small>Plantões hoje</small>
+          <strong data-plantao-stat="total_hoje">{{ plantoes_resumo.total_hoje }}</strong>
+        </article>
+        <article class="stat-card">
+          <small>Em andamento</small>
+          <strong data-plantao-stat="abertos">{{ plantoes_resumo.abertos }}</strong>
+        </article>
+        <article class="stat-card">
+          <small>Finalizados</small>
+          <strong data-plantao-stat="finalizados">{{ plantoes_resumo.finalizados }}</strong>
+        </article>
+      </section>
+
+      <section class="content-grid two-cols plantao-grid">
+        <article class="panel-card form-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Meu plantão</p>
+              <h2 id="plantao-status-title">Carregando...</h2>
+            </div>
+            <button type="button" class="btn-ghost" id="btn-reload-plantao">
+              <i class="fa-solid fa-rotate"></i>
+              Atualizar
+            </button>
+          </div>
+
+          <div class="plantao-status-card" id="plantao-status-card">
+            <div class="status-big muted">
+              <i class="fa-solid fa-circle-notch fa-spin"></i>
+              Verificando status do plantão...
+            </div>
+          </div>
+
+          <form class="plantao-form" id="plantao-form" autocomplete="off">
+            <label class="field-group">
+              <span id="plantao-observacao-label">Observação do início</span>
+              <textarea id="plantao-observacao" rows="5" placeholder="Ex: Assumindo plantão do monitoramento. Sem pendências no momento."></textarea>
+            </label>
+
+            <label class="checkbox-line strong-check">
+              <input type="checkbox" id="plantao-confirmacao">
+              <span id="plantao-confirmacao-label">Confirmo que estou assumindo este plantão.</span>
+            </label>
+
+            <div class="message-box" id="plantao-message" hidden></div>
+
+            <button type="submit" class="btn-primary" id="btn-plantao-action">
+              <i class="fa-solid fa-play"></i>
+              Iniciar plantão
+            </button>
+          </form>
+        </article>
+
+        <article class="panel-card list-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Hoje</p>
+              <h2>Histórico do dia</h2>
+            </div>
+          </div>
+
+          <div class="empty-state" id="plantao-empty" hidden>
+            <i class="fa-regular fa-clock"></i>
+            <h3>Nenhum plantão registrado hoje.</h3>
+            <p>Quando alguém iniciar ou finalizar plantão, o registro aparecerá aqui.</p>
+          </div>
+
+          <div class="plantao-list" id="plantao-list"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/js/pages/interno.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<aside class="interno-sidebar">
+  {% set path = request.url.path %}
+
+  <a href="/interno/dashboard" class="sidebar-logo" aria-label="Painel Interno SEG">
+    <img src="/static/img/logo-seg.png" alt="SEG Sistemas">
+    <span>Interno</span>
+  </a>
+
+  <nav class="sidebar-nav" aria-label="Menu interno">
+    <a href="/interno/dashboard" class="{% if path == '/interno/dashboard' %}active{% endif %}">
+      <i class="fa-solid fa-gauge-high"></i>
+      <span>Dashboard</span>
+    </a>
+
+    <a href="/interno/funcionarios" class="{% if path == '/interno/funcionarios' %}active{% endif %}">
+      <i class="fa-solid fa-users"></i>
+      <span>Funcionários</span>
+    </a>
+
+    <a href="/interno/plantao" class="{% if path == '/interno/plantao' %}active{% endif %}">
+      <i class="fa-solid fa-clock"></i>
+      <span>Plantão</span>
+    </a>
+
+    <a href="/interno/passagem" class="{% if path == '/interno/passagem' %}active{% endif %}">
+      <i class="fa-solid fa-right-left"></i>
+      <span>Passagem</span>
+    </a>
+
+    <span class="nav-disabled">
+      <i class="fa-solid fa-book-open"></i>
+      <span>Manual</span>
+      <small>Depois</small>
+    </span>
+
+    <span class="nav-disabled">
+      <i class="fa-solid fa-clipboard-list"></i>
+      <span>Ocorrências</span>
+      <small>Depois</small>
+    </span>
+
+    <span class="nav-disabled">
+      <i class="fa-solid fa-chart-line"></i>
+      <span>Relatórios</span>
+      <small>Depois</small>
+    </span>
+  </nav>
+
+  <form method="post" action="/interno/logout" class="logout-form">
+    <button type="submit">
+      <i class="fa-solid fa-right-from-bracket"></i>
+      Sair
+    </button>
+  </form>
+</aside>

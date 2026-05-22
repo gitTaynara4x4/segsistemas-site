@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Passagem de Plantão | Painel Interno SEG</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="icon" type="image/png" href="/static/img/favicon.png">
+  <link rel="stylesheet" href="/static/css/interno.css">
+</head>
+<body class="interno-app-body">
+  <div class="interno-shell">
+    {% include "partials/sidebar.html" %}
+
+    <main class="interno-main" id="passagem-page">
+      <header class="interno-topbar">
+        <div>
+          <p class="eyebrow">Parte 4</p>
+          <h1>Passagem de plantão</h1>
+        </div>
+
+        <div class="user-chip">
+          <span class="user-avatar">{{ (user.nome or user.username or 'S')[:1] }}</span>
+          <div>
+            <strong>{{ user.nome }}</strong>
+            <small>{{ user.perfil }}</small>
+          </div>
+        </div>
+      </header>
+
+      <section class="page-intro-card passagem-intro">
+        <div>
+          <span class="status-dot"></span>
+          <p class="eyebrow">Troca de responsabilidade</p>
+          <h2>Deixe registrado o que o próximo plantonista precisa saber.</h2>
+          <p>
+            A passagem salva pendências, clientes em observação, falhas de sistema,
+            ocorrências importantes e o recado para quem vai assumir o próximo turno.
+          </p>
+        </div>
+      </section>
+
+      <section class="stats-row" aria-label="Resumo de passagens">
+        <article class="stat-card">
+          <small>Data</small>
+          <strong data-passagem-stat="data">{{ passagens_resumo.data }}</strong>
+        </article>
+        <article class="stat-card">
+          <small>Passagens hoje</small>
+          <strong data-passagem-stat="total_hoje">{{ passagens_resumo.total_hoje }}</strong>
+        </article>
+        <article class="stat-card">
+          <small>Pendentes</small>
+          <strong data-passagem-stat="pendentes">{{ passagens_resumo.pendentes }}</strong>
+        </article>
+        <article class="stat-card">
+          <small>Recebidas</small>
+          <strong data-passagem-stat="recebidas">{{ passagens_resumo.recebidas }}</strong>
+        </article>
+      </section>
+
+      <section class="content-grid two-cols passagem-grid">
+        <article class="panel-card form-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Registrar</p>
+              <h2>Nova passagem</h2>
+            </div>
+            <button type="button" class="btn-ghost" id="btn-reload-passagem">
+              <i class="fa-solid fa-rotate"></i>
+              Atualizar
+            </button>
+          </div>
+
+          <div class="passagem-alert" id="passagem-pendente-card" hidden></div>
+
+          <form class="passagem-form" id="passagem-form" autocomplete="off">
+            <label class="field-group">
+              <span>Pendências</span>
+              <textarea id="passagem-pendencias" rows="4" placeholder="Ex: Cliente 123 em observação / aguardando retorno / O.S aberta."></textarea>
+            </label>
+
+            <label class="field-group">
+              <span>Clientes em observação</span>
+              <textarea id="passagem-clientes" rows="4" placeholder="Ex: Mercado X com falha GPRS, Condomínio Y com queda de energia."></textarea>
+            </label>
+
+            <label class="field-group">
+              <span>Falhas de sistema</span>
+              <textarea id="passagem-falhas" rows="4" placeholder="Ex: SIM Next indisponível, JFL sem conexão, internet oscilando."></textarea>
+            </label>
+
+            <label class="field-group">
+              <span>Ocorrências importantes</span>
+              <textarea id="passagem-ocorrencias" rows="4" placeholder="Ex: Alarme disparado, cliente contatado, atendente acionado."></textarea>
+            </label>
+
+            <label class="field-group">
+              <span>Recado para o próximo plantonista</span>
+              <textarea id="passagem-recado" rows="4" placeholder="Ex: Conferir cliente X às 22h. Verificar se sistema Y voltou."></textarea>
+            </label>
+
+            <label class="checkbox-line strong-check">
+              <input type="checkbox" id="passagem-confirmacao">
+              <span>Confirmo que estou registrando esta passagem de plantão.</span>
+            </label>
+
+            <div class="message-box" id="passagem-message" hidden></div>
+
+            <button type="submit" class="btn-primary" id="btn-passagem-save">
+              <i class="fa-solid fa-floppy-disk"></i>
+              Salvar passagem
+            </button>
+          </form>
+        </article>
+
+        <article class="panel-card list-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Hoje</p>
+              <h2>Histórico de passagens</h2>
+            </div>
+          </div>
+
+          <div class="empty-state" id="passagem-empty" hidden>
+            <i class="fa-solid fa-right-left"></i>
+            <h3>Nenhuma passagem registrada hoje.</h3>
+            <p>Quando alguém salvar ou assumir uma passagem, o registro aparecerá aqui.</p>
+          </div>
+
+          <div class="passagem-list" id="passagem-list"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/js/pages/interno.js"></script>
+</body>
+</html>

@@ -37,12 +37,12 @@
     'representante_data_nascimento',
     'representante_email_pessoal',
     'representante_telefone_pessoal',
-    'endereco_rua',
-    'endereco_numero',
-    'endereco_bairro',
-    'endereco_cidade',
-    'endereco_uf',
-    'endereco_cep',
+    'imovel_rua',
+    'imovel_numero',
+    'imovel_bairro',
+    'imovel_cidade',
+    'imovel_uf',
+    'imovel_cep',
     'observacoes_contrato',
   ];
 
@@ -335,12 +335,12 @@
     const tipo = String(dom.tipoPessoa.value || 'PF').toUpperCase();
 
     const base = [
-      ['endereco_rua', 'Rua do imóvel'],
-      ['endereco_numero', 'Número do imóvel'],
-      ['endereco_bairro', 'Bairro do imóvel'],
-      ['endereco_cidade', 'Cidade do imóvel'],
-      ['endereco_uf', 'UF do imóvel'],
-      ['endereco_cep', 'CEP do imóvel'],
+      ['imovel_rua', 'Rua do imóvel'],
+      ['imovel_numero', 'Número do imóvel'],
+      ['imovel_bairro', 'Bairro do imóvel'],
+      ['imovel_cidade', 'Cidade do imóvel'],
+      ['imovel_uf', 'UF do imóvel'],
+      ['imovel_cep', 'CEP do imóvel'],
     ];
 
     const pf = [

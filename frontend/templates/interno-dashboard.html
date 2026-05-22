@@ -16,45 +16,7 @@
 </head>
 <body class="interno-app-body">
   <div class="interno-shell">
-    <aside class="interno-sidebar">
-      <a href="/interno/dashboard" class="sidebar-logo" aria-label="Painel Interno SEG">
-        <img src="/static/img/logo-seg.png" alt="SEG Sistemas">
-        <span>Interno</span>
-      </a>
-
-      <nav class="sidebar-nav" aria-label="Menu interno">
-        <a href="/interno/dashboard" class="active">
-          <i class="fa-solid fa-gauge-high"></i>
-          <span>Dashboard</span>
-        </a>
-        <a href="/interno/funcionarios">
-          <i class="fa-solid fa-users"></i>
-          <span>Funcionários</span>
-        </a>
-        <span class="nav-disabled">
-          <i class="fa-solid fa-clock"></i>
-          <span>Plantão</span>
-          <small>Parte 3</small>
-        </span>
-        <span class="nav-disabled">
-          <i class="fa-solid fa-book-open"></i>
-          <span>Manual</span>
-          <small>Depois</small>
-        </span>
-        <span class="nav-disabled">
-          <i class="fa-solid fa-clipboard-list"></i>
-          <span>Ocorrências</span>
-          <small>Depois</small>
-        </span>
-      </nav>
-
-      <form method="post" action="/interno/logout" class="logout-form">
-        <button type="submit">
-          <i class="fa-solid fa-right-from-bracket"></i>
-          Sair
-        </button>
-      </form>
-    </aside>
+    {% include "partials/sidebar.html" %}
 
     <main class="interno-main">
       <header class="interno-topbar">
@@ -78,9 +40,8 @@
           <p class="eyebrow">Painel interno ativo</p>
           <h2>Controle interno da SEG começando do jeito certo.</h2>
           <p>
-            A Parte 1 criou o acesso privado. A Parte 2 adiciona cadastro de funcionários
-            para preparar o controle de plantão, ponto interno, passagem de turno,
-            assinatura, manual e relatórios.
+            A Parte 1 criou o acesso privado, a Parte 2 adicionou os funcionários
+            e a Parte 3 inicia o controle de plantão/ponto interno da equipe.
           </p>
         </div>
       </section>
@@ -107,13 +68,13 @@
           <a href="/interno/funcionarios" class="card-link">Abrir cadastro</a>
         </article>
 
-        <article class="dashboard-card muted">
+        <article class="dashboard-card ready">
           <div class="card-icon">
             <i class="fa-solid fa-business-time"></i>
           </div>
           <h3>Controle de plantão</h3>
-          <p>Entrada, saída, confirmação e responsabilidade do turno.</p>
-          <span class="card-status">Parte 3</span>
+          <p>Hoje: {{ plantoes_resumo.abertos }} em andamento e {{ plantoes_resumo.finalizados }} finalizado(s).</p>
+          <a href="/interno/plantao" class="card-link">Abrir plantão</a>
         </article>
 
         <article class="dashboard-card muted">
