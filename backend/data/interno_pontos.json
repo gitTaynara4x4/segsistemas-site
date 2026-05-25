@@ -1,0 +1,29 @@
+{
+  "versao": 1,
+  "atualizado_em": "2026-05-24T08:14:44.215847+00:00",
+  "pontos": [
+    {
+      "id": 1,
+      "status": "finalizado",
+      "data_ponto": "2026-05-24",
+      "funcionario_id": null,
+      "funcionario_nome": "Administrador SEG",
+      "usuario": "admin",
+      "tipo": "admin",
+      "permissao": "admin",
+      "entrada_em": "2026-05-24T08:14:38.496211+00:00",
+      "saida_em": "2026-05-24T08:14:44.215479+00:00",
+      "observacao_entrada": "",
+      "observacao_saida": "",
+      "pausas": [],
+      "ip_entrada": "127.0.0.1",
+      "ip_saida": "127.0.0.1",
+      "duracao_total_segundos": 5,
+      "duracao_pausas_segundos": 0,
+      "duracao_liquida_segundos": 5,
+      "criado_em": "2026-05-24T08:14:38.496211+00:00",
+      "atualizado_em": "2026-05-24T08:14:44.215479+00:00",
+      "atualizado_por": "admin"
+    }
+  ]
+}

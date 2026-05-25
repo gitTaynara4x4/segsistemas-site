@@ -8,123 +8,304 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
   <link rel="icon" type="image/png" href="/static/img/favicon.png">
+  
   <link rel="stylesheet" href="/static/css/interno.css">
+  
+  <style>
+    /* ==========================================================================
+       TEMA EYE CANDY / PILL UI (Mantendo a Identidade)
+       ========================================================================== */
+    
+    :root {
+      --ec-bg-app: #f0f3ee;       
+      --ec-card-white: #ffffff;
+      --ec-card-green: #dcf6b8;   
+      --ec-card-blue: #e5ebfd;    
+      --ec-card-pink: #fde5e5;    
+      
+      --ec-text-main: #1a1a1a;
+      --ec-text-muted: #737373;
+      
+      --ec-black: #111111;
+      --ec-black-hover: #2a2a2a;
+      
+      --ec-radius-pill: 9999px;
+      --ec-radius-card: 32px;
+      --ec-radius-sm: 16px;
+      
+      --ec-shadow-float: 0 12px 30px rgba(0,0,0,0.03);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body.interno-app-body {
+      background-color: var(--ec-bg-app);
+      font-family: 'Inter', sans-serif;
+      color: var(--ec-text-main);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    .dash-v2-shell { display: flex; min-height: 100vh; }
+    .dash-v2-main {
+      flex: 1; padding: 2rem 3rem; max-width: 1600px;
+      margin: 0 auto; display: flex; flex-direction: column; gap: 2rem;
+    }
+
+    /* ==========================================================================
+       HEADER
+       ========================================================================== */
+    .ec-header { margin-bottom: 0.5rem; }
+    .ec-breadcrumb { font-size: 0.875rem; color: var(--ec-text-muted); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px; }
+    .ec-header h1 { font-size: 3.5rem; font-weight: 300; letter-spacing: -0.04em; color: var(--ec-text-main); line-height: 1.1; }
+    .ec-header p { color: var(--ec-text-muted); max-width: 700px; margin-top: 0.75rem; font-size: 1rem; }
+
+    /* ==========================================================================
+       BENTO GRID - LAYOUT "TERMINAL E TIMELINE"
+       ========================================================================== */
+    .ec-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1.5rem;
+    }
+
+    .ec-card {
+      border-radius: var(--ec-radius-card);
+      padding: 2rem;
+      box-shadow: var(--ec-shadow-float);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      background: var(--ec-card-white);
+    }
+
+    .ec-card-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 1.5rem;
+    }
+    .ec-card-header span { font-size: 0.875rem; font-weight: 500; color: var(--ec-text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    .ec-card-header h2 { font-size: 1.25rem; font-weight: 600; color: var(--ec-text-main); }
+
+    /* 1. ROW TOPO: KPIs em Pílulas (Span 3 cada) */
+    .card-kpi-pill {
+      grid-column: span 3;
+      padding: 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      border-radius: var(--ec-radius-pill); /* Bordas ultra redondas para diferenciar */
+    }
+    .kpi-pill-info { display: flex; flex-direction: column; }
+    .kpi-pill-title { font-size: 0.75rem; font-weight: 600; color: var(--ec-text-muted); text-transform: uppercase; margin-bottom: 0.25rem; }
+    .kpi-pill-value { font-size: 1.5rem; font-weight: 600; color: var(--ec-text-main); line-height: 1; }
+    .kpi-pill-icon {
+      width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.6); color: var(--ec-text-main); font-size: 1.1rem;
+    }
+
+    /* 2. LATERAL ESQUERDA: Formulário / Terminal de Ponto (Span 4) */
+    .card-action-vertical {
+      grid-column: span 4;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 3. LATERAL DIREITA: Histórico / Timeline (Span 8) */
+    .card-history-side {
+      grid-column: span 8;
+    }
+
+    /* ==========================================================================
+       ESTILOS INTERNOS (Formulário e Status)
+       ========================================================================== */
+    .plantao-status-card {
+      background: var(--ec-bg-app); border-radius: var(--ec-radius-sm);
+      padding: 2rem 1.5rem; text-align: center; font-weight: 500; color: var(--ec-text-main);
+      display: flex; flex-direction: column; align-items: center; gap: 1rem;
+      margin-bottom: 1.5rem; transition: all 0.3s ease;
+    }
+    .plantao-status-card i { font-size: 2.5rem; color: var(--ec-text-muted); }
+
+    .ec-form-group { margin-bottom: 1.5rem; }
+    .ec-form-group > span { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--ec-text-main); }
+    
+    .ec-input-wrap {
+      display: flex; background: #f9f9f9; border-radius: var(--ec-radius-sm); padding: 1rem;
+      border: 1px solid rgba(0,0,0,0.05); transition: all 0.2s;
+    }
+    .ec-input-wrap:focus-within { background: #fff; border-color: var(--ec-black); box-shadow: 0 0 0 4px rgba(17,17,17,0.08); }
+    .ec-input-wrap textarea {
+      border: none; background: transparent; flex: 1; outline: none;
+      font-size: 0.875rem; font-family: inherit; color: var(--ec-text-main);
+      width: 100%; resize: vertical; min-height: 80px; line-height: 1.5;
+    }
+
+    .ec-checkbox-line {
+      display: flex; align-items: flex-start; gap: 10px; margin-bottom: 1.5rem;
+      font-size: 0.875rem; cursor: pointer; color: var(--ec-text-main); font-weight: 500;
+      background: #f9f9f9; padding: 1rem; border-radius: var(--ec-radius-sm);
+    }
+    .ec-checkbox-line input { width: 18px; height: 18px; accent-color: var(--ec-black); cursor: pointer; margin-top: 2px; }
+
+    .btn-submit {
+      width: 100%; background: var(--ec-black); color: #fff;
+      border: none; border-radius: var(--ec-radius-pill);
+      padding: 1.25rem; font-size: 1rem; font-weight: 500; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: all 0.2s; box-shadow: var(--ec-shadow-float);
+    }
+    .btn-submit:hover { background: var(--ec-black-hover); transform: translateY(-2px); }
+
+    .btn-ghost-sm {
+      background: #f4f4f4; color: var(--ec-text-main); border: none;
+      padding: 0.4rem 1rem; border-radius: var(--ec-radius-pill);
+      font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: 0.2s;
+    }
+    .btn-ghost-sm:hover { background: #e0e0e0; }
+
+    .message-box { margin-bottom: 1rem; text-align: center; font-size: 0.875rem; padding: 1rem; border-radius: var(--ec-radius-sm); }
+
+    /* ==========================================================================
+       LISTA DE PLANTÕES (Histórico)
+       ========================================================================== */
+    .ec-empty-state { text-align: center; padding: 4rem 2rem; background: #f9f9f9; border-radius: var(--ec-radius-sm); border: 1px dashed rgba(0,0,0,0.1); }
+    .ec-empty-state i { font-size: 2.5rem; color: rgba(0,0,0,0.05); margin-bottom: 1rem; }
+    .ec-empty-state h3 { font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--ec-text-main); }
+    .ec-empty-state p { font-size: 0.875rem; color: var(--ec-text-muted); }
+
+    #plantao-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    #plantao-list > div {
+      background: #f9f9f9; padding: 1.25rem; border-radius: var(--ec-radius-sm);
+      display: flex; align-items: center; justify-content: space-between;
+      border: 1px solid transparent; transition: all 0.2s;
+    }
+    #plantao-list > div:hover { background: #ffffff; border-color: rgba(0,0,0,0.05); box-shadow: 0 4px 12px rgba(0,0,0,0.03); transform: translateX(4px); } /* Efeito de hover diferente aqui (desliza pro lado) */
+
+    /* Responsividade */
+    @media (max-width: 1200px) {
+      .card-kpi-pill { grid-column: span 6; }
+      .card-action-vertical { grid-column: span 12; }
+      .card-history-side { grid-column: span 12; }
+    }
+    @media (max-width: 768px) {
+      .dash-v2-main { padding: 1.5rem; }
+      .ec-header h1 { font-size: 2.5rem; }
+      .card-kpi-pill { grid-column: span 12; }
+    }
+  </style>
 </head>
-<body class="interno-app-body">
-  <div class="interno-shell">
+<body class="interno-app-body dash-v2-body">
+  <div class="interno-shell dash-v2-shell">
+    
     {% include "partials/sidebar.html" %}
 
-    <main class="interno-main" id="plantao-page">
-      <header class="interno-topbar">
-        <div>
-          <p class="eyebrow">Parte 3</p>
-          <h1>Controle de plantão</h1>
-        </div>
+    <main class="dash-v2-main" id="plantao-page">
 
-        <div class="user-chip">
-          <span class="user-avatar">{{ (user.nome or user.username or 'S')[:1] }}</span>
-          <div>
-            <strong>{{ user.nome }}</strong>
-            <small>{{ user.perfil }}</small>
+      <section class="ec-header">
+        <div class="ec-breadcrumb">
+          <i class="fa-regular fa-folder"></i> SEG Sistemas <i class="fa-solid fa-arrow-right-long" style="font-size: 0.7rem; margin: 0 4px;"></i> Operação
+        </div>
+        <h1>Controle de Plantão</h1>
+        <p>Assuma ou finalize sua jornada de trabalho. Os dados de entrada, saída e observações são registrados em tempo real.</p>
+      </section>
+
+      <section class="ec-grid">
+        
+        <article class="ec-card card-kpi-pill" style="background: var(--ec-card-white);">
+          <div class="kpi-pill-info">
+            <span class="kpi-pill-title">Data Atual</span>
+            <span class="kpi-pill-value" style="font-size: 1.2rem; margin-top: 4px;" data-plantao-stat="data">{{ plantoes_resumo.data }}</span>
           </div>
-        </div>
-      </header>
+          <div class="kpi-pill-icon" style="background: #f4f4f4;"><i class="fa-regular fa-calendar"></i></div>
+        </article>
 
-      <section class="page-intro-card plantao-intro">
-        <div>
-          <span class="status-dot"></span>
-          <p class="eyebrow">Ponto interno / responsabilidade</p>
-          <h2>Registre quem assumiu e quem finalizou o plantão.</h2>
-          <p>
-            Esta tela registra entrada, saída, horário automático, observação e confirmação do funcionário logado.
-            É um controle interno da SEG para organizar o monitoramento e a passagem de responsabilidade.
-          </p>
-        </div>
-      </section>
+        <article class="ec-card card-kpi-pill" style="background: var(--ec-card-blue);">
+          <div class="kpi-pill-info">
+            <span class="kpi-pill-title" style="color: #3b4e82;">Total Hoje</span>
+            <span class="kpi-pill-value" data-plantao-stat="total_hoje">{{ plantoes_resumo.total_hoje }}</span>
+          </div>
+          <div class="kpi-pill-icon"><i class="fa-solid fa-hashtag" style="color: #3b4e82;"></i></div>
+        </article>
 
-      <section class="stats-row" aria-label="Resumo de plantões">
-        <article class="stat-card">
-          <small>Data</small>
-          <strong data-plantao-stat="data">{{ plantoes_resumo.data }}</strong>
+        <article class="ec-card card-kpi-pill" style="background: var(--ec-card-green);">
+          <div class="kpi-pill-info">
+            <span class="kpi-pill-title" style="color: #4a5d33;">Em Andamento</span>
+            <span class="kpi-pill-value" data-plantao-stat="abertos">{{ plantoes_resumo.abertos }}</span>
+          </div>
+          <div class="kpi-pill-icon"><i class="fa-solid fa-bolt" style="color: #4a5d33;"></i></div>
         </article>
-        <article class="stat-card">
-          <small>Plantões hoje</small>
-          <strong data-plantao-stat="total_hoje">{{ plantoes_resumo.total_hoje }}</strong>
-        </article>
-        <article class="stat-card">
-          <small>Em andamento</small>
-          <strong data-plantao-stat="abertos">{{ plantoes_resumo.abertos }}</strong>
-        </article>
-        <article class="stat-card">
-          <small>Finalizados</small>
-          <strong data-plantao-stat="finalizados">{{ plantoes_resumo.finalizados }}</strong>
-        </article>
-      </section>
 
-      <section class="content-grid two-cols plantao-grid">
-        <article class="panel-card form-panel">
-          <div class="panel-header">
+        <article class="ec-card card-kpi-pill" style="background: var(--ec-card-pink);">
+          <div class="kpi-pill-info">
+            <span class="kpi-pill-title" style="color: #633333;">Finalizados</span>
+            <span class="kpi-pill-value" data-plantao-stat="finalizados">{{ plantoes_resumo.finalizados }}</span>
+          </div>
+          <div class="kpi-pill-icon"><i class="fa-solid fa-check-double" style="color: #633333;"></i></div>
+        </article>
+
+        <article class="ec-card card-action-vertical">
+          <div class="ec-card-header" style="align-items: center; margin-bottom: 2rem;">
             <div>
-              <p class="eyebrow">Meu plantão</p>
-              <h2 id="plantao-status-title">Carregando...</h2>
+              <span>Painel</span>
+              <h2 id="plantao-status-title">Status</h2>
             </div>
-            <button type="button" class="btn-ghost" id="btn-reload-plantao">
+            <button type="button" class="btn-ghost-sm" id="btn-reload-plantao">
               <i class="fa-solid fa-rotate"></i>
-              Atualizar
             </button>
           </div>
 
           <div class="plantao-status-card" id="plantao-status-card">
-            <div class="status-big muted">
-              <i class="fa-solid fa-circle-notch fa-spin"></i>
-              Verificando status do plantão...
-            </div>
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+            <span>Verificando status do plantão...</span>
           </div>
 
-          <form class="plantao-form" id="plantao-form" autocomplete="off">
-            <label class="field-group">
-              <span id="plantao-observacao-label">Observação do início</span>
-              <textarea id="plantao-observacao" rows="5" placeholder="Ex: Assumindo plantão do monitoramento. Sem pendências no momento."></textarea>
-            </label>
+          <form class="plantao-form" id="plantao-form" autocomplete="off" style="display: flex; flex-direction: column; flex: 1;">
+            
+            <div class="ec-form-group">
+              <span id="plantao-observacao-label">Observação</span>
+              <div class="ec-input-wrap">
+                <textarea id="plantao-observacao" placeholder="Ex: Sem pendências no momento."></textarea>
+              </div>
+            </div>
 
-            <label class="checkbox-line strong-check">
-              <input type="checkbox" id="plantao-confirmacao">
-              <span id="plantao-confirmacao-label">Confirmo que estou assumindo este plantão.</span>
-            </label>
+            <div style="margin-top: auto;">
+              <label class="ec-checkbox-line">
+                <input type="checkbox" id="plantao-confirmacao">
+                <span id="plantao-confirmacao-label">Confirmo minha responsabilidade sobre o plantão.</span>
+              </label>
 
-            <div class="message-box" id="plantao-message" hidden></div>
+              <div class="message-box" id="plantao-message" hidden></div>
 
-            <button type="submit" class="btn-primary" id="btn-plantao-action">
-              <i class="fa-solid fa-play"></i>
-              Iniciar plantão
-            </button>
+              <button type="submit" class="btn-submit" id="btn-plantao-action">
+                <i class="fa-solid fa-play"></i> Iniciar plantão
+              </button>
+            </div>
           </form>
         </article>
 
-        <article class="panel-card list-panel">
-          <div class="panel-header">
+        <article class="ec-card card-history-side">
+          <div class="ec-card-header" style="align-items: center; margin-bottom: 1.5rem;">
             <div>
-              <p class="eyebrow">Hoje</p>
+              <span>Timeline</span>
               <h2>Histórico do dia</h2>
             </div>
           </div>
 
-          <div class="empty-state" id="plantao-empty" hidden>
+          <div class="ec-empty-state" id="plantao-empty" hidden>
             <i class="fa-regular fa-clock"></i>
             <h3>Nenhum plantão registrado hoje.</h3>
             <p>Quando alguém iniciar ou finalizar plantão, o registro aparecerá aqui.</p>
           </div>
 
-          <div class="plantao-list" id="plantao-list"></div>
+          <div id="plantao-list">
+          </div>
         </article>
+
       </section>
     </main>
   </div>
 
-  <script src="/static/js/pages/interno.js"></script>
+  <script src="/static/js/pages/interno-base.js"></script>
+  <script src="/static/js/pages/interno-plantao.js"></script>
 </body>
 </html>

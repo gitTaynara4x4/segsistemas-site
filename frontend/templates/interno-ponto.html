@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Ponto Online | Painel Interno SEG</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="/static/img/favicon.png">
+
+  <link rel="stylesheet" href="/static/css/interno.css">
+
+  <style>
+    :root {
+      --ponto-bg: #f0f3ee;
+      --ponto-card: #ffffff;
+      --ponto-green: #dcf6b8;
+      --ponto-blue: #e5ebfd;
+      --ponto-orange: #ffe8d6;
+      --ponto-red: #fde5e5;
+      --ponto-yellow: #fff3bf;
+      --ponto-purple: #efe7ff;
+      --ponto-black: #050505;
+      --ponto-text: #111111;
+      --ponto-muted: #72766f;
+      --ponto-line: rgba(15, 23, 42, 0.075);
+      --ponto-radius: 32px;
+      --ponto-pill: 999px;
+      --ponto-shadow: 0 12px 30px rgba(0, 0, 0, 0.035);
+      --ponto-shadow-hover: 0 18px 44px rgba(0, 0, 0, 0.075);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body.interno-app-body {
+      background-color: var(--ponto-bg);
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ponto-text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .ponto-shell {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .ponto-main {
+      width: min(1500px, calc(100% - 72px));
+      margin: 0 auto;
+      padding: 2rem 3rem 3rem;
+    }
+
+    .ponto-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 1.5rem;
+      align-items: end;
+      margin-bottom: 1.5rem;
+    }
+
+    .ponto-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 0.65rem;
+      color: var(--ponto-muted);
+      font-size: 0.875rem;
+    }
+
+    .ponto-breadcrumb i {
+      font-size: 0.85rem;
+    }
+
+    .ponto-header h1 {
+      margin: 0;
+      color: var(--ponto-text);
+      font-size: clamp(2.45rem, 5vw, 4.15rem);
+      line-height: 1.04;
+      font-weight: 300;
+      letter-spacing: -0.06em;
+    }
+
+    .ponto-header p {
+      max-width: 860px;
+      margin: 0.9rem 0 0;
+      color: var(--ponto-muted);
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+
+    .ponto-header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .ponto-btn {
+      min-height: 46px;
+      padding: 0 18px;
+      border: 0;
+      border-radius: var(--ponto-pill);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      color: #ffffff;
+      background: var(--ponto-black);
+      font-family: inherit;
+      font-size: 0.86rem;
+      font-weight: 850;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 16px 34px rgba(0, 0, 0, 0.16);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, opacity 0.18s ease;
+    }
+
+    .ponto-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.22);
+    }
+
+    .ponto-btn.secondary {
+      color: #22251f;
+      background: rgba(255, 255, 255, 0.84);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.045);
+    }
+
+    .ponto-btn.success {
+      color: #111111;
+      background: var(--ponto-green);
+      box-shadow: 0 16px 34px rgba(88, 129, 57, 0.13);
+    }
+
+    .ponto-btn.warning {
+      color: #111111;
+      background: var(--ponto-orange);
+      box-shadow: 0 16px 34px rgba(194, 102, 23, 0.13);
+    }
+
+    .ponto-btn.danger {
+      color: #ffffff;
+      background: #b91c1c;
+      box-shadow: 0 16px 34px rgba(185, 28, 28, 0.18);
+    }
+
+    .ponto-btn:disabled {
+      opacity: 0.62;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .ponto-tabs {
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .ponto-tab {
+      border: 0;
+      min-height: 44px;
+      padding: 0 18px;
+      border-radius: var(--ponto-pill);
+      background: rgba(255, 255, 255, 0.78);
+      color: #53574f;
+      font-family: inherit;
+      font-size: 0.84rem;
+      font-weight: 850;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.045);
+      transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .ponto-tab:hover {
+      transform: translateY(-1px);
+      background: #ffffff;
+    }
+
+    .ponto-tab.active {
+      color: #ffffff;
+      background: #050505;
+      box-shadow: 0 16px 34px rgba(0, 0, 0, 0.18);
+    }
+
+    .ponto-tab-panel {
+      display: none;
+    }
+
+    .ponto-tab-panel.active {
+      display: block;
+    }
+
+    .ponto-stats-grid,
+    .ponto-report-dashboard,
+    .ponto-alert-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1rem;
+    }
+
+    .ponto-stats-grid {
+      margin-bottom: 1.5rem;
+    }
+
+    .ponto-stat-card,
+    .ponto-report-card,
+    .ponto-alert {
+      min-height: 140px;
+      padding: 1.25rem;
+      border: 1px solid rgba(255, 255, 255, 0.48);
+      border-radius: var(--ponto-radius);
+      background: var(--ponto-card);
+      box-shadow: var(--ponto-shadow);
+    }
+
+    .ponto-stat-card,
+    .ponto-report-card {
+      grid-column: span 3;
+    }
+
+    .ponto-alert {
+      grid-column: span 4;
+    }
+
+    .green { background: var(--ponto-green) !important; }
+    .blue { background: var(--ponto-blue) !important; }
+    .orange { background: var(--ponto-orange) !important; }
+    .red { background: var(--ponto-red) !important; }
+    .yellow { background: var(--ponto-yellow) !important; }
+    .purple { background: var(--ponto-purple) !important; }
+
+    .ponto-stat-label,
+    .ponto-report-card span {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      color: #4f554b;
+      font-size: 0.74rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .ponto-stat-label i,
+    .ponto-report-card span i {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 14px;
+      color: #111111;
+      background: rgba(255, 255, 255, 0.55);
+    }
+
+    .ponto-stat-value,
+    .ponto-report-card strong,
+    .ponto-alert strong {
+      display: block;
+      margin-top: 1.1rem;
+      color: #111111;
+      font-size: 2.35rem;
+      line-height: 1;
+      font-weight: 300;
+      letter-spacing: -0.06em;
+    }
+
+    .ponto-stat-note,
+    .ponto-report-card small,
+    .ponto-alert span {
+      display: block;
+      margin-top: 0.55rem;
+      color: #60655d;
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+
+    .ponto-layout {
+      display: grid;
+      grid-template-columns: minmax(380px, 0.95fr) minmax(0, 1.35fr);
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .ponto-panel {
+      border: 1px solid rgba(255, 255, 255, 0.48);
+      border-radius: var(--ponto-radius);
+      background: rgba(255, 255, 255, 0.76);
+      box-shadow: var(--ponto-shadow);
+      overflow: hidden;
+    }
+
+    .ponto-panel + .ponto-panel {
+      margin-top: 1.25rem;
+    }
+
+    .ponto-panel-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.35rem 1.35rem 0;
+    }
+
+    .ponto-panel-header h2 {
+      margin: 0;
+      color: var(--ponto-text);
+      font-size: 1.25rem;
+      line-height: 1.15;
+      font-weight: 850;
+      letter-spacing: -0.035em;
+    }
+
+    .ponto-panel-header p {
+      margin: 0.4rem 0 0;
+      color: var(--ponto-muted);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .ponto-panel-icon {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 46px;
+      height: 46px;
+      border-radius: 18px;
+      color: #111111;
+      background: var(--ponto-green);
+    }
+
+    .ponto-status-card {
+      margin: 1.35rem;
+      padding: 1.15rem;
+      border-radius: 26px;
+      background: #ffffff;
+      border: 1px solid rgba(15, 23, 42, 0.07);
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.035);
+    }
+
+    .ponto-status-big {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .ponto-status-icon {
+      flex: 0 0 auto;
+      width: 60px;
+      height: 60px;
+      border-radius: 24px;
+      display: grid;
+      place-items: center;
+      color: #111111;
+      background: var(--ponto-green);
+      font-size: 1.45rem;
+    }
+
+    .ponto-status-icon.pause {
+      background: var(--ponto-orange);
+    }
+
+    .ponto-status-icon.closed {
+      background: var(--ponto-blue);
+    }
+
+    .ponto-status-info strong {
+      display: block;
+      color: var(--ponto-text);
+      font-size: 1.05rem;
+      line-height: 1.25;
+      font-weight: 850;
+      letter-spacing: -0.025em;
+    }
+
+    .ponto-status-info p {
+      margin: 0.35rem 0 0;
+      color: var(--ponto-muted);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .ponto-status-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.75rem;
+    }
+
+    .ponto-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 28px;
+      padding: 0 10px;
+      border-radius: var(--ponto-pill);
+      color: #394034;
+      background: #f4f5f1;
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .ponto-tag.green { color: #234111; background: var(--ponto-green); }
+    .ponto-tag.orange { color: #7c3d12; background: var(--ponto-orange); }
+    .ponto-tag.blue { color: #263455; background: var(--ponto-blue); }
+    .ponto-tag.red { color: #8a1f1f; background: var(--ponto-red); }
+    .ponto-tag.yellow { color: #6b4d00; background: var(--ponto-yellow); }
+    .ponto-tag.purple { color: #49306b; background: var(--ponto-purple); }
+
+    .ponto-form {
+      display: grid;
+      gap: 0.95rem;
+      padding: 0 1.35rem 1.35rem;
+    }
+
+    .ponto-field {
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .ponto-field label,
+    .ponto-field > span {
+      color: #22251f;
+      font-size: 0.8rem;
+      font-weight: 850;
+    }
+
+    .ponto-field input,
+    .ponto-field select,
+    .ponto-field textarea {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 13px;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 17px;
+      outline: 0;
+      color: var(--ponto-text);
+      background: rgba(255, 255, 255, 0.86);
+      font: inherit;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .ponto-field textarea {
+      min-height: 104px;
+      resize: vertical;
+    }
+
+    .ponto-field input:focus,
+    .ponto-field select:focus,
+    .ponto-field textarea:focus {
+      border-color: rgba(17, 17, 17, 0.22);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(220, 246, 184, 0.55);
+    }
+
+    .ponto-confirm {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      padding: 0.9rem;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.66);
+      color: #41463d;
+      font-size: 0.84rem;
+      line-height: 1.5;
+      cursor: pointer;
+    }
+
+    .ponto-confirm input {
+      width: 18px;
+      height: 18px;
+      margin-top: 1px;
+      accent-color: #111111;
+    }
+
+    .ponto-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.7rem;
+    }
+
+    .ponto-actions .ponto-btn {
+      width: 100%;
+      min-height: 50px;
+    }
+
+    .ponto-message {
+      display: none;
+      padding: 0.9rem 1rem;
+      border-radius: 18px;
+      font-size: 0.86rem;
+      font-weight: 750;
+      line-height: 1.55;
+    }
+
+    .ponto-message.show {
+      display: block;
+    }
+
+    .ponto-message.success {
+      color: #234111;
+      background: rgba(220, 246, 184, 0.85);
+    }
+
+    .ponto-message.error {
+      color: #8a1f1f;
+      background: rgba(253, 229, 229, 0.95);
+    }
+
+    .ponto-list-wrap {
+      padding: 1.15rem 1.35rem 1.35rem;
+    }
+
+    .ponto-list {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .ponto-card {
+      position: relative;
+      padding: 1rem;
+      border: 1px solid rgba(15, 23, 42, 0.075);
+      border-radius: 24px;
+      background: #ffffff;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.035);
+      overflow: hidden;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .ponto-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(15, 23, 42, 0.11);
+      box-shadow: var(--ponto-shadow-hover);
+    }
+
+    .ponto-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 7px;
+      background: var(--ponto-green);
+    }
+
+    .ponto-card.pausado::before,
+    .ponto-card.em_pausa::before {
+      background: var(--ponto-orange);
+    }
+
+    .ponto-card.finalizado::before {
+      background: var(--ponto-blue);
+    }
+
+    .ponto-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .ponto-card-title h3 {
+      margin: 0;
+      color: var(--ponto-text);
+      font-size: 1rem;
+      line-height: 1.25;
+      font-weight: 850;
+      letter-spacing: -0.025em;
+    }
+
+    .ponto-card-title p {
+      margin: 0.35rem 0 0;
+      color: var(--ponto-muted);
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .ponto-times {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.65rem;
+      margin-top: 0.85rem;
+    }
+
+    .ponto-time-box {
+      padding: 0.75rem;
+      border-radius: 17px;
+      background: #f7f8f4;
+    }
+
+    .ponto-time-box small {
+      display: block;
+      color: var(--ponto-muted);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .ponto-time-box strong {
+      display: block;
+      margin-top: 0.25rem;
+      color: var(--ponto-text);
+      font-size: 0.82rem;
+      line-height: 1.35;
+      font-weight: 850;
+    }
+
+    .ponto-note {
+      margin-top: 0.85rem;
+      padding: 0.85rem;
+      border-radius: 18px;
+      color: #394034;
+      background: #f7f8f4;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+
+    .ponto-note strong {
+      color: #111111;
+    }
+
+    .ponto-empty {
+      display: none;
+      padding: 3rem 1.5rem;
+      border: 1px dashed rgba(15, 23, 42, 0.12);
+      border-radius: 26px;
+      background: rgba(255, 255, 255, 0.68);
+      text-align: center;
+    }
+
+    .ponto-empty.show {
+      display: block;
+    }
+
+    .ponto-empty i {
+      margin-bottom: 0.85rem;
+      color: rgba(0, 0, 0, 0.14);
+      font-size: 2.1rem;
+    }
+
+    .ponto-empty h3 {
+      margin: 0;
+      color: var(--ponto-text);
+      font-size: 1.08rem;
+    }
+
+    .ponto-empty p {
+      max-width: 520px;
+      margin: 0.5rem auto 0;
+      color: var(--ponto-muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .ponto-filter-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.8rem;
+      padding: 1.35rem;
+    }
+
+    .ponto-report-dashboard,
+    .ponto-alert-grid {
+      padding: 1.35rem;
+      padding-bottom: 0;
+    }
+
+    .ponto-report-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      padding: 0 1.35rem 1.35rem;
+    }
+
+    .ponto-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      padding: 0 1.35rem 1.35rem;
+    }
+
+    .ponto-table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+    }
+
+    .ponto-table th {
+      padding: 0 12px 8px;
+      color: var(--ponto-muted);
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-align: left;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .ponto-table td {
+      padding: 13px 12px;
+      background: #ffffff;
+      color: #242821;
+      font-size: 0.84rem;
+      border-top: 1px solid rgba(15, 23, 42, 0.06);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+      vertical-align: top;
+    }
+
+    .ponto-table td:first-child {
+      border-left: 1px solid rgba(15, 23, 42, 0.06);
+      border-radius: 18px 0 0 18px;
+    }
+
+    .ponto-table td:last-child {
+      border-right: 1px solid rgba(15, 23, 42, 0.06);
+      border-radius: 0 18px 18px 0;
+    }
+
+    .ponto-calendar-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(340px, 0.65fr);
+      gap: 1rem;
+      padding: 1.35rem;
+    }
+
+    .ponto-calendar-box,
+    .ponto-day-box {
+      border-radius: 28px;
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .ponto-calendar-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      padding: 1rem;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+      background: #f8f9f5;
+    }
+
+    .ponto-calendar-head strong {
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .ponto-calendar-controls {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .ponto-mini-btn {
+      min-height: 36px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 999px;
+      background: #ffffff;
+      color: #111111;
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 850;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+    }
+
+    .ponto-month-input {
+      min-height: 38px;
+      padding: 0 10px;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 999px;
+      font: inherit;
+      font-size: 0.82rem;
+      background: #ffffff;
+      outline: 0;
+    }
+
+    .ponto-weekdays,
+    .ponto-calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    .ponto-weekdays span {
+      padding: 0.8rem 0.45rem;
+      text-align: center;
+      color: var(--ponto-muted);
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.055);
+    }
+
+    .ponto-day {
+      min-height: 126px;
+      padding: 0.7rem;
+      border: 0;
+      border-right: 1px solid rgba(15, 23, 42, 0.045);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.045);
+      background: #ffffff;
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .ponto-day:hover {
+      background: #f8f9f5;
+    }
+
+    .ponto-day.out {
+      opacity: 0.42;
+      background: #fbfbf9;
+    }
+
+    .ponto-day.today {
+      background: var(--ponto-blue);
+    }
+
+    .ponto-day.selected {
+      background: var(--ponto-green);
+      box-shadow: inset 0 0 0 2px rgba(17, 17, 17, 0.14);
+    }
+
+    .ponto-day-number {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .ponto-day-number strong {
+      font-size: 0.92rem;
+      font-weight: 900;
+    }
+
+    .ponto-day-number span {
+      min-width: 24px;
+      height: 24px;
+      padding: 0 7px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #111111;
+      background: rgba(255, 255, 255, 0.72);
+      font-size: 0.7rem;
+      font-weight: 900;
+    }
+
+    .ponto-day-names {
+      display: grid;
+      gap: 0.3rem;
+    }
+
+    .ponto-day-name {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-height: 22px;
+      padding: 4px 7px;
+      border-radius: 999px;
+      color: #394034;
+      background: #f4f5f1;
+      font-size: 0.7rem;
+      font-weight: 800;
+    }
+
+    .ponto-day-more {
+      color: var(--ponto-muted);
+      font-size: 0.7rem;
+      font-weight: 900;
+    }
+
+    .ponto-day-panel {
+      padding: 1rem;
+    }
+
+    .ponto-day-panel h3 {
+      margin: 0;
+      font-size: 1.08rem;
+      font-weight: 900;
+      letter-spacing: -0.035em;
+    }
+
+    .ponto-day-panel p {
+      margin: 0.45rem 0 0;
+      color: var(--ponto-muted);
+      font-size: 0.86rem;
+      line-height: 1.55;
+    }
+
+    .ponto-day-list {
+      display: grid;
+      gap: 0.65rem;
+      margin-top: 1rem;
+    }
+
+    .ponto-person-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      padding: 0.8rem;
+      border-radius: 18px;
+      background: #f8f9f5;
+      border: 1px solid rgba(15, 23, 42, 0.045);
+    }
+
+    .ponto-person-row strong {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 900;
+    }
+
+    .ponto-person-row small {
+      display: block;
+      margin-top: 0.2rem;
+      color: var(--ponto-muted);
+      font-size: 0.76rem;
+    }
+
+    @media print {
+      body {
+        padding: 0 !important;
+        background: #ffffff !important;
+      }
+
+      .seg-interno-app-chrome,
+      .ponto-header,
+      .ponto-tabs,
+      .ponto-header-actions,
+      .ponto-report-actions,
+      .ponto-btn,
+      .ponto-panel-header p {
+        display: none !important;
+      }
+
+      .ponto-main {
+        width: 100%;
+        padding: 0;
+      }
+
+      .ponto-tab-panel {
+        display: block !important;
+      }
+
+      .ponto-tab-panel:not(#panel-relatorio) {
+        display: none !important;
+      }
+
+      .ponto-panel {
+        box-shadow: none;
+        border: 0;
+        background: #ffffff;
+      }
+    }
+
+    @media (max-width: 1280px) {
+      .ponto-stat-card,
+      .ponto-report-card {
+        grid-column: span 6;
+      }
+
+      .ponto-alert {
+        grid-column: span 6;
+      }
+
+      .ponto-layout,
+      .ponto-calendar-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .ponto-filter-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 920px) {
+      .ponto-main {
+        width: min(920px, calc(100% - 32px));
+        padding: 1.5rem 0 2.5rem;
+      }
+
+      .ponto-header {
+        grid-template-columns: 1fr;
+      }
+
+      .ponto-header-actions {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .ponto-stat-card,
+      .ponto-report-card,
+      .ponto-alert {
+        grid-column: span 12;
+      }
+
+      .ponto-actions,
+      .ponto-filter-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ponto-times {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .ponto-card-header {
+        flex-direction: column;
+      }
+
+      .ponto-day {
+        min-height: 96px;
+        padding: 0.45rem;
+      }
+
+      .ponto-day-name {
+        display: none;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .ponto-header h1 {
+        font-size: 2.4rem;
+      }
+
+      .ponto-panel,
+      .ponto-stat-card {
+        border-radius: 24px;
+      }
+
+      .ponto-panel-header,
+      .ponto-form,
+      .ponto-list-wrap,
+      .ponto-filter-grid,
+      .ponto-table-wrap,
+      .ponto-report-actions,
+      .ponto-alert-grid,
+      .ponto-report-dashboard,
+      .ponto-calendar-layout {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      .ponto-times {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body class="interno-app-body">
+  <div class="interno-shell ponto-shell">
+
+    {% include "partials/sidebar.html" %}
+
+    <main class="ponto-main" id="ponto-page" data-ponto-page>
+      <section class="ponto-header">
+        <div>
+          <div class="ponto-breadcrumb">
+            <i class="fa-regular fa-clock"></i>
+            <span>SEG Sistemas</span>
+            <i class="fa-solid fa-arrow-right-long" style="font-size: 0.7rem; margin: 0 4px;"></i>
+            <span>Ponto Online</span>
+          </div>
+
+          <h1>Ponto Online</h1>
+          <p>
+            Controle de jornada com entrada, pausa, retorno, saída, relatório separado,
+            calendário separado e alertas operacionais.
+          </p>
+        </div>
+
+        <div class="ponto-header-actions">
+          <button type="button" class="ponto-btn secondary" id="btn-reload-ponto">
+            <i class="fa-solid fa-rotate-right"></i>
+            Atualizar
+          </button>
+
+          <a href="/interno/dashboard" class="ponto-btn">
+            <i class="fa-solid fa-table-cells-large"></i>
+            Dashboard
+          </a>
+        </div>
+      </section>
+
+      <nav class="ponto-tabs" aria-label="Abas do ponto online">
+        <button type="button" class="ponto-tab active" data-ponto-tab="controle">
+          <i class="fa-solid fa-fingerprint"></i>
+          Controle
+        </button>
+
+        <button type="button" class="ponto-tab" data-ponto-tab="relatorio">
+          <i class="fa-solid fa-chart-simple"></i>
+          Relatório
+        </button>
+
+        <button type="button" class="ponto-tab" data-ponto-tab="calendario">
+          <i class="fa-regular fa-calendar-days"></i>
+          Calendário
+        </button>
+
+        <button type="button" class="ponto-tab" data-ponto-tab="alertas">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          Alertas
+        </button>
+      </nav>
+
+      <section class="ponto-stats-grid" aria-label="Resumo do ponto">
+        <article class="ponto-stat-card green">
+          <span class="ponto-stat-label">
+            Ativos agora
+            <i class="fa-solid fa-user-check"></i>
+          </span>
+          <strong class="ponto-stat-value" data-ponto-stat="ativos_agora">
+            {{ pontos_resumo.ativos_agora|default(pontos_resumo.presentes|default(0)) }}
+          </strong>
+          <span class="ponto-stat-note">Trabalhando ou em pausa.</span>
+        </article>
+
+        <article class="ponto-stat-card orange">
+          <span class="ponto-stat-label">
+            Em pausa
+            <i class="fa-solid fa-mug-hot"></i>
+          </span>
+          <strong class="ponto-stat-value" data-ponto-stat="em_pausa">
+            {{ pontos_resumo.em_pausa|default(0) }}
+          </strong>
+          <span class="ponto-stat-note">Pausas abertas neste momento.</span>
+        </article>
+
+        <article class="ponto-stat-card blue">
+          <span class="ponto-stat-label">
+            Finalizados
+            <i class="fa-solid fa-check"></i>
+          </span>
+          <strong class="ponto-stat-value" data-ponto-stat="finalizados">
+            {{ pontos_resumo.finalizados|default(pontos_resumo.finalizados_hoje|default(0)) }}
+          </strong>
+          <span class="ponto-stat-note">Saídas batidas hoje.</span>
+        </article>
+
+        <article class="ponto-stat-card red">
+          <span class="ponto-stat-label">
+            Registros hoje
+            <i class="fa-regular fa-calendar-check"></i>
+          </span>
+          <strong class="ponto-stat-value" data-ponto-stat="total_hoje">
+            {{ pontos_resumo.total_hoje|default(0) }}
+          </strong>
+          <span class="ponto-stat-note">Jornadas do dia atual.</span>
+        </article>
+      </section>
+
+      <section class="ponto-tab-panel active" id="panel-controle" data-ponto-panel="controle">
+        <section class="ponto-layout">
+          <aside class="ponto-panel" aria-label="Controle de ponto">
+            <div class="ponto-panel-header">
+              <div>
+                <h2 id="ponto-status-title">Status do ponto</h2>
+                <p>Bata entrada, pausa, retorno e saída com confirmação.</p>
+              </div>
+
+              <span class="ponto-panel-icon">
+                <i class="fa-regular fa-clock"></i>
+              </span>
+            </div>
+
+            <div class="ponto-status-card" id="ponto-status-card">
+              <div class="ponto-status-big">
+                <span class="ponto-status-icon closed">
+                  <i class="fa-solid fa-spinner fa-spin"></i>
+                </span>
+
+                <div class="ponto-status-info">
+                  <strong>Carregando status...</strong>
+                  <p>Aguarde enquanto consultamos seu ponto do dia.</p>
+                </div>
+              </div>
+            </div>
+
+            <form class="ponto-form" id="ponto-form">
+              <div class="ponto-message" id="ponto-message"></div>
+
+              <label class="ponto-field">
+                <span>Observação / justificativa</span>
+                <textarea
+                  id="ponto-observacao"
+                  placeholder="Opcional. Ex: entrada normal, atraso justificado, pausa para almoço, saída do expediente..."
+                ></textarea>
+              </label>
+
+              <label class="ponto-confirm">
+                <input type="checkbox" id="ponto-confirmacao">
+                <span id="ponto-confirmacao-label">
+                  Confirmo que estou registrando esta ação no ponto online.
+                </span>
+              </label>
+
+              <div class="ponto-actions">
+                <button type="button" class="ponto-btn success" id="btn-ponto-entrada">
+                  <i class="fa-solid fa-play"></i>
+                  Entrada
+                </button>
+
+                <button type="button" class="ponto-btn warning" id="btn-ponto-pausa">
+                  <i class="fa-solid fa-pause"></i>
+                  Pausa
+                </button>
+
+                <button type="button" class="ponto-btn secondary" id="btn-ponto-retorno">
+                  <i class="fa-solid fa-rotate-left"></i>
+                  Retorno
+                </button>
+
+                <button type="button" class="ponto-btn danger" id="btn-ponto-saida">
+                  <i class="fa-solid fa-stop"></i>
+                  Saída
+                </button>
+              </div>
+            </form>
+          </aside>
+
+          <section class="ponto-panel" aria-label="Histórico do ponto">
+            <div class="ponto-panel-header">
+              <div>
+                <h2>Histórico do dia</h2>
+                <p>Veja os registros de ponto do dia atual.</p>
+              </div>
+
+              <span class="ponto-panel-icon blue">
+                <i class="fa-solid fa-list-check"></i>
+              </span>
+            </div>
+
+            <div class="ponto-list-wrap">
+              <div class="ponto-list" id="ponto-list"></div>
+
+              <div class="ponto-empty" id="ponto-empty">
+                <i class="fa-regular fa-clock"></i>
+                <h3>Nenhum registro de ponto hoje.</h3>
+                <p>
+                  Quando você bater entrada, o registro aparecerá aqui com horários,
+                  pausas, retorno e saída.
+                </p>
+              </div>
+            </div>
+          </section>
+        </section>
+      </section>
+
+      <section class="ponto-tab-panel" id="panel-relatorio" data-ponto-panel="relatorio">
+        <section class="ponto-panel">
+          <div class="ponto-panel-header">
+            <div>
+              <h2>Relatório de ponto</h2>
+              <p>Dashboard do período, filtros, tabela, exportação CSV e impressão.</p>
+            </div>
+
+            <span class="ponto-panel-icon yellow">
+              <i class="fa-solid fa-chart-pie"></i>
+            </span>
+          </div>
+
+          <div class="ponto-filter-grid">
+            <label class="ponto-field">
+              <span>Data inicial</span>
+              <input type="date" id="rel-data-inicio">
+            </label>
+
+            <label class="ponto-field">
+              <span>Data final</span>
+              <input type="date" id="rel-data-fim">
+            </label>
+
+            <label class="ponto-field">
+              <span>Funcionário</span>
+              <input type="text" id="rel-funcionario" placeholder="Nome ou usuário">
+            </label>
+
+            <label class="ponto-field">
+              <span>Status</span>
+              <select id="rel-status">
+                <option value="">Todos</option>
+                <option value="aberto">Trabalhando</option>
+                <option value="pausado">Em pausa</option>
+                <option value="em_pausa">Em pausa</option>
+                <option value="finalizado">Finalizado</option>
+              </select>
+            </label>
+
+            <label class="ponto-field">
+              <span>Busca geral</span>
+              <input type="text" id="rel-busca" placeholder="Buscar observação, usuário...">
+            </label>
+          </div>
+
+          <div class="ponto-report-actions">
+            <button type="button" class="ponto-btn" id="btn-rel-carregar">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              Carregar relatório
+            </button>
+
+            <button type="button" class="ponto-btn secondary" id="btn-rel-limpar">
+              <i class="fa-solid fa-eraser"></i>
+              Limpar filtros
+            </button>
+
+            <button type="button" class="ponto-btn success" id="btn-rel-csv">
+              <i class="fa-solid fa-file-csv"></i>
+              Exportar CSV
+            </button>
+
+            <button type="button" class="ponto-btn warning" id="btn-rel-print">
+              <i class="fa-solid fa-print"></i>
+              Imprimir
+            </button>
+          </div>
+
+          <div class="ponto-report-dashboard">
+            <article class="ponto-report-card green">
+              <span>
+                Registros
+                <i class="fa-solid fa-list-check"></i>
+              </span>
+              <strong id="dash-total-registros">0</strong>
+              <small>Total de pontos encontrados no período.</small>
+            </article>
+
+            <article class="ponto-report-card blue">
+              <span>
+                Pessoas
+                <i class="fa-solid fa-users"></i>
+              </span>
+              <strong id="dash-total-pessoas">0</strong>
+              <small>Funcionários diferentes que bateram ponto.</small>
+            </article>
+
+            <article class="ponto-report-card orange">
+              <span>
+                Trabalhando
+                <i class="fa-solid fa-user-clock"></i>
+              </span>
+              <strong id="dash-trabalhando">0</strong>
+              <small>Pontos abertos ou em pausa no filtro.</small>
+            </article>
+
+            <article class="ponto-report-card red">
+              <span>
+                Finalizados
+                <i class="fa-solid fa-check"></i>
+              </span>
+              <strong id="dash-finalizados">0</strong>
+              <small>Pontos com saída registrada.</small>
+            </article>
+
+            <article class="ponto-report-card yellow">
+              <span>
+                Horas líquidas
+                <i class="fa-regular fa-clock"></i>
+              </span>
+              <strong id="dash-horas-liquidas">0 min</strong>
+              <small>Total trabalhado sem contar pausas.</small>
+            </article>
+
+            <article class="ponto-report-card purple">
+              <span>
+                Pausas
+                <i class="fa-solid fa-mug-hot"></i>
+              </span>
+              <strong id="dash-pausas">0 min</strong>
+              <small>Total de pausas registradas no período.</small>
+            </article>
+
+            <article class="ponto-report-card blue">
+              <span>
+                Dias com ponto
+                <i class="fa-regular fa-calendar-check"></i>
+              </span>
+              <strong id="dash-dias-com-ponto">0</strong>
+              <small>Dias em que pelo menos alguém bateu ponto.</small>
+            </article>
+
+            <article class="ponto-report-card green">
+              <span>
+                Média/dia
+                <i class="fa-solid fa-chart-line"></i>
+              </span>
+              <strong id="dash-media-dia">0</strong>
+              <small>Média de registros por dia no período.</small>
+            </article>
+          </div>
+
+          <div class="ponto-panel-header" style="padding-top: 1.35rem;">
+            <div>
+              <h2>Tabela do relatório</h2>
+              <p>Detalhes dos registros encontrados no filtro.</p>
+            </div>
+          </div>
+
+          <div class="ponto-table-wrap">
+            <table class="ponto-table">
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Funcionário</th>
+                  <th>Status</th>
+                  <th>Entrada</th>
+                  <th>Pausas</th>
+                  <th>Saída</th>
+                  <th>Trabalhado</th>
+                  <th>Obs.</th>
+                </tr>
+              </thead>
+              <tbody id="rel-table-body"></tbody>
+            </table>
+
+            <div class="ponto-empty" id="rel-empty">
+              <i class="fa-solid fa-file-lines"></i>
+              <h3>Nenhum ponto encontrado.</h3>
+              <p>Use os filtros acima para carregar os registros.</p>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="ponto-tab-panel" id="panel-calendario" data-ponto-panel="calendario">
+        <section class="ponto-panel">
+          <div class="ponto-panel-header">
+            <div>
+              <h2>Calendário de ponto</h2>
+              <p>Veja visualmente quem bateu ponto em cada dia do mês.</p>
+            </div>
+
+            <span class="ponto-panel-icon blue">
+              <i class="fa-regular fa-calendar-days"></i>
+            </span>
+          </div>
+
+          <div class="ponto-calendar-layout">
+            <section class="ponto-calendar-box" aria-label="Calendário mensal de ponto">
+              <div class="ponto-calendar-head">
+                <strong id="calendar-title">Calendário</strong>
+
+                <div class="ponto-calendar-controls">
+                  <button type="button" class="ponto-mini-btn" id="btn-cal-prev">
+                    <i class="fa-solid fa-chevron-left"></i>
+                  </button>
+
+                  <input type="month" class="ponto-month-input" id="calendar-month">
+
+                  <button type="button" class="ponto-mini-btn" id="btn-cal-next">
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+
+                  <button type="button" class="ponto-mini-btn" id="btn-cal-load">
+                    Atualizar
+                  </button>
+                </div>
+              </div>
+
+              <div class="ponto-weekdays">
+                <span>Dom</span>
+                <span>Seg</span>
+                <span>Ter</span>
+                <span>Qua</span>
+                <span>Qui</span>
+                <span>Sex</span>
+                <span>Sáb</span>
+              </div>
+
+              <div class="ponto-calendar-grid" id="ponto-calendar-grid"></div>
+            </section>
+
+            <aside class="ponto-day-box" aria-label="Detalhe do dia selecionado">
+              <div class="ponto-day-panel">
+                <h3 id="day-detail-title">Selecione um dia</h3>
+                <p id="day-detail-subtitle">Clique em uma data no calendário para ver quem bateu ponto.</p>
+
+                <div class="ponto-alert-grid" style="grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 1rem 0 0;">
+                  <div class="ponto-alert green" style="grid-column: span 1;">
+                    <strong id="day-total-presentes">0</strong>
+                    <span>bateram ponto.</span>
+                  </div>
+
+                  <div class="ponto-alert orange" style="grid-column: span 1;">
+                    <strong id="day-total-ausentes">0</strong>
+                    <span>sem registro.</span>
+                  </div>
+                </div>
+
+                <div class="ponto-day-list" id="day-present-list"></div>
+
+                <div class="ponto-empty" id="day-empty">
+                  <i class="fa-regular fa-calendar-xmark"></i>
+                  <h3>Nenhum registro neste dia.</h3>
+                  <p>Quando alguém bater ponto nessa data, aparecerá aqui.</p>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </section>
+
+      <section class="ponto-tab-panel" id="panel-alertas" data-ponto-panel="alertas">
+        <section class="ponto-panel">
+          <div class="ponto-panel-header">
+            <div>
+              <h2>Alertas do ponto</h2>
+              <p>Resumo rápido para o gestor acompanhar situações que precisam de atenção.</p>
+            </div>
+
+            <span class="ponto-panel-icon red">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </span>
+          </div>
+
+          <div class="ponto-alert-grid">
+            <div class="ponto-alert green">
+              <strong id="alert-trabalhando">0</strong>
+              <span>funcionários trabalhando agora.</span>
+            </div>
+
+            <div class="ponto-alert orange">
+              <strong id="alert-pausados">0</strong>
+              <span>funcionários em pausa agora.</span>
+            </div>
+
+            <div class="ponto-alert red">
+              <strong id="alert-ponto-aberto">0</strong>
+              <span>pontos ainda abertos sem saída.</span>
+            </div>
+
+            <div class="ponto-alert blue">
+              <strong id="alert-finalizados">0</strong>
+              <span>pontos finalizados hoje.</span>
+            </div>
+
+            <div class="ponto-alert yellow">
+              <strong id="alert-horas">0 min</strong>
+              <span>horas líquidas trabalhadas hoje.</span>
+            </div>
+
+            <div class="ponto-alert red">
+              <strong id="alert-pausas-longas">0</strong>
+              <span>pausas abertas há mais de 1 hora.</span>
+            </div>
+          </div>
+
+          <div class="ponto-list-wrap">
+            <div class="ponto-list" id="alert-list"></div>
+
+            <div class="ponto-empty" id="alert-empty">
+              <i class="fa-solid fa-circle-check"></i>
+              <h3>Nenhum alerta crítico agora.</h3>
+              <p>Quando houver ponto aberto, pausa longa ou pendência, aparecerá aqui.</p>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+  <script src="/static/js/pages/interno-ponto.js"></script>
+</body>
+</html>
