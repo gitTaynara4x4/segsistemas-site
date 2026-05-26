@@ -15,9 +15,17 @@
     normalize,
     apiFetch,
     initPasswordToggle,
-    formatDateTime,
     onReady,
   } = core;
+
+  const ACESSOS_OPERACAO = [
+    'dashboard',
+    'ponto',
+    'plantao',
+    'passagem',
+    'ocorrencias',
+    'manual',
+  ];
 
   function setMessage(type, text) {
     const box = qs('#func-form-message');
@@ -35,6 +43,94 @@
     box.textContent = text;
   }
 
+  function getAcessoChecks() {
+    return Array.from(qsa('[data-acesso-check]') || []);
+  }
+
+  function getTodosAcessosDisponiveis() {
+    return getAcessoChecks()
+      .map(function (check) {
+        return String(check.value || '').trim();
+      })
+      .filter(Boolean);
+  }
+
+  function normalizarListaAcessos(valor) {
+    if (!valor) return [];
+
+    if (Array.isArray(valor)) {
+      return valor
+        .map(function (item) {
+          return String(item || '').trim();
+        })
+        .filter(Boolean);
+    }
+
+    if (typeof valor === 'string') {
+      const raw = valor.trim();
+      if (!raw) return [];
+
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          return parsed
+            .map(function (item) {
+              return String(item || '').trim();
+            })
+            .filter(Boolean);
+        }
+      } catch (error) {
+        // Se não for JSON, tenta separado por vírgula.
+      }
+
+      return raw
+        .split(',')
+        .map(function (item) {
+          return String(item || '').trim();
+        })
+        .filter(Boolean);
+    }
+
+    return [];
+  }
+
+  function getAcessosSelecionados() {
+    return getAcessoChecks()
+      .filter(function (check) {
+        return Boolean(check.checked);
+      })
+      .map(function (check) {
+        return String(check.value || '').trim();
+      })
+      .filter(Boolean);
+  }
+
+  function setAcessosSelecionados(acessos) {
+    const lista = normalizarListaAcessos(acessos);
+    const set = new Set(lista);
+
+    getAcessoChecks().forEach(function (check) {
+      check.checked = set.has(String(check.value || '').trim());
+    });
+  }
+
+  function selecionarAcessosOperacao() {
+    const disponiveis = new Set(getTodosAcessosDisponiveis());
+    const operacao = ACESSOS_OPERACAO.filter(function (key) {
+      return disponiveis.has(key);
+    });
+
+    setAcessosSelecionados(operacao);
+  }
+
+  function selecionarTodosAcessos() {
+    setAcessosSelecionados(getTodosAcessosDisponiveis());
+  }
+
+  function limparAcessos() {
+    setAcessosSelecionados([]);
+  }
+
   function getFormData() {
     return {
       id: qs('#funcionario-id') ? qs('#funcionario-id').value : '',
@@ -47,6 +143,7 @@
       permissao: qs('#func-permissao') ? qs('#func-permissao').value : 'operador',
       senha: qs('#func-senha') ? qs('#func-senha').value : '',
       ativo: qs('#func-ativo') ? qs('#func-ativo').checked : true,
+      acessos: getAcessosSelecionados(),
     };
   }
 
@@ -59,6 +156,9 @@
 
     const ativo = qs('#func-ativo');
     if (ativo) ativo.checked = true;
+
+    const permissao = qs('#func-permissao');
+    if (permissao) permissao.value = 'operador';
 
     const title = qs('#func-form-title');
     if (title) title.textContent = 'Novo funcionário';
@@ -76,21 +176,43 @@
       senha.value = '';
     }
 
+    selecionarAcessosOperacao();
     setMessage('', '');
   }
 
   function fillForm(funcionario) {
     if (!funcionario) return;
 
-    qs('#funcionario-id').value = funcionario.id || '';
-    qs('#func-nome').value = funcionario.nome || '';
-    qs('#func-telefone').value = funcionario.telefone || '';
-    qs('#func-email').value = funcionario.email || '';
-    qs('#func-cargo').value = funcionario.cargo || '';
-    qs('#func-tipo').value = funcionario.tipo || 'plantonista';
-    qs('#func-usuario').value = funcionario.usuario || '';
-    qs('#func-permissao').value = funcionario.permissao || 'operador';
-    qs('#func-ativo').checked = Boolean(funcionario.ativo);
+    const id = qs('#funcionario-id');
+    const nome = qs('#func-nome');
+    const telefone = qs('#func-telefone');
+    const email = qs('#func-email');
+    const cargo = qs('#func-cargo');
+    const tipo = qs('#func-tipo');
+    const usuario = qs('#func-usuario');
+    const permissao = qs('#func-permissao');
+    const ativo = qs('#func-ativo');
+
+    if (id) id.value = funcionario.id || '';
+    if (nome) nome.value = funcionario.nome || '';
+    if (telefone) telefone.value = funcionario.telefone || '';
+    if (email) email.value = funcionario.email || '';
+    if (cargo) cargo.value = funcionario.cargo || '';
+    if (tipo) tipo.value = funcionario.tipo || 'plantonista';
+    if (usuario) usuario.value = funcionario.usuario || '';
+    if (permissao) permissao.value = funcionario.permissao || 'operador';
+    if (ativo) ativo.checked = Boolean(funcionario.ativo);
+
+    const acessos = funcionario.acessos || funcionario.acessos_lista || [];
+    const acessosNormalizados = normalizarListaAcessos(acessos);
+
+    if (acessosNormalizados.length) {
+      setAcessosSelecionados(acessosNormalizados);
+    } else if ((funcionario.permissao || '') === 'admin') {
+      selecionarTodosAcessos();
+    } else {
+      selecionarAcessosOperacao();
+    }
 
     const senha = qs('#func-senha');
     if (senha) {
@@ -120,11 +242,51 @@
     });
   }
 
+  function labelAcesso(key) {
+    const check = getAcessoChecks().find(function (item) {
+      return item.value === key;
+    });
+
+    if (!check) return key;
+
+    const label = check.closest('label');
+    if (!label) return key;
+
+    const span = label.querySelector('span');
+    if (!span) return key;
+
+    return String(span.childNodes[0] ? span.childNodes[0].textContent : span.textContent || key).trim();
+  }
+
+  function acessoResumoHtml(funcionario) {
+    const acessos = normalizarListaAcessos(funcionario.acessos || funcionario.acessos_lista || []);
+
+    if (!acessos.length) {
+      return '<div class="func-access-summary"><span class="tag neutral">Sem módulos definidos</span></div>';
+    }
+
+    const visiveis = acessos.slice(0, 4);
+    const restante = acessos.length - visiveis.length;
+
+    return `
+      <div class="func-access-summary">
+        ${visiveis.map(function (key) {
+          return '<span class="tag access">' + escapeHtml(labelAcesso(key)) + '</span>';
+        }).join('')}
+        ${restante > 0 ? '<span class="tag neutral">+' + restante + '</span>' : ''}
+      </div>
+    `;
+  }
+
   function filteredFuncionarios() {
     const filtro = normalize(state.filtro);
     if (!filtro) return state.funcionarios.slice();
 
     return state.funcionarios.filter(function (funcionario) {
+      const acessos = normalizarListaAcessos(funcionario.acessos || funcionario.acessos_lista || [])
+        .map(labelAcesso)
+        .join(' ');
+
       const haystack = normalize([
         funcionario.nome,
         funcionario.usuario,
@@ -134,6 +296,7 @@
         funcionario.tipo_label,
         funcionario.permissao_label,
         funcionario.ativo ? 'ativo' : 'inativo',
+        acessos,
       ].join(' '));
 
       return haystack.includes(filtro);
@@ -162,18 +325,24 @@
         <article class="func-card ${ativo ? '' : 'inativo'}" data-id="${escapeHtml(funcionario.id)}">
           <div class="func-main">
             <span class="func-avatar">${letra}</span>
+
             <div class="func-info">
-              <h3>${escapeHtml(funcionario.nome)}</h3>
+              <h3>${escapeHtml(funcionario.nome || 'Sem nome')}</h3>
+
               <p>
-                <strong>@${escapeHtml(funcionario.usuario)}</strong>
+                <strong>@${escapeHtml(funcionario.usuario || 'sem_usuario')}</strong>
                 ${cargo ? ' • ' + escapeHtml(cargo) : ''}
               </p>
+
               ${contato ? `<p>${escapeHtml(contato)}</p>` : '<p>Sem telefone/e-mail informado</p>'}
+
               <div class="func-tags">
                 ${statusTag}
-                <span class="tag neutral">${escapeHtml(funcionario.tipo_label || funcionario.tipo)}</span>
-                <span class="tag warn">${escapeHtml(funcionario.permissao_label || funcionario.permissao)}</span>
+                <span class="tag neutral">${escapeHtml(funcionario.tipo_label || funcionario.tipo || 'Tipo')}</span>
+                <span class="tag warn">${escapeHtml(funcionario.permissao_label || funcionario.permissao || 'Permissão')}</span>
               </div>
+
+              ${acessoResumoHtml(funcionario)}
             </div>
           </div>
 
@@ -182,6 +351,7 @@
               <i class="fa-solid fa-pen"></i>
               Editar
             </button>
+
             <button type="button" class="btn-small ${ativo ? 'danger' : 'success'}" data-toggle-func="${escapeHtml(funcionario.id)}" data-ativo="${ativo ? '1' : '0'}">
               <i class="fa-solid ${ativo ? 'fa-user-slash' : 'fa-user-check'}"></i>
               ${ativo ? 'Inativar' : 'Ativar'}
@@ -231,7 +401,13 @@
       return;
     }
 
+    if (!Array.isArray(dados.acessos) || !dados.acessos.length) {
+      setMessage('error', 'Marque pelo menos uma tela que esse funcionário pode acessar.');
+      return;
+    }
+
     state.salvando = true;
+
     if (btn) {
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
@@ -246,6 +422,9 @@
 
       await apiFetch(url, {
         method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(dados),
       });
 
@@ -256,6 +435,7 @@
       setMessage('error', error.message || 'Erro ao salvar funcionário.');
     } finally {
       state.salvando = false;
+
       if (btn) {
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar funcionário';
@@ -274,12 +454,51 @@
     try {
       await apiFetch('/api/interno/funcionarios/' + encodeURIComponent(id) + '/' + acao, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({}),
       });
+
       await loadFuncionarios();
       setMessage('success', ativoAtual ? 'Funcionário inativado.' : 'Funcionário ativado.');
     } catch (error) {
       setMessage('error', error.message || 'Erro ao alterar status do funcionário.');
+    }
+  }
+
+  function bindAcessosButtons() {
+    const btnOperacao = qs('#btn-acessos-operacao');
+    const btnTodos = qs('#btn-acessos-todos');
+    const btnLimpar = qs('#btn-acessos-limpar');
+    const permissao = qs('#func-permissao');
+
+    if (btnOperacao) {
+      btnOperacao.addEventListener('click', function () {
+        selecionarAcessosOperacao();
+      });
+    }
+
+    if (btnTodos) {
+      btnTodos.addEventListener('click', function () {
+        selecionarTodosAcessos();
+      });
+    }
+
+    if (btnLimpar) {
+      btnLimpar.addEventListener('click', function () {
+        limparAcessos();
+      });
+    }
+
+    if (permissao) {
+      permissao.addEventListener('change', function () {
+        if (permissao.value === 'admin') {
+          selecionarTodosAcessos();
+        } else if (!getAcessosSelecionados().length) {
+          selecionarAcessosOperacao();
+        }
+      });
     }
   }
 
@@ -311,6 +530,7 @@
         const funcionario = state.funcionarios.find(function (item) {
           return Number(item.id) === id;
         });
+
         fillForm(funcionario);
         return;
       }
@@ -323,6 +543,7 @@
       }
     });
 
+    bindAcessosButtons();
     resetForm();
     loadFuncionarios();
   }
@@ -346,8 +567,18 @@
       listCard.classList.remove('is-shrunk');
     }
 
-    if (btnOpen) btnOpen.addEventListener('click', showForm);
-    if (btnClose) btnClose.addEventListener('click', hideForm);
+    if (btnOpen) {
+      btnOpen.addEventListener('click', function () {
+        resetForm();
+        showForm();
+      });
+    }
+
+    if (btnClose) {
+      btnClose.addEventListener('click', function () {
+        hideForm();
+      });
+    }
 
     document.addEventListener('click', function (event) {
       if (event.target.closest('#btn-cancel-edit')) {
