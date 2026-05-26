@@ -4,24 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex,nofollow">
-  <title>Visão Geral | SEG Sistemas</title>
+  <title>Painel Interno | SEG Sistemas</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" type="image/png" href="/static/img/favicon.png">
 
-  <link rel="stylesheet" href="/static/css/interno.css">
-
   <style>
-    /* ==========================================================================
-       SEG INTERNO — DASHBOARD OPERACIONAL
-       Visual bento/pill UI integrado aos módulos:
-       Funcionários, Plantão, Passagem, Manual e Ocorrências.
-       ========================================================================== */
-
     :root {
       --ec-bg-app: #f0f3ee;
       --ec-card-white: #ffffff;
@@ -29,22 +21,16 @@
       --ec-card-blue: #e5ebfd;
       --ec-card-orange: #ffe8d6;
       --ec-card-red: #fde5e5;
-      --ec-card-yellow: #fff3bf;
 
-      --ec-text-main: #111111;
+      --ec-text-main: #243027;
       --ec-text-muted: #73776f;
-      --ec-text-soft: #9da198;
 
-      --ec-black: #050505;
-      --ec-black-hover: #202020;
-      --ec-border: rgba(15, 23, 42, 0.07);
-
+      --ec-primary-soft: #eaf7dc;
       --ec-radius-pill: 9999px;
-      --ec-radius-card: 32px;
-      --ec-radius-sm: 18px;
+      --ec-radius-card: 24px;
 
-      --ec-shadow-float: 0 12px 30px rgba(0, 0, 0, 0.035);
-      --ec-shadow-hover: 0 18px 48px rgba(0, 0, 0, 0.08);
+      --ec-shadow-float: 0 10px 24px rgba(0, 0, 0, 0.03);
+      --ec-shadow-hover: 0 14px 34px rgba(0, 0, 0, 0.055);
     }
 
     * {
@@ -53,89 +39,104 @@
       padding: 0;
     }
 
+    html {
+      min-height: 100%;
+      background: var(--ec-bg-app);
+    }
+
     body.interno-app-body {
+      min-height: 100vh;
       background-color: var(--ec-bg-app);
       font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--ec-text-main);
       -webkit-font-smoothing: antialiased;
       line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    strong {
+      font-weight: 500;
     }
 
     .dash-v2-shell {
-      display: flex;
+      display: block;
       min-height: 100vh;
+      background: var(--ec-bg-app);
     }
 
     .dash-v2-main {
-      width: min(1500px, calc(100% - 72px));
+      width: min(1280px, calc(100% - 96px));
+      max-width: 1280px;
       margin: 0 auto;
-      padding: 2rem 3rem 3rem;
+      padding: 1.35rem 1.25rem 2.6rem;
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 1rem;
     }
 
     .ec-header {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
-      gap: 1.5rem;
+      gap: 1rem;
       align-items: end;
-      margin-bottom: 0.5rem;
-    }
-
-    .ec-breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 0.6rem;
-      color: var(--ec-text-muted);
-      font-size: 0.875rem;
-    }
-
-    .ec-breadcrumb i {
-      font-size: 0.85rem;
+      margin-bottom: 0.2rem;
     }
 
     .ec-header h1 {
       color: var(--ec-text-main);
-      font-size: clamp(2.6rem, 5vw, 4.4rem);
+      font-size: clamp(2rem, 3.4vw, 3.15rem);
       font-weight: 300;
-      letter-spacing: -0.065em;
+      letter-spacing: -0.058em;
       line-height: 1.04;
     }
 
     .ec-header p {
-      max-width: 820px;
-      margin-top: 0.8rem;
+      max-width: 680px;
+      margin-top: 0.55rem;
       color: var(--ec-text-muted);
-      font-size: 1rem;
-      line-height: 1.72;
+      font-size: 0.9rem;
+      line-height: 1.62;
+      font-weight: 400;
     }
 
     .ec-header-actions {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 0.75rem;
+      gap: 0.6rem;
       flex-wrap: wrap;
     }
 
     .ec-main-btn {
-      min-height: 46px;
-      padding: 0 18px;
+      min-height: 38px;
+      padding: 0 14px;
       border: 0;
       border-radius: var(--ec-radius-pill);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 9px;
-      color: #ffffff;
-      background: var(--ec-black);
+      gap: 8px;
+      color: #244020;
+      background: var(--ec-primary-soft);
       font-family: inherit;
-      font-size: 0.86rem;
-      font-weight: 850;
+      font-size: 0.78rem;
+      font-weight: 500;
       text-decoration: none;
-      box-shadow: 0 16px 34px rgba(0, 0, 0, 0.16);
+      box-shadow: 0 8px 20px rgba(79, 127, 69, 0.10);
       transition:
         transform 0.18s ease,
         box-shadow 0.18s ease,
@@ -144,25 +145,140 @@
 
     .ec-main-btn:hover {
       transform: translateY(-1px);
-      background: var(--ec-black-hover);
-      box-shadow: 0 20px 42px rgba(0, 0, 0, 0.22);
+      background: #dff2ca;
+      box-shadow: 0 12px 26px rgba(79, 127, 69, 0.15);
     }
 
     .ec-main-btn.secondary {
-      color: #242821;
+      color: #3e463b;
       background: rgba(255, 255, 255, 0.84);
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.045);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.045);
     }
 
     .ec-main-btn.secondary:hover {
       background: #ffffff;
-      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.075);
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.065);
+    }
+
+    .ec-filter-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem;
+      border: 1px solid rgba(255, 255, 255, 0.52);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: var(--ec-shadow-float);
+    }
+
+    .ec-filter-label {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      min-width: 210px;
+      color: var(--ec-text-main);
+      font-size: 0.82rem;
+    }
+
+    .ec-filter-label i {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #42543a;
+      background: #eef8e5;
+      font-size: 0.78rem;
+    }
+
+    .ec-filter-label span {
+      display: block;
+      color: var(--ec-text-muted);
+      font-size: 0.72rem;
+    }
+
+    .ec-filter-label strong {
+      display: block;
+      margin-top: 0.08rem;
+      font-size: 0.86rem;
+      font-weight: 500;
+    }
+
+    .ec-filter-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .ec-filter-chip {
+      min-height: 34px;
+      padding: 0 0.8rem;
+      border: 1px solid rgba(15, 23, 42, 0.055);
+      border-radius: var(--ec-radius-pill);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #3e463b;
+      background: #ffffff;
+      font-size: 0.76rem;
+      font-weight: 400;
+      transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .ec-filter-chip:hover {
+      transform: translateY(-1px);
+      background: #f8fbf5;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.045);
+    }
+
+    .ec-filter-chip.active {
+      color: #244020;
+      background: var(--ec-primary-soft);
+      border-color: rgba(79, 127, 69, 0.16);
+      box-shadow: 0 8px 18px rgba(79, 127, 69, 0.08);
+    }
+
+    .ec-date-form {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding-left: 0.2rem;
+    }
+
+    .ec-date-form input[type="date"] {
+      min-height: 34px;
+      padding: 0 0.75rem;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: var(--ec-radius-pill);
+      color: #3e463b;
+      background: #ffffff;
+      font-size: 0.76rem;
+      outline: 0;
+    }
+
+    .ec-date-form input[type="date"]:focus {
+      border-color: rgba(79, 127, 69, 0.35);
+      box-shadow: 0 0 0 3px rgba(79, 127, 69, 0.08);
+    }
+
+    .ec-date-form button {
+      min-height: 34px;
+      padding: 0 0.8rem;
+      border: 0;
+      border-radius: var(--ec-radius-pill);
+      color: #244020;
+      background: var(--ec-primary-soft);
+      font-size: 0.76rem;
+      font-weight: 500;
     }
 
     .ec-grid {
       display: grid;
       grid-template-columns: repeat(12, 1fr);
-      gap: 1.25rem;
+      gap: 0.8rem;
     }
 
     .ec-card {
@@ -170,9 +286,9 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      border: 1px solid rgba(255, 255, 255, 0.46);
+      border: 1px solid rgba(255, 255, 255, 0.52);
       border-radius: var(--ec-radius-card);
-      padding: 1.55rem;
+      padding: 1rem;
       background: var(--ec-card-white);
       box-shadow: var(--ec-shadow-float);
     }
@@ -181,60 +297,9 @@
       box-shadow: var(--ec-shadow-hover);
     }
 
-    .card-hero {
-      grid-column: span 4;
-      grid-row: span 2;
-      min-height: 410px;
-      justify-content: space-between;
-      background:
-        radial-gradient(circle at 84% 10%, rgba(255, 255, 255, 0.45), transparent 28%),
-        var(--ec-card-green);
-    }
-
-    .card-hero-title {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      color: #1d2b13;
-      font-size: 1.05rem;
-      font-weight: 850;
-      letter-spacing: -0.025em;
-    }
-
-    .card-hero-icon {
-      flex: 1;
-      display: grid;
-      place-items: center;
-      color: rgba(0, 0, 0, 0.07);
-      font-size: clamp(4rem, 8vw, 7rem);
-    }
-
-    .card-hero-glass {
-      padding: 1.35rem;
-      border: 1px solid rgba(255, 255, 255, 0.42);
-      border-radius: 24px;
-      background: rgba(255, 255, 255, 0.42);
-      backdrop-filter: blur(12px);
-    }
-
-    .card-hero-glass h3 {
-      margin: 0 0 0.35rem;
-      color: #16230d;
-      font-size: 1.02rem;
-      font-weight: 850;
-      letter-spacing: -0.025em;
-    }
-
-    .card-hero-glass p {
-      margin: 0;
-      color: #4a5d33;
-      font-size: 0.9rem;
-      line-height: 1.62;
-    }
-
     .card-kpi {
-      grid-column: span 2;
-      min-height: 184px;
+      grid-column: span 3;
+      min-height: 138px;
     }
 
     .card-kpi.blue {
@@ -253,88 +318,74 @@
       background: var(--ec-card-green);
     }
 
-    .card-wide {
+    .card-modules {
+      grid-column: span 8;
+      background: var(--ec-card-white);
+      padding: 0.95rem;
+    }
+
+    .card-actions {
       grid-column: span 4;
-      background: var(--ec-card-blue);
+      background: var(--ec-card-white);
+      padding: 0.95rem;
     }
 
     .ec-card-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 1rem;
-      margin-bottom: 1.15rem;
+      gap: 0.8rem;
+      margin-bottom: 0.85rem;
     }
 
     .ec-card-header span {
       color: #4f554b;
-      font-size: 0.78rem;
-      font-weight: 900;
+      font-size: 0.67rem;
+      font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.08em;
     }
 
     .ec-icon-pill {
       flex: 0 0 auto;
-      width: 36px;
-      height: 36px;
+      width: 31px;
+      height: 31px;
       border-radius: 50%;
       display: grid;
       place-items: center;
-      color: var(--ec-text-main);
+      color: #42543a;
       background: rgba(255, 255, 255, 0.56);
-      font-size: 0.9rem;
+      font-size: 0.8rem;
     }
 
     .ec-kpi-value {
       margin-top: auto;
       color: var(--ec-text-main);
-      font-size: clamp(2.45rem, 5vw, 3.55rem);
+      font-size: clamp(2rem, 3.8vw, 2.8rem);
       font-weight: 300;
       letter-spacing: -0.065em;
       line-height: 0.95;
     }
 
     .ec-kpi-footer {
-      margin-top: 0.65rem;
+      margin-top: 0.5rem;
       color: #60655d;
-      font-size: 0.875rem;
-      line-height: 1.5;
-    }
-
-    .ec-kpi-footer strong {
-      color: var(--ec-text-main);
-      font-weight: 850;
+      font-size: 0.78rem;
+      line-height: 1.38;
+      font-weight: 400;
     }
 
     .ec-badge {
       display: inline-flex;
       align-items: center;
-      min-height: 26px;
-      padding: 0 10px;
+      min-height: 22px;
+      padding: 0 8px;
       border-radius: var(--ec-radius-pill);
       color: #3b5017;
       background: #c5f082;
-      font-size: 0.74rem;
-      font-weight: 900;
+      font-size: 0.66rem;
+      font-weight: 500;
       letter-spacing: -0.01em;
-    }
-
-    .ec-badge.neutral {
-      color: #3d4239;
-      background: rgba(255, 255, 255, 0.64);
-    }
-
-    .card-modules {
-      grid-column: span 7;
-      background: var(--ec-card-white);
-      padding: 1.35rem;
-    }
-
-    .card-actions {
-      grid-column: span 5;
-      background: var(--ec-card-white);
-      padding: 1.35rem;
     }
 
     .ec-section-title {
@@ -342,34 +393,38 @@
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
     }
 
     .ec-section-title strong {
       color: var(--ec-text-main);
-      font-size: 1.02rem;
-      font-weight: 850;
+      font-size: 0.92rem;
+      font-weight: 500;
       letter-spacing: -0.03em;
     }
 
     .ec-section-title small {
+      display: block;
+      margin-top: 0.12rem;
       color: var(--ec-text-muted);
-      font-size: 0.82rem;
+      font-size: 0.74rem;
+      line-height: 1.35;
+      font-weight: 400;
     }
 
     .ec-module-list {
       display: grid;
-      gap: 0.65rem;
+      gap: 0.55rem;
     }
 
     .ec-module-row {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      min-height: 76px;
-      padding: 0.9rem;
+      gap: 0.75rem;
+      min-height: 58px;
+      padding: 0.68rem;
       border: 1px solid rgba(15, 23, 42, 0.045);
-      border-radius: 22px;
+      border-radius: 18px;
       color: var(--ec-text-main);
       background: #f8f9f5;
       text-decoration: none;
@@ -382,19 +437,20 @@
     .ec-module-row:hover {
       transform: translateY(-1px);
       background: #ffffff;
-      box-shadow: 0 14px 30px rgba(15, 23, 42, 0.055);
+      box-shadow: 0 12px 24px rgba(15, 23, 42, 0.05);
     }
 
     .ec-module-icon {
       flex: 0 0 auto;
-      width: 46px;
-      height: 46px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       display: grid;
       place-items: center;
-      color: #111111;
+      color: #42543a;
       background: #ffffff;
-      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.055);
+      box-shadow: 0 7px 16px rgba(15, 23, 42, 0.05);
+      font-size: 0.8rem;
     }
 
     .ec-module-info {
@@ -405,53 +461,53 @@
     .ec-module-info strong {
       display: block;
       color: var(--ec-text-main);
-      font-size: 0.95rem;
-      font-weight: 850;
+      font-size: 0.82rem;
+      font-weight: 500;
       letter-spacing: -0.02em;
     }
 
     .ec-module-info small {
       display: block;
-      margin-top: 0.18rem;
+      margin-top: 0.12rem;
       color: var(--ec-text-muted);
-      font-size: 0.84rem;
-      line-height: 1.35;
+      font-size: 0.72rem;
+      font-weight: 400;
+      line-height: 1.28;
     }
 
     .ec-circle-btn {
       flex: 0 0 auto;
-      width: 38px;
-      height: 38px;
+      width: 29px;
+      height: 29px;
       border-radius: 50%;
       display: grid;
       place-items: center;
-      color: #ffffff;
-      background: var(--ec-black);
-      font-size: 0.82rem;
+      color: #34522e;
+      background: #eef8e5;
+      font-size: 0.7rem;
     }
 
     .ec-action-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.85rem;
+      grid-template-columns: 1fr;
+      gap: 0.65rem;
     }
 
     .ec-action-box {
-      min-height: 128px;
-      padding: 1.15rem 0.9rem;
+      min-height: 62px;
+      padding: 0.8rem;
       border: 1px solid rgba(15, 23, 42, 0.045);
-      border-radius: 24px;
+      border-radius: 18px;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       gap: 0.65rem;
       color: var(--ec-text-main);
       background: var(--ec-bg-app);
-      text-align: center;
+      text-align: left;
       text-decoration: none;
-      font-size: 0.86rem;
-      font-weight: 800;
+      font-size: 0.78rem;
+      font-weight: 400;
       transition:
         transform 0.18s ease,
         background 0.18s ease,
@@ -459,43 +515,38 @@
     }
 
     .ec-action-box i {
-      color: #a1a69c;
-      font-size: 1.45rem;
-      transition: color 0.18s ease;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #42543a;
+      background: #ffffff;
+      font-size: 0.82rem;
     }
 
     .ec-action-box:hover {
       transform: translateY(-2px);
       background: var(--ec-card-green);
-      box-shadow: 0 16px 30px rgba(15, 23, 42, 0.065);
-    }
-
-    .ec-action-box:hover i {
-      color: var(--ec-text-main);
-    }
-
-    .ec-action-box.full {
-      grid-column: span 2;
-      min-height: 86px;
-      flex-direction: row;
+      box-shadow: 0 14px 26px rgba(15, 23, 42, 0.055);
     }
 
     .card-alerts {
       grid-column: span 12;
       background: rgba(255, 255, 255, 0.74);
-      padding: 1.35rem;
+      padding: 0.95rem;
     }
 
     .ec-alert-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.85rem;
+      gap: 0.65rem;
     }
 
     .ec-alert-item {
-      min-height: 112px;
-      padding: 1rem;
-      border-radius: 24px;
+      min-height: 88px;
+      padding: 0.8rem;
+      border-radius: 20px;
       background: #f8f9f5;
       border: 1px solid rgba(15, 23, 42, 0.045);
     }
@@ -503,7 +554,7 @@
     .ec-alert-item strong {
       display: block;
       color: var(--ec-text-main);
-      font-size: 1.6rem;
+      font-size: 1.4rem;
       font-weight: 300;
       letter-spacing: -0.055em;
       line-height: 1;
@@ -511,10 +562,11 @@
 
     .ec-alert-item span {
       display: block;
-      margin-top: 0.4rem;
+      margin-top: 0.34rem;
       color: var(--ec-text-muted);
-      font-size: 0.86rem;
-      line-height: 1.45;
+      font-size: 0.76rem;
+      line-height: 1.38;
+      font-weight: 400;
     }
 
     .ec-alert-item.red {
@@ -534,17 +586,13 @@
     }
 
     @media (max-width: 1280px) {
-      .card-hero {
-        grid-column: span 12;
-        grid-row: auto;
-        min-height: 320px;
+      .dash-v2-main {
+        width: min(1120px, calc(100% - 48px));
+        max-width: 1120px;
+        margin: 0 auto;
       }
 
       .card-kpi {
-        grid-column: span 3;
-      }
-
-      .card-wide {
         grid-column: span 6;
       }
 
@@ -556,12 +604,18 @@
       .ec-alert-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+
+      .ec-action-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 920px) {
       .dash-v2-main {
         width: min(920px, calc(100% - 32px));
-        padding: 1.5rem 0 2.5rem;
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 1.25rem 0 2.4rem;
       }
 
       .ec-header {
@@ -572,45 +626,57 @@
         justify-content: flex-start;
       }
 
-      .card-kpi,
-      .card-wide {
-        grid-column: span 6;
+      .ec-filter-card {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .ec-filter-actions {
+        justify-content: flex-start;
       }
     }
 
     @media (max-width: 720px) {
       .ec-header h1 {
-        font-size: 2.55rem;
+        font-size: 2.2rem;
       }
 
-      .card-kpi,
-      .card-wide {
+      .card-kpi {
         grid-column: span 12;
       }
 
-      .ec-alert-grid {
-        grid-template-columns: 1fr;
-      }
-
+      .ec-alert-grid,
       .ec-action-grid {
         grid-template-columns: 1fr;
       }
 
-      .ec-action-box.full {
-        grid-column: span 1;
+      .ec-date-form {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+
+      .ec-date-form input[type="date"] {
+        flex: 1;
+        min-width: 180px;
       }
     }
 
     @media (max-width: 520px) {
+      .dash-v2-main {
+        width: calc(100% - 24px);
+        max-width: none;
+        margin: 0 auto;
+      }
+
       .ec-card {
-        border-radius: 24px;
-        padding: 1.15rem;
+        border-radius: 20px;
+        padding: 0.9rem;
       }
 
       .card-modules,
       .card-actions,
       .card-alerts {
-        padding: 1rem;
+        padding: 0.85rem;
       }
 
       .ec-module-row {
@@ -633,24 +699,17 @@
 
       <section class="ec-header">
         <div>
-          <div class="ec-breadcrumb">
-            <i class="fa-regular fa-folder"></i>
-            <span>SEG Sistemas</span>
-            <i class="fa-solid fa-arrow-right-long" style="font-size: 0.7rem; margin: 0 4px;"></i>
-            <span>Painel de Controle</span>
-          </div>
-
-          <h1>Visão Operacional</h1>
+          <h1>Painel Interno</h1>
           <p>
-            Resumo interno da operação SEG: equipe, plantões, passagens, manual e ocorrências
-            em um único painel.
+            Acompanhe as pendências principais da operação por período:
+            ocorrências, passagens de plantão, plantões em andamento e equipe ativa.
           </p>
         </div>
 
         <div class="ec-header-actions">
-          <a href="/interno/plantao" class="ec-main-btn secondary">
-            <i class="fa-solid fa-play"></i>
-            Plantão
+          <a href="/interno/ponto" class="ec-main-btn secondary">
+            <i class="fa-solid fa-calendar-check"></i>
+            Ponto Online
           </a>
 
           <a href="/interno/ocorrencias" class="ec-main-btn">
@@ -660,24 +719,101 @@
         </div>
       </section>
 
+      <section class="ec-filter-card">
+        <div class="ec-filter-label">
+          <i class="fa-regular fa-calendar"></i>
+          <div>
+            <span>Período selecionado</span>
+            <strong>{{ dashboard_filtro.label }}</strong>
+          </div>
+        </div>
+
+        <div class="ec-filter-actions">
+          <a
+            href="/interno/dashboard?periodo=hoje"
+            class="ec-filter-chip{% if dashboard_filtro.periodo == 'hoje' %} active{% endif %}"
+          >
+            Hoje
+          </a>
+
+          <a
+            href="/interno/dashboard?periodo=ontem"
+            class="ec-filter-chip{% if dashboard_filtro.periodo == 'ontem' %} active{% endif %}"
+          >
+            Ontem
+          </a>
+
+          <a
+            href="/interno/dashboard?periodo=7dias"
+            class="ec-filter-chip{% if dashboard_filtro.periodo == '7dias' %} active{% endif %}"
+          >
+            Últimos 7 dias
+          </a>
+
+          <form class="ec-date-form" method="get" action="/interno/dashboard">
+            <input
+              type="date"
+              name="data"
+              value="{% if dashboard_filtro.periodo == 'data' %}{{ dashboard_filtro.data_input }}{% endif %}"
+              aria-label="Escolher data"
+            >
+            <button type="submit">
+              Ver data
+            </button>
+          </form>
+        </div>
+      </section>
+
       <section class="ec-grid">
 
-        <article class="ec-card card-hero">
-          <div class="card-hero-title">
-            <i class="fa-solid fa-shield-halved"></i>
-            Status do Sistema
+        <article class="ec-card card-kpi red">
+          <div class="ec-card-header">
+            <span>Ocorrências abertas</span>
+            <div class="ec-icon-pill">
+              <i class="fa-regular fa-clipboard"></i>
+            </div>
           </div>
 
-          <div class="card-hero-icon">
-            <i class="fa-solid fa-fingerprint"></i>
+          <div class="ec-kpi-value">
+            {{ ocorrencias_resumo.abertas|default(0) }}
           </div>
 
-          <div class="card-hero-glass">
-            <h3>Operação segura</h3>
-            <p>
-              O ambiente interno está ativo. Use este painel para acompanhar registros,
-              pendências e rotina operacional da equipe.
-            </p>
+          <div class="ec-kpi-footer">
+            {{ ocorrencias_resumo.criticas_abertas|default(0) }} críticas abertas
+          </div>
+        </article>
+
+        <article class="ec-card card-kpi orange">
+          <div class="ec-card-header">
+            <span>Passagens pendentes</span>
+            <div class="ec-icon-pill">
+              <i class="fa-solid fa-right-left"></i>
+            </div>
+          </div>
+
+          <div class="ec-kpi-value">
+            {{ passagens_resumo.pendentes|default(0) }}
+          </div>
+
+          <div class="ec-kpi-footer">
+            {{ passagens_resumo.recebidas|default(0) }} recebidas no período
+          </div>
+        </article>
+
+        <article class="ec-card card-kpi blue">
+          <div class="ec-card-header">
+            <span>Plantões abertos</span>
+            <div class="ec-icon-pill">
+              <i class="fa-regular fa-clock"></i>
+            </div>
+          </div>
+
+          <div class="ec-kpi-value">
+            {{ plantoes_resumo.abertos|default(0) }}
+          </div>
+
+          <div class="ec-kpi-footer">
+            {{ plantoes_resumo.finalizados|default(0) }} finalizados no período
           </div>
         </article>
 
@@ -699,106 +835,23 @@
           </div>
         </article>
 
-        <article class="ec-card card-kpi blue">
-          <div class="ec-card-header">
-            <span>Plantões abertos</span>
-            <div class="ec-icon-pill">
-              <i class="fa-regular fa-clock"></i>
-            </div>
-          </div>
-
-          <div class="ec-kpi-value">
-            {{ plantoes_resumo.abertos|default(0) }}
-          </div>
-
-          <div class="ec-kpi-footer">
-            {{ plantoes_resumo.finalizados|default(0) }} finalizados hoje
-          </div>
-        </article>
-
-        <article class="ec-card card-kpi orange">
-          <div class="ec-card-header">
-            <span>Passagens pendentes</span>
-            <div class="ec-icon-pill">
-              <i class="fa-solid fa-right-left"></i>
-            </div>
-          </div>
-
-          <div class="ec-kpi-value">
-            {{ passagens_resumo.pendentes|default(0) }}
-          </div>
-
-          <div class="ec-kpi-footer">
-            {{ passagens_resumo.recebidas|default(0) }} recebidas hoje
-          </div>
-        </article>
-
-        <article class="ec-card card-kpi red">
-          <div class="ec-card-header">
-            <span>Ocorrências abertas</span>
-            <div class="ec-icon-pill">
-              <i class="fa-regular fa-clipboard"></i>
-            </div>
-          </div>
-
-          <div class="ec-kpi-value">
-            {{ ocorrencias_resumo.abertas|default(0) }}
-          </div>
-
-          <div class="ec-kpi-footer">
-            {{ ocorrencias_resumo.criticas_abertas|default(0) }} críticas abertas
-          </div>
-        </article>
-
-        <article class="ec-card card-wide">
-          <div class="ec-card-header">
-            <span>Movimento do dia</span>
-            <div class="ec-icon-pill">
-              <i class="fa-solid fa-chart-line"></i>
-            </div>
-          </div>
-
-          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: auto;">
-            <div>
-              <div class="ec-kpi-value" style="font-size: 2.25rem;">
-                {{ plantoes_resumo.total_hoje|default(0) }}
-              </div>
-              <div class="ec-kpi-footer">plantões</div>
-            </div>
-
-            <div>
-              <div class="ec-kpi-value" style="font-size: 2.25rem;">
-                {{ passagens_resumo.total_hoje|default(0) }}
-              </div>
-              <div class="ec-kpi-footer">passagens</div>
-            </div>
-
-            <div>
-              <div class="ec-kpi-value" style="font-size: 2.25rem;">
-                {{ ocorrencias_resumo.total_hoje|default(0) }}
-              </div>
-              <div class="ec-kpi-footer">ocorrências</div>
-            </div>
-          </div>
-        </article>
-
         <article class="ec-card card-modules">
           <div class="ec-section-title">
             <div>
-              <strong>Módulos do sistema</strong>
-              <small>Acesse as áreas principais do painel interno.</small>
+              <strong>Áreas de trabalho</strong>
+              <small>Acesse rapidamente os módulos principais do painel.</small>
             </div>
           </div>
 
           <div class="ec-module-list">
-            <a href="/interno/plantao" class="ec-module-row">
+            <a href="/interno/ocorrencias" class="ec-module-row">
               <div class="ec-module-icon">
-                <i class="fa-solid fa-business-time"></i>
+                <i class="fa-regular fa-clipboard"></i>
               </div>
 
               <div class="ec-module-info">
-                <strong>Controle de Plantão</strong>
-                <small>Início, encerramento e histórico do turno.</small>
+                <strong>Ocorrências</strong>
+                <small>Registrar e acompanhar falhas, problemas e pendências.</small>
               </div>
 
               <div class="ec-circle-btn">
@@ -813,7 +866,37 @@
 
               <div class="ec-module-info">
                 <strong>Passagem de Plantão</strong>
-                <small>Pendências, recados, falhas e observações para o próximo responsável.</small>
+                <small>Recados, pendências e observações para o próximo responsável.</small>
+              </div>
+
+              <div class="ec-circle-btn">
+                <i class="fa-solid fa-arrow-right"></i>
+              </div>
+            </a>
+
+            <a href="/interno/plantao" class="ec-module-row">
+              <div class="ec-module-icon">
+                <i class="fa-solid fa-business-time"></i>
+              </div>
+
+              <div class="ec-module-info">
+                <strong>Plantão</strong>
+                <small>Início, encerramento e histórico dos turnos.</small>
+              </div>
+
+              <div class="ec-circle-btn">
+                <i class="fa-solid fa-arrow-right"></i>
+              </div>
+            </a>
+
+            <a href="/interno/ponto" class="ec-module-row">
+              <div class="ec-module-icon">
+                <i class="fa-solid fa-calendar-check"></i>
+              </div>
+
+              <div class="ec-module-info">
+                <strong>Ponto Online</strong>
+                <small>Batidas de ponto, calendário, relatórios e presença.</small>
               </div>
 
               <div class="ec-circle-btn">
@@ -828,22 +911,7 @@
 
               <div class="ec-module-info">
                 <strong>Manual Interno</strong>
-                <small>Procedimentos de atendimento, alarme, falhas e ronda virtual.</small>
-              </div>
-
-              <div class="ec-circle-btn">
-                <i class="fa-solid fa-arrow-right"></i>
-              </div>
-            </a>
-
-            <a href="/interno/ocorrencias" class="ec-module-row">
-              <div class="ec-module-icon">
-                <i class="fa-regular fa-clipboard"></i>
-              </div>
-
-              <div class="ec-module-info">
-                <strong>Ocorrências Internas</strong>
-                <small>Registro e acompanhamento de problemas, falhas e pendências.</small>
+                <small>Procedimentos de atendimento, alarme e rotina operacional.</small>
               </div>
 
               <div class="ec-circle-btn">
@@ -858,7 +926,7 @@
 
               <div class="ec-module-info">
                 <strong>Funcionários</strong>
-                <small>Gestão de acessos da equipe interna.</small>
+                <small>Cadastro e controle de acessos da equipe interna.</small>
               </div>
 
               <div class="ec-circle-btn">
@@ -871,20 +939,15 @@
         <article class="ec-card card-actions">
           <div class="ec-section-title">
             <div>
-              <strong>Atalhos rápidos</strong>
-              <small>Ações mais usadas na rotina.</small>
+              <strong>Ações rápidas</strong>
+              <small>O que a equipe mais usa no dia a dia.</small>
             </div>
           </div>
 
           <div class="ec-action-grid">
-            <a href="/interno/funcionarios" class="ec-action-box">
-              <i class="fa-solid fa-user-plus"></i>
-              Novo membro
-            </a>
-
-            <a href="/interno/plantao" class="ec-action-box">
-              <i class="fa-solid fa-play"></i>
-              Iniciar plantão
+            <a href="/interno/ocorrencias" class="ec-action-box">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              Nova ocorrência
             </a>
 
             <a href="/interno/passagem" class="ec-action-box">
@@ -892,14 +955,24 @@
               Registrar passagem
             </a>
 
-            <a href="/interno/ocorrencias" class="ec-action-box">
-              <i class="fa-solid fa-triangle-exclamation"></i>
-              Nova ocorrência
+            <a href="/interno/plantao" class="ec-action-box">
+              <i class="fa-solid fa-play"></i>
+              Iniciar plantão
             </a>
 
-            <a href="/interno/manual" class="ec-action-box full">
+            <a href="/interno/ponto" class="ec-action-box">
+              <i class="fa-solid fa-calendar-check"></i>
+              Ver ponto online
+            </a>
+
+            <a href="/interno/manual" class="ec-action-box">
               <i class="fa-regular fa-folder-open"></i>
-              Consultar manual interno
+              Consultar manual
+            </a>
+
+            <a href="/interno/funcionarios" class="ec-action-box">
+              <i class="fa-solid fa-user-plus"></i>
+              Funcionários
             </a>
           </div>
         </article>
@@ -908,29 +981,29 @@
           <div class="ec-section-title">
             <div>
               <strong>Resumo operacional</strong>
-              <small>Indicadores rápidos para saber onde precisa de atenção.</small>
+              <small>Indicadores rápidos do período selecionado.</small>
             </div>
           </div>
 
           <div class="ec-alert-grid">
-            <div class="ec-alert-item green">
-              <strong>{{ funcionarios_resumo.plantonistas|default(0) }}</strong>
-              <span>plantonistas ativos cadastrados no painel.</span>
-            </div>
-
-            <div class="ec-alert-item blue">
-              <strong>{{ plantoes_resumo.abertos|default(0) }}</strong>
-              <span>plantões em andamento neste momento.</span>
+            <div class="ec-alert-item red">
+              <strong>{{ ocorrencias_resumo.total_hoje|default(0) }}</strong>
+              <span>ocorrências registradas no período.</span>
             </div>
 
             <div class="ec-alert-item orange">
-              <strong>{{ passagens_resumo.pendentes|default(0) }}</strong>
-              <span>passagens aguardando confirmação de recebimento.</span>
+              <strong>{{ passagens_resumo.total_hoje|default(0) }}</strong>
+              <span>passagens registradas no período.</span>
             </div>
 
-            <div class="ec-alert-item red">
-              <strong>{{ ocorrencias_resumo.criticas_abertas|default(0) }}</strong>
-              <span>ocorrências críticas ainda abertas.</span>
+            <div class="ec-alert-item blue">
+              <strong>{{ plantoes_resumo.total_hoje|default(0) }}</strong>
+              <span>plantões registrados no período.</span>
+            </div>
+
+            <div class="ec-alert-item green">
+              <strong>{{ pontos_resumo.total_hoje|default(0) }}</strong>
+              <span>registros de ponto no período.</span>
             </div>
           </div>
         </article>

@@ -8,7 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" type="image/png" href="/static/img/favicon.png">
@@ -19,137 +19,178 @@
     :root {
       --ponto-bg: #f0f3ee;
       --ponto-card: #ffffff;
+      --ponto-soft: #f8f9f5;
+
       --ponto-green: #dcf6b8;
+      --ponto-green-soft: #eaf7dc;
       --ponto-blue: #e5ebfd;
       --ponto-orange: #ffe8d6;
       --ponto-red: #fde5e5;
       --ponto-yellow: #fff3bf;
-      --ponto-purple: #efe7ff;
-      --ponto-black: #050505;
-      --ponto-text: #111111;
-      --ponto-muted: #72766f;
-      --ponto-line: rgba(15, 23, 42, 0.075);
-      --ponto-radius: 32px;
-      --ponto-pill: 999px;
-      --ponto-shadow: 0 12px 30px rgba(0, 0, 0, 0.035);
-      --ponto-shadow-hover: 0 18px 44px rgba(0, 0, 0, 0.075);
+      --ponto-purple: #f3e5fd;
+
+      --ponto-text: #243027;
+      --ponto-muted: #73776f;
+      --ponto-soft-text: #9da198;
+
+      --ponto-primary: #4f7f45;
+      --ponto-border: rgba(15, 23, 42, 0.06);
+
+      --ponto-radius: 24px;
+      --ponto-radius-sm: 18px;
+      --ponto-pill: 9999px;
+
+      --ponto-shadow: 0 10px 24px rgba(0, 0, 0, 0.03);
+      --ponto-shadow-hover: 0 14px 34px rgba(0, 0, 0, 0.055);
     }
 
     * {
       box-sizing: border-box;
     }
 
+    html {
+      min-height: 100%;
+      background: var(--ponto-bg);
+    }
+
     body.interno-app-body {
+      min-height: 100vh;
+      margin: 0;
       background-color: var(--ponto-bg);
       font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--ponto-text);
       -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
     }
 
     .ponto-shell {
       display: flex;
       min-height: 100vh;
+      background: var(--ponto-bg);
     }
 
     .ponto-main {
-      width: min(1500px, calc(100% - 72px));
+      width: min(1280px, calc(100% - 96px));
+      max-width: 1280px;
       margin: 0 auto;
-      padding: 2rem 3rem 3rem;
+      padding: 1.35rem 1.25rem 2.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
 
     .ponto-header {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
-      gap: 1.5rem;
+      gap: 1rem;
       align-items: end;
-      margin-bottom: 1.5rem;
-    }
-
-    .ponto-breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 0.65rem;
-      color: var(--ponto-muted);
-      font-size: 0.875rem;
-    }
-
-    .ponto-breadcrumb i {
-      font-size: 0.85rem;
+      margin-bottom: 0.2rem;
     }
 
     .ponto-header h1 {
       margin: 0;
       color: var(--ponto-text);
-      font-size: clamp(2.45rem, 5vw, 4.15rem);
+      font-size: clamp(2rem, 3.4vw, 3.15rem);
       line-height: 1.04;
       font-weight: 300;
-      letter-spacing: -0.06em;
+      letter-spacing: -0.058em;
     }
 
     .ponto-header p {
-      max-width: 860px;
-      margin: 0.9rem 0 0;
+      max-width: 760px;
+      margin: 0.55rem 0 0;
       color: var(--ponto-muted);
-      font-size: 1rem;
-      line-height: 1.75;
+      font-size: 0.9rem;
+      line-height: 1.62;
+      font-weight: 400;
     }
 
     .ponto-header-actions {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 0.75rem;
+      gap: 0.6rem;
       flex-wrap: wrap;
     }
 
     .ponto-btn {
-      min-height: 46px;
-      padding: 0 18px;
+      min-height: 38px;
+      padding: 0 14px;
       border: 0;
       border-radius: var(--ponto-pill);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 9px;
-      color: #ffffff;
-      background: var(--ponto-black);
+      gap: 8px;
+      color: #244020;
+      background: var(--ponto-green-soft);
       font-family: inherit;
-      font-size: 0.86rem;
-      font-weight: 850;
+      font-size: 0.78rem;
+      font-weight: 500;
       text-decoration: none;
-      cursor: pointer;
-      box-shadow: 0 16px 34px rgba(0, 0, 0, 0.16);
-      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, opacity 0.18s ease;
+      box-shadow: 0 8px 20px rgba(79, 127, 69, 0.10);
+      transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease,
+        opacity 0.18s ease;
     }
 
     .ponto-btn:hover {
       transform: translateY(-1px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.22);
+      background: #dff2ca;
+      box-shadow: 0 12px 26px rgba(79, 127, 69, 0.15);
     }
 
     .ponto-btn.secondary {
-      color: #22251f;
+      color: #3e463b;
       background: rgba(255, 255, 255, 0.84);
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.045);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.045);
+    }
+
+    .ponto-btn.secondary:hover {
+      background: #ffffff;
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.065);
     }
 
     .ponto-btn.success {
-      color: #111111;
+      color: #244020;
       background: var(--ponto-green);
-      box-shadow: 0 16px 34px rgba(88, 129, 57, 0.13);
+      box-shadow: 0 8px 20px rgba(79, 127, 69, 0.10);
     }
 
     .ponto-btn.warning {
-      color: #111111;
+      color: #6d4218;
       background: var(--ponto-orange);
-      box-shadow: 0 16px 34px rgba(194, 102, 23, 0.13);
+      box-shadow: 0 8px 20px rgba(194, 102, 23, 0.08);
     }
 
     .ponto-btn.danger {
-      color: #ffffff;
-      background: #b91c1c;
-      box-shadow: 0 16px 34px rgba(185, 28, 28, 0.18);
+      color: #8a1f1f;
+      background: var(--ponto-red);
+      box-shadow: 0 8px 20px rgba(153, 27, 27, 0.08);
+    }
+
+    .ponto-btn.danger:hover {
+      background: #fbd7d7;
+      box-shadow: 0 12px 26px rgba(153, 27, 27, 0.12);
     }
 
     .ponto-btn:disabled {
@@ -161,35 +202,44 @@
 
     .ponto-tabs {
       display: flex;
-      gap: 0.7rem;
+      gap: 0.55rem;
       flex-wrap: wrap;
-      margin-bottom: 1.5rem;
+      margin-bottom: 0.2rem;
     }
 
     .ponto-tab {
-      border: 0;
-      min-height: 44px;
-      padding: 0 18px;
+      min-height: 36px;
+      padding: 0 0.85rem;
+      border: 1px solid rgba(15, 23, 42, 0.055);
       border-radius: var(--ponto-pill);
-      background: rgba(255, 255, 255, 0.78);
-      color: #53574f;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      color: #3e463b;
+      background: #ffffff;
       font-family: inherit;
-      font-size: 0.84rem;
-      font-weight: 850;
-      cursor: pointer;
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.045);
-      transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+      font-size: 0.76rem;
+      font-weight: 400;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.035);
+      transition:
+        transform 0.18s ease,
+        background 0.18s ease,
+        color 0.18s ease,
+        box-shadow 0.18s ease;
     }
 
     .ponto-tab:hover {
       transform: translateY(-1px);
-      background: #ffffff;
+      background: #f8fbf5;
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.045);
     }
 
     .ponto-tab.active {
-      color: #ffffff;
-      background: #050505;
-      box-shadow: 0 16px 34px rgba(0, 0, 0, 0.18);
+      color: #244020;
+      background: var(--ponto-green-soft);
+      border-color: rgba(79, 127, 69, 0.16);
+      box-shadow: 0 8px 18px rgba(79, 127, 69, 0.08);
     }
 
     .ponto-tab-panel {
@@ -204,23 +254,29 @@
     .ponto-report-dashboard,
     .ponto-alert-grid {
       display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 1rem;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 0.8rem;
     }
 
     .ponto-stats-grid {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .ponto-stat-card,
     .ponto-report-card,
     .ponto-alert {
-      min-height: 140px;
-      padding: 1.25rem;
-      border: 1px solid rgba(255, 255, 255, 0.48);
+      min-height: 132px;
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.52);
       border-radius: var(--ponto-radius);
       background: var(--ponto-card);
       box-shadow: var(--ponto-shadow);
+    }
+
+    .ponto-stat-card:hover,
+    .ponto-report-card:hover,
+    .ponto-alert:hover {
+      box-shadow: var(--ponto-shadow-hover);
     }
 
     .ponto-stat-card,
@@ -232,35 +288,54 @@
       grid-column: span 4;
     }
 
-    .green { background: var(--ponto-green) !important; }
-    .blue { background: var(--ponto-blue) !important; }
-    .orange { background: var(--ponto-orange) !important; }
-    .red { background: var(--ponto-red) !important; }
-    .yellow { background: var(--ponto-yellow) !important; }
-    .purple { background: var(--ponto-purple) !important; }
+    .green {
+      background: var(--ponto-green) !important;
+    }
+
+    .blue {
+      background: var(--ponto-blue) !important;
+    }
+
+    .orange {
+      background: var(--ponto-orange) !important;
+    }
+
+    .red {
+      background: var(--ponto-red) !important;
+    }
+
+    .yellow {
+      background: var(--ponto-yellow) !important;
+    }
+
+    .purple {
+      background: var(--ponto-purple) !important;
+    }
 
     .ponto-stat-label,
     .ponto-report-card span {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       gap: 0.75rem;
       color: #4f554b;
-      font-size: 0.74rem;
-      font-weight: 900;
+      font-size: 0.67rem;
+      font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.08em;
     }
 
     .ponto-stat-label i,
     .ponto-report-card span i {
+      flex: 0 0 auto;
+      width: 31px;
+      height: 31px;
+      border-radius: 50%;
       display: grid;
       place-items: center;
-      width: 34px;
-      height: 34px;
-      border-radius: 14px;
-      color: #111111;
-      background: rgba(255, 255, 255, 0.55);
+      color: #42543a;
+      background: rgba(255, 255, 255, 0.56);
+      font-size: 0.8rem;
     }
 
     .ponto-stat-value,
@@ -268,32 +343,33 @@
     .ponto-alert strong {
       display: block;
       margin-top: 1.1rem;
-      color: #111111;
-      font-size: 2.35rem;
-      line-height: 1;
+      color: var(--ponto-text);
+      font-size: clamp(2rem, 3.8vw, 2.8rem);
+      line-height: 0.95;
       font-weight: 300;
-      letter-spacing: -0.06em;
+      letter-spacing: -0.065em;
     }
 
     .ponto-stat-note,
     .ponto-report-card small,
     .ponto-alert span {
       display: block;
-      margin-top: 0.55rem;
+      margin-top: 0.5rem;
       color: #60655d;
-      font-size: 0.86rem;
-      line-height: 1.45;
+      font-size: 0.78rem;
+      line-height: 1.38;
+      font-weight: 400;
     }
 
     .ponto-layout {
       display: grid;
-      grid-template-columns: minmax(380px, 0.95fr) minmax(0, 1.35fr);
-      gap: 1.25rem;
+      grid-template-columns: minmax(360px, 0.92fr) minmax(0, 1.38fr);
+      gap: 0.8rem;
       align-items: start;
     }
 
     .ponto-panel {
-      border: 1px solid rgba(255, 255, 255, 0.48);
+      border: 1px solid rgba(255, 255, 255, 0.52);
       border-radius: var(--ponto-radius);
       background: rgba(255, 255, 255, 0.76);
       box-shadow: var(--ponto-shadow);
@@ -301,7 +377,7 @@
     }
 
     .ponto-panel + .ponto-panel {
-      margin-top: 1.25rem;
+      margin-top: 0.8rem;
     }
 
     .ponto-panel-header {
@@ -309,133 +385,233 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 1rem;
-      padding: 1.35rem 1.35rem 0;
+      padding: 1rem 1rem 0;
     }
 
     .ponto-panel-header h2 {
       margin: 0;
       color: var(--ponto-text);
-      font-size: 1.25rem;
-      line-height: 1.15;
-      font-weight: 850;
-      letter-spacing: -0.035em;
+      font-size: 1rem;
+      line-height: 1.2;
+      font-weight: 500;
+      letter-spacing: -0.03em;
     }
 
     .ponto-panel-header p {
-      margin: 0.4rem 0 0;
+      margin: 0.32rem 0 0;
       color: var(--ponto-muted);
-      font-size: 0.9rem;
-      line-height: 1.55;
+      font-size: 0.78rem;
+      line-height: 1.45;
+      font-weight: 400;
     }
 
     .ponto-panel-icon {
+      flex: 0 0 auto;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
       display: grid;
       place-items: center;
-      flex: 0 0 auto;
-      width: 46px;
-      height: 46px;
-      border-radius: 18px;
-      color: #111111;
-      background: var(--ponto-green);
+      color: #42543a;
+      background: var(--ponto-green-soft);
+      font-size: 0.9rem;
+    }
+
+    .ponto-panel-icon.blue {
+      background: var(--ponto-blue);
+    }
+
+    .ponto-panel-icon.yellow {
+      background: var(--ponto-yellow);
+    }
+
+    .ponto-panel-icon.red {
+      background: var(--ponto-red);
     }
 
     .ponto-status-card {
-      margin: 1.35rem;
-      padding: 1.15rem;
-      border-radius: 26px;
+      margin: 1rem;
+      padding: 1rem;
+      border-radius: 22px;
       background: #ffffff;
-      border: 1px solid rgba(15, 23, 42, 0.07);
-      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.035);
+      border: 1px solid rgba(15, 23, 42, 0.055);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
     }
 
     .ponto-status-big {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.8rem;
     }
 
     .ponto-status-icon {
       flex: 0 0 auto;
-      width: 60px;
-      height: 60px;
-      border-radius: 24px;
+      width: 52px;
+      height: 52px;
+      border-radius: 20px;
       display: grid;
       place-items: center;
-      color: #111111;
+      color: #244020;
       background: var(--ponto-green);
-      font-size: 1.45rem;
+      font-size: 1.15rem;
     }
 
     .ponto-status-icon.pause {
+      color: #6d4218;
       background: var(--ponto-orange);
     }
 
     .ponto-status-icon.closed {
+      color: #3e463b;
       background: var(--ponto-blue);
     }
 
     .ponto-status-info strong {
       display: block;
       color: var(--ponto-text);
-      font-size: 1.05rem;
+      font-size: 0.95rem;
       line-height: 1.25;
-      font-weight: 850;
+      font-weight: 500;
       letter-spacing: -0.025em;
     }
 
     .ponto-status-info p {
-      margin: 0.35rem 0 0;
+      margin: 0.28rem 0 0;
       color: var(--ponto-muted);
-      font-size: 0.88rem;
-      line-height: 1.55;
+      font-size: 0.78rem;
+      line-height: 1.45;
     }
 
     .ponto-status-tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.45rem;
-      margin-top: 0.75rem;
+      gap: 0.4rem;
+      margin-top: 0.7rem;
     }
 
     .ponto-tag {
+      min-height: 25px;
+      padding: 0 0.55rem;
+      border-radius: var(--ponto-pill);
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      min-height: 28px;
-      padding: 0 10px;
-      border-radius: var(--ponto-pill);
-      color: #394034;
-      background: #f4f5f1;
-      font-size: 0.72rem;
-      font-weight: 900;
+      color: #3f463d;
+      background: #eef1ed;
+      font-size: 0.65rem;
+      font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.04em;
       white-space: nowrap;
     }
 
-    .ponto-tag.green { color: #234111; background: var(--ponto-green); }
-    .ponto-tag.orange { color: #7c3d12; background: var(--ponto-orange); }
-    .ponto-tag.blue { color: #263455; background: var(--ponto-blue); }
-    .ponto-tag.red { color: #8a1f1f; background: var(--ponto-red); }
-    .ponto-tag.yellow { color: #6b4d00; background: var(--ponto-yellow); }
-    .ponto-tag.purple { color: #49306b; background: var(--ponto-purple); }
+    .ponto-tag.green {
+      color: #234111;
+      background: var(--ponto-green);
+    }
+
+    .ponto-tag.orange {
+      color: #7c3d12;
+      background: var(--ponto-orange);
+    }
+
+    .ponto-tag.blue {
+      color: #263455;
+      background: var(--ponto-blue);
+    }
+
+    .ponto-tag.red {
+      color: #8a1f1f;
+      background: var(--ponto-red);
+    }
+
+    .ponto-tag.yellow {
+      color: #6b4d00;
+      background: var(--ponto-yellow);
+    }
+
+    .ponto-tag.purple {
+      color: #49306b;
+      background: var(--ponto-purple);
+    }
 
     .ponto-form {
       display: grid;
-      gap: 0.95rem;
-      padding: 0 1.35rem 1.35rem;
+      gap: 0.8rem;
+      padding: 0 1rem 1rem;
+    }
+
+    .ponto-big-action {
+      display: block;
+    }
+
+    .ponto-big-btn {
+      width: 100%;
+      min-height: 118px;
+      border: 0;
+      border-radius: 28px;
+      display: grid;
+      place-items: center;
+      gap: 0.25rem;
+      color: #244020;
+      background: var(--ponto-green);
+      box-shadow: 0 14px 30px rgba(79, 127, 69, 0.16);
+      font-family: inherit;
+      cursor: pointer;
+      transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease,
+        opacity 0.18s ease;
+    }
+
+    .ponto-big-btn:hover {
+      transform: translateY(-2px);
+      background: #d2f19d;
+      box-shadow: 0 18px 38px rgba(79, 127, 69, 0.22);
+    }
+
+    .ponto-big-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 10px 22px rgba(79, 127, 69, 0.14);
+    }
+
+    .ponto-big-btn i {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #244020;
+      background: rgba(255, 255, 255, 0.66);
+      font-size: 1.1rem;
+    }
+
+    .ponto-big-btn span {
+      display: block;
+      font-size: 1.18rem;
+      font-weight: 500;
+      letter-spacing: -0.035em;
+      line-height: 1.15;
+    }
+
+    .ponto-big-btn small {
+      display: block;
+      color: #4f6a3d;
+      font-size: 0.78rem;
+      font-weight: 400;
     }
 
     .ponto-field {
       display: grid;
-      gap: 0.45rem;
+      gap: 0.42rem;
     }
 
     .ponto-field label,
     .ponto-field > span {
-      color: #22251f;
-      font-size: 0.8rem;
-      font-weight: 850;
+      color: var(--ponto-text);
+      font-size: 0.78rem;
+      font-weight: 500;
     }
 
     .ponto-field input,
@@ -444,67 +620,72 @@
       width: 100%;
       min-height: 44px;
       padding: 10px 13px;
-      border: 1px solid rgba(15, 23, 42, 0.08);
-      border-radius: 17px;
+      border: 1px solid rgba(15, 23, 42, 0.065);
+      border-radius: 18px;
       outline: 0;
       color: var(--ponto-text);
-      background: rgba(255, 255, 255, 0.86);
+      background: var(--ponto-soft);
       font: inherit;
-      font-size: 0.9rem;
-      line-height: 1.5;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease;
     }
 
     .ponto-field textarea {
-      min-height: 104px;
+      min-height: 100px;
       resize: vertical;
     }
 
     .ponto-field input:focus,
     .ponto-field select:focus,
     .ponto-field textarea:focus {
-      border-color: rgba(17, 17, 17, 0.22);
+      border-color: rgba(79, 127, 69, 0.32);
       background: #ffffff;
-      box-shadow: 0 0 0 4px rgba(220, 246, 184, 0.55);
+      box-shadow: 0 0 0 4px rgba(79, 127, 69, 0.08);
     }
 
     .ponto-confirm {
       display: flex;
       align-items: flex-start;
-      gap: 0.7rem;
-      padding: 0.9rem;
+      gap: 0.65rem;
+      padding: 0.85rem;
       border-radius: 18px;
       background: rgba(255, 255, 255, 0.66);
       color: #41463d;
-      font-size: 0.84rem;
-      line-height: 1.5;
+      font-size: 0.78rem;
+      line-height: 1.45;
       cursor: pointer;
     }
 
     .ponto-confirm input {
-      width: 18px;
-      height: 18px;
-      margin-top: 1px;
-      accent-color: #111111;
+      flex: 0 0 auto;
+      width: 17px;
+      height: 17px;
+      margin-top: 2px;
+      accent-color: var(--ponto-primary);
     }
 
     .ponto-actions {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.7rem;
+      gap: 0.55rem;
     }
 
     .ponto-actions .ponto-btn {
       width: 100%;
-      min-height: 50px;
+      min-height: 46px;
     }
 
     .ponto-message {
       display: none;
-      padding: 0.9rem 1rem;
+      padding: 0.8rem;
       border-radius: 18px;
-      font-size: 0.86rem;
-      font-weight: 750;
-      line-height: 1.55;
+      font-size: 0.82rem;
+      font-weight: 500;
+      line-height: 1.45;
     }
 
     .ponto-message.show {
@@ -512,46 +693,49 @@
     }
 
     .ponto-message.success {
-      color: #234111;
-      background: rgba(220, 246, 184, 0.85);
+      color: #166534;
+      background: #dcfce7;
     }
 
     .ponto-message.error {
-      color: #8a1f1f;
-      background: rgba(253, 229, 229, 0.95);
+      color: #991b1b;
+      background: #fee2e2;
     }
 
     .ponto-list-wrap {
-      padding: 1.15rem 1.35rem 1.35rem;
+      padding: 1rem;
     }
 
     .ponto-list {
       display: grid;
-      gap: 0.8rem;
+      gap: 0.7rem;
     }
 
     .ponto-card {
       position: relative;
-      padding: 1rem;
-      border: 1px solid rgba(15, 23, 42, 0.075);
-      border-radius: 24px;
+      padding: 0.9rem;
+      border: 1px solid rgba(15, 23, 42, 0.055);
+      border-radius: 20px;
       background: #ffffff;
-      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.035);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
       overflow: hidden;
-      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+      transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        border-color 0.18s ease;
     }
 
     .ponto-card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(15, 23, 42, 0.11);
-      box-shadow: var(--ponto-shadow-hover);
+      transform: translateY(-1px);
+      border-color: rgba(15, 23, 42, 0.09);
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.05);
     }
 
     .ponto-card::before {
       content: "";
       position: absolute;
       inset: 0 auto 0 0;
-      width: 7px;
+      width: 5px;
       background: var(--ponto-green);
     }
 
@@ -569,76 +753,77 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 1rem;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.75rem;
     }
 
     .ponto-card-title h3 {
       margin: 0;
       color: var(--ponto-text);
-      font-size: 1rem;
+      font-size: 0.92rem;
       line-height: 1.25;
-      font-weight: 850;
+      font-weight: 500;
       letter-spacing: -0.025em;
     }
 
     .ponto-card-title p {
-      margin: 0.35rem 0 0;
+      margin: 0.28rem 0 0;
       color: var(--ponto-muted);
-      font-size: 0.82rem;
+      font-size: 0.76rem;
       line-height: 1.45;
     }
 
     .ponto-times {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.65rem;
-      margin-top: 0.85rem;
+      gap: 0.55rem;
+      margin-top: 0.75rem;
     }
 
     .ponto-time-box {
-      padding: 0.75rem;
+      padding: 0.7rem;
       border-radius: 17px;
-      background: #f7f8f4;
+      background: var(--ponto-soft);
     }
 
     .ponto-time-box small {
       display: block;
       color: var(--ponto-muted);
-      font-size: 0.72rem;
-      font-weight: 800;
+      font-size: 0.66rem;
+      font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
 
     .ponto-time-box strong {
       display: block;
-      margin-top: 0.25rem;
+      margin-top: 0.22rem;
       color: var(--ponto-text);
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       line-height: 1.35;
-      font-weight: 850;
+      font-weight: 500;
     }
 
     .ponto-note {
-      margin-top: 0.85rem;
-      padding: 0.85rem;
+      margin-top: 0.75rem;
+      padding: 0.78rem;
       border-radius: 18px;
       color: #394034;
-      background: #f7f8f4;
-      font-size: 0.82rem;
-      line-height: 1.55;
+      background: var(--ponto-soft);
+      font-size: 0.78rem;
+      line-height: 1.5;
       white-space: pre-wrap;
     }
 
     .ponto-note strong {
-      color: #111111;
+      color: var(--ponto-text);
+      font-weight: 500;
     }
 
     .ponto-empty {
       display: none;
       padding: 3rem 1.5rem;
-      border: 1px dashed rgba(15, 23, 42, 0.12);
-      border-radius: 26px;
+      border: 1px dashed rgba(15, 23, 42, 0.11);
+      border-radius: 22px;
       background: rgba(255, 255, 255, 0.68);
       text-align: center;
     }
@@ -649,98 +834,100 @@
 
     .ponto-empty i {
       margin-bottom: 0.85rem;
-      color: rgba(0, 0, 0, 0.14);
-      font-size: 2.1rem;
+      color: rgba(36, 48, 39, 0.10);
+      font-size: 2.2rem;
     }
 
     .ponto-empty h3 {
       margin: 0;
       color: var(--ponto-text);
-      font-size: 1.08rem;
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: -0.03em;
     }
 
     .ponto-empty p {
       max-width: 520px;
-      margin: 0.5rem auto 0;
+      margin: 0.42rem auto 0;
       color: var(--ponto-muted);
-      font-size: 0.9rem;
-      line-height: 1.6;
+      font-size: 0.82rem;
+      line-height: 1.5;
     }
 
     .ponto-filter-grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 0.8rem;
-      padding: 1.35rem;
+      padding: 1rem;
     }
 
     .ponto-report-dashboard,
     .ponto-alert-grid {
-      padding: 1.35rem;
+      padding: 1rem;
       padding-bottom: 0;
     }
 
     .ponto-report-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.7rem;
-      padding: 0 1.35rem 1.35rem;
+      gap: 0.55rem;
+      padding: 0 1rem 1rem;
     }
 
     .ponto-table-wrap {
       width: 100%;
       overflow-x: auto;
-      padding: 0 1.35rem 1.35rem;
+      padding: 0 1rem 1rem;
     }
 
     .ponto-table {
       width: 100%;
       min-width: 980px;
       border-collapse: separate;
-      border-spacing: 0 10px;
+      border-spacing: 0 9px;
     }
 
     .ponto-table th {
       padding: 0 12px 8px;
       color: var(--ponto-muted);
-      font-size: 0.72rem;
-      font-weight: 900;
+      font-size: 0.68rem;
+      font-weight: 500;
       text-align: left;
       text-transform: uppercase;
       letter-spacing: 0.06em;
     }
 
     .ponto-table td {
-      padding: 13px 12px;
+      padding: 12px;
       background: #ffffff;
-      color: #242821;
-      font-size: 0.84rem;
-      border-top: 1px solid rgba(15, 23, 42, 0.06);
-      border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+      color: var(--ponto-text);
+      font-size: 0.8rem;
+      border-top: 1px solid rgba(15, 23, 42, 0.055);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.055);
       vertical-align: top;
     }
 
     .ponto-table td:first-child {
-      border-left: 1px solid rgba(15, 23, 42, 0.06);
+      border-left: 1px solid rgba(15, 23, 42, 0.055);
       border-radius: 18px 0 0 18px;
     }
 
     .ponto-table td:last-child {
-      border-right: 1px solid rgba(15, 23, 42, 0.06);
+      border-right: 1px solid rgba(15, 23, 42, 0.055);
       border-radius: 0 18px 18px 0;
     }
 
     .ponto-calendar-layout {
       display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(340px, 0.65fr);
-      gap: 1rem;
-      padding: 1.35rem;
+      grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+      gap: 0.8rem;
+      padding: 1rem;
     }
 
     .ponto-calendar-box,
     .ponto-day-box {
-      border-radius: 28px;
-      border: 1px solid rgba(15, 23, 42, 0.06);
+      border-radius: 22px;
+      border: 1px solid rgba(15, 23, 42, 0.055);
       background: #ffffff;
       overflow: hidden;
     }
@@ -750,46 +937,51 @@
       align-items: center;
       justify-content: space-between;
       gap: 0.8rem;
-      padding: 1rem;
-      border-bottom: 1px solid rgba(15, 23, 42, 0.06);
-      background: #f8f9f5;
+      padding: 0.9rem;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.055);
+      background: var(--ponto-soft);
     }
 
     .ponto-calendar-head strong {
-      font-size: 1rem;
-      font-weight: 900;
+      color: var(--ponto-text);
+      font-size: 0.95rem;
+      font-weight: 500;
       letter-spacing: -0.03em;
     }
 
     .ponto-calendar-controls {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.45rem;
       align-items: center;
       flex-wrap: wrap;
     }
 
     .ponto-mini-btn {
-      min-height: 36px;
-      padding: 0 12px;
+      min-height: 34px;
+      padding: 0 0.75rem;
       border: 0;
-      border-radius: 999px;
+      border-radius: var(--ponto-pill);
       background: #ffffff;
-      color: #111111;
+      color: var(--ponto-text);
       font-family: inherit;
-      font-size: 0.78rem;
-      font-weight: 850;
-      cursor: pointer;
-      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+      font-size: 0.74rem;
+      font-weight: 500;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.035);
+    }
+
+    .ponto-mini-btn:hover {
+      background: var(--ponto-green-soft);
     }
 
     .ponto-month-input {
-      min-height: 38px;
-      padding: 0 10px;
-      border: 1px solid rgba(15, 23, 42, 0.08);
-      border-radius: 999px;
-      font: inherit;
-      font-size: 0.82rem;
+      min-height: 34px;
+      padding: 0 0.75rem;
+      border: 1px solid rgba(15, 23, 42, 0.065);
+      border-radius: var(--ponto-pill);
+      color: var(--ponto-text);
       background: #ffffff;
+      font: inherit;
+      font-size: 0.78rem;
       outline: 0;
     }
 
@@ -800,19 +992,19 @@
     }
 
     .ponto-weekdays span {
-      padding: 0.8rem 0.45rem;
-      text-align: center;
+      padding: 0.75rem 0.4rem;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.055);
       color: var(--ponto-muted);
-      font-size: 0.72rem;
-      font-weight: 900;
+      font-size: 0.68rem;
+      font-weight: 500;
+      text-align: center;
       text-transform: uppercase;
       letter-spacing: 0.04em;
-      border-bottom: 1px solid rgba(15, 23, 42, 0.055);
     }
 
     .ponto-day {
-      min-height: 126px;
-      padding: 0.7rem;
+      min-height: 118px;
+      padding: 0.65rem;
       border: 0;
       border-right: 1px solid rgba(15, 23, 42, 0.045);
       border-bottom: 1px solid rgba(15, 23, 42, 0.045);
@@ -820,11 +1012,13 @@
       text-align: left;
       cursor: pointer;
       font-family: inherit;
-      transition: background 0.16s ease, box-shadow 0.16s ease;
+      transition:
+        background 0.16s ease,
+        box-shadow 0.16s ease;
     }
 
     .ponto-day:hover {
-      background: #f8f9f5;
+      background: var(--ponto-soft);
     }
 
     .ponto-day.out {
@@ -838,7 +1032,7 @@
 
     .ponto-day.selected {
       background: var(--ponto-green);
-      box-shadow: inset 0 0 0 2px rgba(17, 17, 17, 0.14);
+      box-shadow: inset 0 0 0 2px rgba(79, 127, 69, 0.18);
     }
 
     .ponto-day-number {
@@ -846,26 +1040,27 @@
       align-items: center;
       justify-content: space-between;
       gap: 0.5rem;
-      margin-bottom: 0.45rem;
+      margin-bottom: 0.42rem;
     }
 
     .ponto-day-number strong {
-      font-size: 0.92rem;
-      font-weight: 900;
+      color: var(--ponto-text);
+      font-size: 0.86rem;
+      font-weight: 500;
     }
 
     .ponto-day-number span {
-      min-width: 24px;
-      height: 24px;
+      min-width: 23px;
+      height: 23px;
       padding: 0 7px;
-      border-radius: 999px;
+      border-radius: var(--ponto-pill);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      color: #111111;
+      color: var(--ponto-text);
       background: rgba(255, 255, 255, 0.72);
-      font-size: 0.7rem;
-      font-weight: 900;
+      font-size: 0.68rem;
+      font-weight: 500;
     }
 
     .ponto-day-names {
@@ -875,22 +1070,22 @@
 
     .ponto-day-name {
       max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
       min-height: 22px;
       padding: 4px 7px;
-      border-radius: 999px;
+      border-radius: var(--ponto-pill);
+      overflow: hidden;
       color: #394034;
-      background: #f4f5f1;
-      font-size: 0.7rem;
-      font-weight: 800;
+      background: var(--ponto-soft);
+      font-size: 0.68rem;
+      font-weight: 400;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .ponto-day-more {
       color: var(--ponto-muted);
-      font-size: 0.7rem;
-      font-weight: 900;
+      font-size: 0.68rem;
+      font-weight: 500;
     }
 
     .ponto-day-panel {
@@ -899,21 +1094,22 @@
 
     .ponto-day-panel h3 {
       margin: 0;
-      font-size: 1.08rem;
-      font-weight: 900;
-      letter-spacing: -0.035em;
+      color: var(--ponto-text);
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: -0.03em;
     }
 
     .ponto-day-panel p {
-      margin: 0.45rem 0 0;
+      margin: 0.42rem 0 0;
       color: var(--ponto-muted);
-      font-size: 0.86rem;
-      line-height: 1.55;
+      font-size: 0.8rem;
+      line-height: 1.5;
     }
 
     .ponto-day-list {
       display: grid;
-      gap: 0.65rem;
+      gap: 0.6rem;
       margin-top: 1rem;
     }
 
@@ -922,23 +1118,24 @@
       align-items: center;
       justify-content: space-between;
       gap: 0.8rem;
-      padding: 0.8rem;
+      padding: 0.78rem;
       border-radius: 18px;
-      background: #f8f9f5;
+      background: var(--ponto-soft);
       border: 1px solid rgba(15, 23, 42, 0.045);
     }
 
     .ponto-person-row strong {
       display: block;
-      font-size: 0.88rem;
-      font-weight: 900;
+      color: var(--ponto-text);
+      font-size: 0.84rem;
+      font-weight: 500;
     }
 
     .ponto-person-row small {
       display: block;
       margin-top: 0.2rem;
       color: var(--ponto-muted);
-      font-size: 0.76rem;
+      font-size: 0.74rem;
     }
 
     @media print {
@@ -978,6 +1175,12 @@
     }
 
     @media (max-width: 1280px) {
+      .ponto-main {
+        width: min(1120px, calc(100% - 48px));
+        max-width: 1120px;
+        margin: 0 auto;
+      }
+
       .ponto-stat-card,
       .ponto-report-card {
         grid-column: span 6;
@@ -1000,7 +1203,9 @@
     @media (max-width: 920px) {
       .ponto-main {
         width: min(920px, calc(100% - 32px));
-        padding: 1.5rem 0 2.5rem;
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 1.25rem 0 2.4rem;
       }
 
       .ponto-header {
@@ -1013,6 +1218,10 @@
     }
 
     @media (max-width: 720px) {
+      .ponto-header h1 {
+        font-size: 2.3rem;
+      }
+
       .ponto-stat-card,
       .ponto-report-card,
       .ponto-alert {
@@ -1043,13 +1252,25 @@
     }
 
     @media (max-width: 520px) {
-      .ponto-header h1 {
-        font-size: 2.4rem;
+      .ponto-main {
+        width: calc(100% - 24px);
+        max-width: none;
+        margin: 0 auto;
+      }
+
+      .ponto-header-actions {
+        width: 100%;
+      }
+
+      .ponto-btn {
+        width: 100%;
       }
 
       .ponto-panel,
-      .ponto-stat-card {
-        border-radius: 24px;
+      .ponto-stat-card,
+      .ponto-report-card,
+      .ponto-alert {
+        border-radius: 20px;
       }
 
       .ponto-panel-header,
@@ -1061,8 +1282,8 @@
       .ponto-alert-grid,
       .ponto-report-dashboard,
       .ponto-calendar-layout {
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-left: 0.9rem;
+        padding-right: 0.9rem;
       }
 
       .ponto-times {
@@ -1080,17 +1301,10 @@
     <main class="ponto-main" id="ponto-page" data-ponto-page>
       <section class="ponto-header">
         <div>
-          <div class="ponto-breadcrumb">
-            <i class="fa-regular fa-clock"></i>
-            <span>SEG Sistemas</span>
-            <i class="fa-solid fa-arrow-right-long" style="font-size: 0.7rem; margin: 0 4px;"></i>
-            <span>Ponto Online</span>
-          </div>
-
           <h1>Ponto Online</h1>
           <p>
-            Controle de jornada com entrada, pausa, retorno, saída, relatório separado,
-            calendário separado e alertas operacionais.
+            Controle de jornada com entrada, pausa, retorno, saída,
+            relatórios, calendário e alertas operacionais.
           </p>
         </div>
 
@@ -1135,9 +1349,11 @@
             Ativos agora
             <i class="fa-solid fa-user-check"></i>
           </span>
+
           <strong class="ponto-stat-value" data-ponto-stat="ativos_agora">
             {{ pontos_resumo.ativos_agora|default(pontos_resumo.presentes|default(0)) }}
           </strong>
+
           <span class="ponto-stat-note">Trabalhando ou em pausa.</span>
         </article>
 
@@ -1146,9 +1362,11 @@
             Em pausa
             <i class="fa-solid fa-mug-hot"></i>
           </span>
+
           <strong class="ponto-stat-value" data-ponto-stat="em_pausa">
             {{ pontos_resumo.em_pausa|default(0) }}
           </strong>
+
           <span class="ponto-stat-note">Pausas abertas neste momento.</span>
         </article>
 
@@ -1157,9 +1375,11 @@
             Finalizados
             <i class="fa-solid fa-check"></i>
           </span>
+
           <strong class="ponto-stat-value" data-ponto-stat="finalizados">
             {{ pontos_resumo.finalizados|default(pontos_resumo.finalizados_hoje|default(0)) }}
           </strong>
+
           <span class="ponto-stat-note">Saídas batidas hoje.</span>
         </article>
 
@@ -1168,9 +1388,11 @@
             Registros hoje
             <i class="fa-regular fa-calendar-check"></i>
           </span>
+
           <strong class="ponto-stat-value" data-ponto-stat="total_hoje">
             {{ pontos_resumo.total_hoje|default(0) }}
           </strong>
+
           <span class="ponto-stat-note">Jornadas do dia atual.</span>
         </article>
       </section>
@@ -1204,6 +1426,14 @@
 
             <form class="ponto-form" id="ponto-form">
               <div class="ponto-message" id="ponto-message"></div>
+
+              <div class="ponto-big-action">
+                <button type="button" class="ponto-big-btn" id="btn-ponto-big-entrada">
+                  <i class="fa-solid fa-fingerprint"></i>
+                  <span>Bater ponto</span>
+                  <small>Registrar entrada agora</small>
+                </button>
+              </div>
 
               <label class="ponto-field">
                 <span>Observação / justificativa</span>
@@ -1346,6 +1576,7 @@
                 Registros
                 <i class="fa-solid fa-list-check"></i>
               </span>
+
               <strong id="dash-total-registros">0</strong>
               <small>Total de pontos encontrados no período.</small>
             </article>
@@ -1355,6 +1586,7 @@
                 Pessoas
                 <i class="fa-solid fa-users"></i>
               </span>
+
               <strong id="dash-total-pessoas">0</strong>
               <small>Funcionários diferentes que bateram ponto.</small>
             </article>
@@ -1364,6 +1596,7 @@
                 Trabalhando
                 <i class="fa-solid fa-user-clock"></i>
               </span>
+
               <strong id="dash-trabalhando">0</strong>
               <small>Pontos abertos ou em pausa no filtro.</small>
             </article>
@@ -1373,6 +1606,7 @@
                 Finalizados
                 <i class="fa-solid fa-check"></i>
               </span>
+
               <strong id="dash-finalizados">0</strong>
               <small>Pontos com saída registrada.</small>
             </article>
@@ -1382,6 +1616,7 @@
                 Horas líquidas
                 <i class="fa-regular fa-clock"></i>
               </span>
+
               <strong id="dash-horas-liquidas">0 min</strong>
               <small>Total trabalhado sem contar pausas.</small>
             </article>
@@ -1391,6 +1626,7 @@
                 Pausas
                 <i class="fa-solid fa-mug-hot"></i>
               </span>
+
               <strong id="dash-pausas">0 min</strong>
               <small>Total de pausas registradas no período.</small>
             </article>
@@ -1400,6 +1636,7 @@
                 Dias com ponto
                 <i class="fa-regular fa-calendar-check"></i>
               </span>
+
               <strong id="dash-dias-com-ponto">0</strong>
               <small>Dias em que pelo menos alguém bateu ponto.</small>
             </article>
@@ -1409,12 +1646,13 @@
                 Média/dia
                 <i class="fa-solid fa-chart-line"></i>
               </span>
+
               <strong id="dash-media-dia">0</strong>
               <small>Média de registros por dia no período.</small>
             </article>
           </div>
 
-          <div class="ponto-panel-header" style="padding-top: 1.35rem;">
+          <div class="ponto-panel-header" style="padding-top: 1rem;">
             <div>
               <h2>Tabela do relatório</h2>
               <p>Detalhes dos registros encontrados no filtro.</p>
@@ -1583,6 +1821,25 @@
       </section>
     </main>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const bigEntrada = document.getElementById("btn-ponto-big-entrada");
+      const entradaReal = document.getElementById("btn-ponto-entrada");
+      const confirmacao = document.getElementById("ponto-confirmacao");
+
+      if (bigEntrada && entradaReal) {
+        bigEntrada.addEventListener("click", function () {
+          if (confirmacao) {
+            confirmacao.checked = true;
+          }
+
+          entradaReal.click();
+        });
+      }
+    });
+  </script>
+
   <script src="/static/js/pages/interno-ponto.js"></script>
 </body>
 </html>

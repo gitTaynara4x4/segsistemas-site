@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Date, DateTime, ForeignKey, Integer, JSON, String, Text
+from sqlalchemy import Boolean, Column, Date, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -15,7 +15,7 @@ class InternoFuncionario(Base):
     tipo = Column(String(40), nullable=False, default="plantonista")
     usuario = Column(String(80), nullable=False, unique=True, index=True)
     permissao = Column(String(40), nullable=False, default="operador")
-    acessos = Column(JSON, nullable=True)
+    acessos = Column(Text, nullable=False, default="")
     ativo = Column(Boolean, nullable=False, default=True)
     senha_hash = Column(Text, nullable=False, default="")
     criado_em = Column(DateTime(timezone=True), nullable=True)
@@ -142,7 +142,12 @@ class InternoPontoPausa(Base):
     __tablename__ = "interno_ponto_pausas"
 
     id = Column(Integer, primary_key=True, index=True)
-    ponto_id = Column(Integer, ForeignKey("interno_pontos.id", ondelete="CASCADE"), nullable=False, index=True)
+    ponto_id = Column(
+        Integer,
+        ForeignKey("interno_pontos.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
     inicio_em = Column(DateTime(timezone=True), nullable=True)
     fim_em = Column(DateTime(timezone=True), nullable=True)
     duracao_segundos = Column(Integer, nullable=False, default=0)

@@ -8,297 +8,782 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" type="image/png" href="/static/img/favicon.png">
-  
+
   <link rel="stylesheet" href="/static/css/interno.css">
-  
+
   <style>
-    /* ==========================================================================
-       TEMA EYE CANDY / PILL UI
-       ========================================================================== */
-    
     :root {
-      --ec-bg-app: #f0f3ee;       
+      --ec-bg-app: #f0f3ee;
       --ec-card-white: #ffffff;
-      --ec-card-green: #dcf6b8;   
-      --ec-card-blue: #e5ebfd;    
-      --ec-card-pink: #fde5e5;
-      --ec-card-orange: #ffe8d6;  
-      
-      --ec-text-main: #1a1a1a;
-      --ec-text-muted: #737373;
-      
-      --ec-black: #111111;
-      --ec-black-hover: #2a2a2a;
-      
+      --ec-card-soft: #f8f9f5;
+
+      --ec-card-green: #dcf6b8;
+      --ec-card-blue: #e5ebfd;
+      --ec-card-orange: #ffe8d6;
+      --ec-card-red: #fde5e5;
+      --ec-card-purple: #f3e5fd;
+
+      --ec-text-main: #243027;
+      --ec-text-muted: #73776f;
+      --ec-text-soft: #9da198;
+
+      --ec-primary: #4f7f45;
+      --ec-primary-soft: #eaf7dc;
+      --ec-primary-hover: #dff2ca;
+
+      --ec-border: rgba(15, 23, 42, 0.06);
+
       --ec-radius-pill: 9999px;
-      --ec-radius-card: 32px;
-      --ec-radius-sm: 16px;
-      
-      --ec-shadow-float: 0 12px 30px rgba(0,0,0,0.03);
+      --ec-radius-card: 24px;
+      --ec-radius-sm: 18px;
+
+      --ec-shadow-float: 0 10px 24px rgba(0, 0, 0, 0.03);
+      --ec-shadow-hover: 0 14px 34px rgba(0, 0, 0, 0.055);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--ec-bg-app);
+    }
 
     body.interno-app-body {
+      min-height: 100vh;
+      margin: 0;
       background-color: var(--ec-bg-app);
-      font-family: 'Inter', sans-serif;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--ec-text-main);
       -webkit-font-smoothing: antialiased;
       line-height: 1.5;
+      overflow-x: hidden;
     }
 
-    .dash-v2-shell { display: flex; min-height: 100vh; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    strong {
+      font-weight: 500;
+    }
+
+    .dash-v2-shell {
+      display: flex;
+      min-height: 100vh;
+      background: var(--ec-bg-app);
+    }
+
     .dash-v2-main {
-      flex: 1; padding: 2rem 3rem; max-width: 1600px;
-      margin: 0 auto; display: flex; flex-direction: column; gap: 2rem;
+      flex: 1;
+      width: min(1280px, calc(100% - 96px));
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1.35rem 1.25rem 2.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
 
-    /* ==========================================================================
-       HEADER
-       ========================================================================== */
-    .ec-header { margin-bottom: 0.5rem; }
-    .ec-breadcrumb { font-size: 0.875rem; color: var(--ec-text-muted); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px; }
-    .ec-header h1 { font-size: 3.5rem; font-weight: 300; letter-spacing: -0.04em; color: var(--ec-text-main); line-height: 1.1; }
-    .ec-header p { color: var(--ec-text-muted); max-width: 800px; margin-top: 0.75rem; font-size: 1rem; }
+    .ec-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 1rem;
+      align-items: end;
+      margin-bottom: 0.2rem;
+    }
 
-    /* ==========================================================================
-       BENTO GRID - LAYOUT RELATÓRIO (PASSAGEM)
-       ========================================================================== */
+    .ec-header h1 {
+      margin: 0;
+      color: var(--ec-text-main);
+      font-size: clamp(2rem, 3.4vw, 3.15rem);
+      font-weight: 300;
+      letter-spacing: -0.058em;
+      line-height: 1.04;
+    }
+
+    .ec-header p {
+      max-width: 820px;
+      margin: 0.55rem 0 0;
+      color: var(--ec-text-muted);
+      font-size: 0.9rem;
+      line-height: 1.62;
+      font-weight: 400;
+    }
+
+    .ec-header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .ec-main-btn {
+      min-height: 38px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: var(--ec-radius-pill);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #244020;
+      background: var(--ec-primary-soft);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 500;
+      text-decoration: none;
+      box-shadow: 0 8px 20px rgba(79, 127, 69, 0.10);
+      transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease;
+    }
+
+    .ec-main-btn:hover {
+      transform: translateY(-1px);
+      background: var(--ec-primary-hover);
+      box-shadow: 0 12px 26px rgba(79, 127, 69, 0.15);
+    }
+
+    .ec-main-btn.secondary {
+      color: #3e463b;
+      background: rgba(255, 255, 255, 0.84);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.045);
+    }
+
+    .ec-main-btn.secondary:hover {
+      background: #ffffff;
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.065);
+    }
+
     .ec-grid {
       display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 1.5rem;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 0.8rem;
     }
 
     .ec-card {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(255, 255, 255, 0.52);
       border-radius: var(--ec-radius-card);
-      padding: 2rem;
-      box-shadow: var(--ec-shadow-float);
-      border: 1px solid rgba(255, 255, 255, 0.4);
+      padding: 1rem;
       background: var(--ec-card-white);
+      box-shadow: var(--ec-shadow-float);
+    }
+
+    .ec-card:hover {
+      box-shadow: var(--ec-shadow-hover);
     }
 
     .ec-card-header {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.8rem;
+      margin-bottom: 0.85rem;
     }
-    .ec-card-header span { font-size: 0.875rem; font-weight: 500; color: var(--ec-text-muted); text-transform: uppercase; letter-spacing: 1px; }
-    .ec-card-header h2 { font-size: 1.25rem; font-weight: 600; color: var(--ec-text-main); }
 
-    /* 1. KPIs (4 colunas cada, ou layout adaptado) */
+    .ec-card-header span {
+      display: block;
+      color: #4f554b;
+      font-size: 0.67rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .ec-card-header h2 {
+      margin: 0.12rem 0 0;
+      color: var(--ec-text-main);
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+    }
+
+    .ec-icon-pill {
+      flex: 0 0 auto;
+      width: 31px;
+      height: 31px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #42543a;
+      background: rgba(255, 255, 255, 0.56);
+      font-size: 0.8rem;
+    }
+
+    .ec-icon-pill.bg-white {
+      background: #ffffff;
+      box-shadow: 0 7px 16px rgba(15, 23, 42, 0.05);
+    }
+
     .card-kpi-block {
       grid-column: span 3;
-      padding: 1.5rem;
-      border-radius: var(--ec-radius-sm);
-      display: flex; flex-direction: column; gap: 0.5rem;
-      box-shadow: var(--ec-shadow-float);
+      min-height: 132px;
+      border-radius: var(--ec-radius-card);
     }
-    .kpi-block-header { display: flex; justify-content: space-between; align-items: center; }
-    .kpi-block-title { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
-    .kpi-block-value { font-size: 2rem; font-weight: 300; line-height: 1; margin-top: 0.5rem; color: var(--ec-text-main); }
-    .kpi-block-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.7); }
 
-    /* 2. FORMULÁRIO DE PASSAGEM (Largo - Span 7) */
+    .card-kpi-block.white {
+      background: var(--ec-card-white);
+    }
+
+    .card-kpi-block.blue {
+      background: var(--ec-card-blue);
+    }
+
+    .card-kpi-block.orange {
+      background: var(--ec-card-orange);
+    }
+
+    .card-kpi-block.green {
+      background: var(--ec-card-green);
+    }
+
+    .kpi-block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .kpi-block-title {
+      color: #4f554b;
+      font-size: 0.67rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .kpi-block-icon {
+      flex: 0 0 auto;
+      width: 31px;
+      height: 31px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #42543a;
+      background: rgba(255, 255, 255, 0.56);
+      font-size: 0.8rem;
+    }
+
+    .kpi-block-value {
+      display: block;
+      margin-top: auto;
+      color: var(--ec-text-main);
+      font-size: clamp(2rem, 3.8vw, 2.8rem);
+      font-weight: 300;
+      letter-spacing: -0.065em;
+      line-height: 0.95;
+    }
+
     .card-form-report {
       grid-column: span 7;
-      display: flex;
-      flex-direction: column;
+      background: var(--ec-card-white);
     }
 
-    /* Grid interno para colocar os textareas lado a lado */
-    .form-grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-      margin-bottom: 1.25rem;
-    }
-
-    /* 3. HISTÓRICO (Lateral Direita - Span 5) */
     .card-history {
       grid-column: span 5;
+      background: var(--ec-card-white);
     }
 
-    /* ==========================================================================
-       ESTILOS INTERNOS (Formulário, Textareas e Alertas)
-       ========================================================================== */
-    .ec-form-group { display: block; }
-    .ec-form-group.full-width { grid-column: span 2; } /* Para o recado ocupar tudo */
-    .ec-form-group > span { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--ec-text-main); }
-    
-    .ec-input-wrap {
-      display: flex; background: #f9f9f9; border-radius: var(--ec-radius-sm); padding: 1rem;
-      border: 1px solid rgba(0,0,0,0.05); transition: all 0.2s;
+    .passagem-alert {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+      padding: 0.9rem;
+      border: 1px solid rgba(194, 102, 23, 0.10);
+      border-radius: 20px;
+      color: #7c3d12;
+      background: var(--ec-card-orange);
+      font-size: 0.82rem;
+      line-height: 1.45;
     }
-    .ec-input-wrap:focus-within { background: #fff; border-color: var(--ec-black); box-shadow: 0 0 0 4px rgba(17,17,17,0.08); }
+
+    .passagem-alert i {
+      flex: 0 0 auto;
+      width: 31px;
+      height: 31px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #7c3d12;
+      background: rgba(255, 255, 255, 0.56);
+      font-size: 0.8rem;
+    }
+
+    .passagem-form {
+      display: block;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .ec-form-group {
+      display: block;
+    }
+
+    .ec-form-group.full-width {
+      grid-column: span 2;
+    }
+
+    .ec-form-group > span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 0.45rem;
+      color: var(--ec-text-main);
+      font-size: 0.78rem;
+      font-weight: 500;
+    }
+
+    .ec-form-group > span i {
+      color: #8d9488 !important;
+      font-size: 0.76rem;
+    }
+
+    .ec-input-wrap {
+      display: flex;
+      padding: 0.85rem;
+      border: 1px solid rgba(15, 23, 42, 0.065);
+      border-radius: 18px;
+      background: var(--ec-card-soft);
+      transition:
+        background 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+    }
+
+    .ec-input-wrap:focus-within {
+      background: #ffffff;
+      border-color: rgba(79, 127, 69, 0.32);
+      box-shadow: 0 0 0 4px rgba(79, 127, 69, 0.08);
+    }
+
     .ec-input-wrap textarea {
-      border: none; background: transparent; flex: 1; outline: none;
-      font-size: 0.875rem; font-family: inherit; color: var(--ec-text-main);
-      width: 100%; resize: vertical; min-height: 80px; line-height: 1.5;
+      width: 100%;
+      min-height: 92px;
+      border: 0;
+      outline: 0;
+      resize: vertical;
+      color: var(--ec-text-main);
+      background: transparent;
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .ec-form-group.full-width .ec-input-wrap textarea {
+      min-height: 96px;
     }
 
     .ec-checkbox-line {
-      display: flex; align-items: center; gap: 10px; margin-top: 0.5rem; margin-bottom: 1.5rem;
-      font-size: 0.875rem; cursor: pointer; color: var(--ec-text-main); font-weight: 500;
-      background: #f9f9f9; padding: 1rem; border-radius: var(--ec-radius-sm);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      margin: 0.85rem 0;
+      padding: 0.85rem;
+      border-radius: 18px;
+      color: var(--ec-text-main);
+      background: rgba(255, 255, 255, 0.66);
+      font-size: 0.78rem;
+      line-height: 1.45;
+      cursor: pointer;
     }
-    .ec-checkbox-line input { width: 18px; height: 18px; accent-color: var(--ec-black); cursor: pointer; }
+
+    .ec-checkbox-line input {
+      flex: 0 0 auto;
+      width: 17px;
+      height: 17px;
+      margin-top: 2px;
+      accent-color: var(--ec-primary);
+      cursor: pointer;
+    }
 
     .btn-submit {
-      width: 100%; background: var(--ec-black); color: #fff;
-      border: none; border-radius: var(--ec-radius-pill);
-      padding: 1.25rem; font-size: 1rem; font-weight: 500; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      transition: all 0.2s; box-shadow: var(--ec-shadow-float);
+      width: 100%;
+      min-height: 56px;
+      border: 0;
+      border-radius: var(--ec-radius-pill);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #244020;
+      background: var(--ec-card-green);
+      font-size: 0.9rem;
+      font-weight: 500;
+      box-shadow: 0 12px 26px rgba(79, 127, 69, 0.14);
+      transition:
+        transform 0.18s ease,
+        background 0.18s ease,
+        box-shadow 0.18s ease;
     }
-    .btn-submit:hover { background: var(--ec-black-hover); transform: translateY(-2px); }
+
+    .btn-submit:hover {
+      transform: translateY(-1px);
+      background: #d2f19d;
+      box-shadow: 0 16px 32px rgba(79, 127, 69, 0.20);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+      box-shadow: 0 8px 18px rgba(79, 127, 69, 0.12);
+    }
 
     .btn-ghost-sm {
-      background: #f4f4f4; color: var(--ec-text-main); border: none;
-      padding: 0.4rem 1rem; border-radius: var(--ec-radius-pill);
-      font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: 0.2s;
+      min-height: 34px;
+      border: 0;
+      border-radius: var(--ec-radius-pill);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 0.8rem;
+      color: #3e463b;
+      background: var(--ec-card-soft);
+      font-size: 0.74rem;
+      font-weight: 500;
+      transition:
+        transform 0.18s ease,
+        background 0.18s ease,
+        box-shadow 0.18s ease;
     }
-    .btn-ghost-sm:hover { background: #e0e0e0; }
 
-    .message-box { margin-bottom: 1rem; text-align: center; font-size: 0.875rem; padding: 1rem; border-radius: var(--ec-radius-sm); }
-
-    /* Alerta de Passagem Pendente (Design Pill) */
-    .passagem-alert {
-      background: var(--ec-card-orange); border-radius: var(--ec-radius-sm);
-      padding: 1.5rem; margin-bottom: 1.5rem; color: #7a4b22;
-      display: flex; align-items: center; gap: 1rem; border: 1px dashed rgba(0,0,0,0.1);
+    .btn-ghost-sm:hover {
+      transform: translateY(-1px);
+      background: #ffffff;
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.045);
     }
 
-    /* ==========================================================================
-       LISTA DE PASSAGENS (Histórico)
-       ========================================================================== */
-    .ec-empty-state { text-align: center; padding: 4rem 2rem; background: #f9f9f9; border-radius: var(--ec-radius-sm); border: 1px dashed rgba(0,0,0,0.1); }
-    .ec-empty-state i { font-size: 2.5rem; color: rgba(0,0,0,0.05); margin-bottom: 1rem; }
-    .ec-empty-state h3 { font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--ec-text-main); }
-    .ec-empty-state p { font-size: 0.875rem; color: var(--ec-text-muted); }
+    .message-box {
+      margin-bottom: 0.8rem;
+      padding: 0.8rem;
+      border-radius: 18px;
+      text-align: center;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      font-weight: 500;
+    }
 
-    #passagem-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .message-box.success {
+      color: #166534;
+      background: #dcfce7;
+    }
+
+    .message-box.error {
+      color: #991b1b;
+      background: #fee2e2;
+    }
+
+    .ec-empty-state {
+      display: grid;
+      place-items: center;
+      padding: 3rem 1.5rem;
+      border: 1px dashed rgba(15, 23, 42, 0.11);
+      border-radius: 20px;
+      background: var(--ec-card-soft);
+      text-align: center;
+    }
+
+    .ec-empty-state i {
+      margin-bottom: 0.85rem;
+      color: rgba(36, 48, 39, 0.10);
+      font-size: 2.3rem;
+    }
+
+    .ec-empty-state h3 {
+      margin: 0;
+      color: var(--ec-text-main);
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: -0.03em;
+    }
+
+    .ec-empty-state p {
+      max-width: 420px;
+      margin: 0.42rem 0 0;
+      color: var(--ec-text-muted);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    #passagem-list {
+      display: grid;
+      gap: 0.7rem;
+    }
+
     #passagem-list > div {
-      background: #f9f9f9; padding: 1.25rem; border-radius: var(--ec-radius-sm);
-      display: flex; flex-direction: column; gap: 0.5rem;
-      border: 1px solid transparent; transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 0.9rem;
+      border: 1px solid rgba(15, 23, 42, 0.055);
+      border-radius: 20px;
+      background: var(--ec-card-soft);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
+      transition:
+        transform 0.18s ease,
+        background 0.18s ease,
+        box-shadow 0.18s ease;
     }
-    #passagem-list > div:hover { background: #ffffff; border-color: rgba(0,0,0,0.05); box-shadow: 0 4px 12px rgba(0,0,0,0.03); transform: scale(1.01); }
 
-    /* Responsividade */
-    @media (max-width: 1200px) {
-      .card-kpi-block { grid-column: span 6; }
-      .card-form-report { grid-column: span 12; }
-      .card-history { grid-column: span 12; }
+    #passagem-list > div:hover {
+      transform: translateY(-1px);
+      background: #ffffff;
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.05);
     }
+
+    @media (max-width: 1280px) {
+      .dash-v2-main {
+        width: min(1120px, calc(100% - 48px));
+        max-width: 1120px;
+        margin: 0 auto;
+      }
+
+      .card-kpi-block {
+        grid-column: span 6;
+      }
+
+      .card-form-report,
+      .card-history {
+        grid-column: span 12;
+      }
+    }
+
+    @media (max-width: 920px) {
+      .dash-v2-main {
+        width: min(920px, calc(100% - 32px));
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 1.25rem 0 2.4rem;
+      }
+
+      .ec-header {
+        grid-template-columns: 1fr;
+      }
+
+      .ec-header-actions {
+        justify-content: flex-start;
+      }
+    }
+
     @media (max-width: 768px) {
-      .dash-v2-main { padding: 1.5rem; }
-      .ec-header h1 { font-size: 2.5rem; }
-      .card-kpi-block { grid-column: span 12; }
-      .form-grid-2 { grid-template-columns: 1fr; } /* No mobile, os campos de texto empilham */
-      .ec-form-group.full-width { grid-column: span 1; }
+      .ec-header h1 {
+        font-size: 2.3rem;
+      }
+
+      .card-kpi-block {
+        grid-column: span 12;
+      }
+
+      .form-grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .ec-form-group.full-width {
+        grid-column: span 1;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .dash-v2-main {
+        width: calc(100% - 24px);
+        max-width: none;
+        margin: 0 auto;
+      }
+
+      .ec-card {
+        border-radius: 20px;
+        padding: 0.9rem;
+      }
+
+      .ec-header-actions {
+        width: 100%;
+      }
+
+      .ec-main-btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
+
 <body class="interno-app-body dash-v2-body">
   <div class="interno-shell dash-v2-shell">
-    
+
     {% include "partials/sidebar.html" %}
 
     <main class="dash-v2-main" id="passagem-page">
 
       <section class="ec-header">
-        <div class="ec-breadcrumb">
-          <i class="fa-regular fa-folder"></i> SEG Sistemas <i class="fa-solid fa-arrow-right-long" style="font-size: 0.7rem; margin: 0 4px;"></i> Operação
+        <div>
+          <h1>Passagem de Plantão</h1>
+          <p>
+            Deixe registrado tudo o que o próximo plantonista precisa saber.
+            A passagem salva pendências, observações de clientes, falhas e
+            ocorrências do seu turno.
+          </p>
         </div>
-        <h1>Passagem de Plantão</h1>
-        <p>Deixe registrado tudo o que o próximo plantonista precisa saber. A passagem salva pendências, observações de clientes, falhas e ocorrências do seu turno.</p>
+
+        <div class="ec-header-actions">
+          <button type="button" class="ec-main-btn secondary" id="btn-reload-passagem">
+            <i class="fa-solid fa-rotate"></i>
+            Atualizar
+          </button>
+
+          <a href="/interno/dashboard" class="ec-main-btn">
+            <i class="fa-solid fa-table-cells-large"></i>
+            Dashboard
+          </a>
+        </div>
       </section>
 
       <section class="ec-grid">
-        
-        <article class="ec-card card-kpi-block" style="background: var(--ec-card-white);">
+
+        <article class="ec-card card-kpi-block white">
           <div class="kpi-block-header">
-            <span class="kpi-block-title" style="color: var(--ec-text-muted);">Data</span>
-            <div class="kpi-block-icon" style="background: #f4f4f4;"><i class="fa-regular fa-calendar"></i></div>
+            <span class="kpi-block-title">Data</span>
+            <div class="kpi-block-icon">
+              <i class="fa-regular fa-calendar"></i>
+            </div>
           </div>
-          <span class="kpi-block-value" style="font-size: 1.5rem; padding-top: 10px;" data-passagem-stat="data">{{ passagens_resumo.data }}</span>
+
+          <span class="kpi-block-value" data-passagem-stat="data">
+            {{ passagens_resumo.data }}
+          </span>
         </article>
 
-        <article class="ec-card card-kpi-block" style="background: var(--ec-card-blue);">
+        <article class="ec-card card-kpi-block blue">
           <div class="kpi-block-header">
-            <span class="kpi-block-title" style="color: #3b4e82;">Criadas Hoje</span>
-            <div class="kpi-block-icon"><i class="fa-solid fa-file-lines" style="color: #3b4e82;"></i></div>
+            <span class="kpi-block-title">Criadas hoje</span>
+            <div class="kpi-block-icon">
+              <i class="fa-solid fa-file-lines"></i>
+            </div>
           </div>
-          <span class="kpi-block-value" data-passagem-stat="total_hoje">{{ passagens_resumo.total_hoje }}</span>
+
+          <span class="kpi-block-value" data-passagem-stat="total_hoje">
+            {{ passagens_resumo.total_hoje }}
+          </span>
         </article>
 
-        <article class="ec-card card-kpi-block" style="background: var(--ec-card-orange);">
+        <article class="ec-card card-kpi-block orange">
           <div class="kpi-block-header">
-            <span class="kpi-block-title" style="color: #8c5b25;">Aguardando</span>
-            <div class="kpi-block-icon"><i class="fa-solid fa-clock-rotate-left" style="color: #8c5b25;"></i></div>
+            <span class="kpi-block-title">Aguardando</span>
+            <div class="kpi-block-icon">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+            </div>
           </div>
-          <span class="kpi-block-value" data-passagem-stat="pendentes">{{ passagens_resumo.pendentes }}</span>
+
+          <span class="kpi-block-value" data-passagem-stat="pendentes">
+            {{ passagens_resumo.pendentes }}
+          </span>
         </article>
 
-        <article class="ec-card card-kpi-block" style="background: var(--ec-card-green);">
+        <article class="ec-card card-kpi-block green">
           <div class="kpi-block-header">
-            <span class="kpi-block-title" style="color: #4a5d33;">Recebidas</span>
-            <div class="kpi-block-icon"><i class="fa-solid fa-check" style="color: #4a5d33;"></i></div>
+            <span class="kpi-block-title">Recebidas</span>
+            <div class="kpi-block-icon">
+              <i class="fa-solid fa-check"></i>
+            </div>
           </div>
-          <span class="kpi-block-value" data-passagem-stat="recebidas">{{ passagens_resumo.recebidas }}</span>
+
+          <span class="kpi-block-value" data-passagem-stat="recebidas">
+            {{ passagens_resumo.recebidas }}
+          </span>
         </article>
 
         <article class="ec-card card-form-report">
-          <div class="ec-card-header" style="align-items: center; margin-bottom: 2rem;">
+          <div class="ec-card-header" style="align-items: center; margin-bottom: 1rem;">
             <div>
-              <span>Novo Registro</span>
-              <h2>Relatório de Passagem</h2>
+              <span>Novo registro</span>
+              <h2>Relatório de passagem</h2>
             </div>
-            <button type="button" class="btn-ghost-sm" id="btn-reload-passagem" style="display: flex; align-items: center; gap: 6px;">
-              <i class="fa-solid fa-rotate"></i> Atualizar
-            </button>
+
+            <div class="ec-icon-pill">
+              <i class="fa-solid fa-right-left"></i>
+            </div>
           </div>
 
-          <div class="passagem-alert" id="passagem-pendente-card" hidden>
-            </div>
+          <div class="passagem-alert" id="passagem-pendente-card" hidden></div>
 
           <form class="passagem-form" id="passagem-form" autocomplete="off">
-            
+
             <div class="form-grid-2">
               <label class="ec-form-group">
-                <span><i class="fa-solid fa-list-check" style="color: #a1a1a1;"></i> Pendências</span>
+                <span>
+                  <i class="fa-solid fa-list-check"></i>
+                  Pendências
+                </span>
+
                 <div class="ec-input-wrap">
                   <textarea id="passagem-pendencias" placeholder="Ex: Cliente 123 em observação / aguardando retorno / O.S aberta."></textarea>
                 </div>
               </label>
 
               <label class="ec-form-group">
-                <span><i class="fa-solid fa-eye" style="color: #a1a1a1;"></i> Clientes em observação</span>
+                <span>
+                  <i class="fa-solid fa-eye"></i>
+                  Clientes em observação
+                </span>
+
                 <div class="ec-input-wrap">
                   <textarea id="passagem-clientes" placeholder="Ex: Mercado X com falha GPRS, Condomínio Y com queda de energia."></textarea>
                 </div>
               </label>
 
               <label class="ec-form-group">
-                <span><i class="fa-solid fa-triangle-exclamation" style="color: #a1a1a1;"></i> Falhas de sistema</span>
+                <span>
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                  Falhas de sistema
+                </span>
+
                 <div class="ec-input-wrap">
                   <textarea id="passagem-falhas" placeholder="Ex: SIM Next indisponível, JFL sem conexão, internet oscilando."></textarea>
                 </div>
               </label>
 
               <label class="ec-form-group">
-                <span><i class="fa-solid fa-bell" style="color: #a1a1a1;"></i> Ocorrências importantes</span>
+                <span>
+                  <i class="fa-solid fa-bell"></i>
+                  Ocorrências importantes
+                </span>
+
                 <div class="ec-input-wrap">
                   <textarea id="passagem-ocorrencias" placeholder="Ex: Alarme disparado, cliente contatado, atendente acionado."></textarea>
                 </div>
               </label>
 
               <label class="ec-form-group full-width">
-                <span><i class="fa-solid fa-comment-dots" style="color: #a1a1a1;"></i> Recado final para o próximo plantonista</span>
+                <span>
+                  <i class="fa-solid fa-comment-dots"></i>
+                  Recado final para o próximo plantonista
+                </span>
+
                 <div class="ec-input-wrap">
                   <textarea id="passagem-recado" rows="3" placeholder="Ex: Conferir cliente X às 22h. Verificar se sistema Y voltou."></textarea>
                 </div>
@@ -313,16 +798,21 @@
             <div class="message-box" id="passagem-message" hidden></div>
 
             <button type="submit" class="btn-submit" id="btn-passagem-save">
-              <i class="fa-solid fa-floppy-disk"></i> Salvar e Registrar Passagem
+              <i class="fa-solid fa-floppy-disk"></i>
+              Salvar e registrar passagem
             </button>
           </form>
         </article>
 
         <article class="ec-card card-history">
-          <div class="ec-card-header" style="align-items: center; margin-bottom: 1.5rem;">
+          <div class="ec-card-header" style="align-items: center; margin-bottom: 1rem;">
             <div>
               <span>Hoje</span>
-              <h2>Últimos Registros</h2>
+              <h2>Últimos registros</h2>
+            </div>
+
+            <div class="ec-icon-pill">
+              <i class="fa-solid fa-list-check"></i>
             </div>
           </div>
 
@@ -332,8 +822,7 @@
             <p>Quando você salvar ou assumir uma passagem, ela aparecerá aqui.</p>
           </div>
 
-          <div id="passagem-list">
-          </div>
+          <div id="passagem-list"></div>
         </article>
 
       </section>

@@ -38,7 +38,7 @@
       radial-gradient(circle at 86% 0%, rgba(255, 255, 255, 0.55), transparent 28%),
       var(--seg-app-bg) !important;
     color: var(--seg-text);
-    font-family: "Poppins", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
 
   .interno-shell {
@@ -377,10 +377,6 @@
     border-radius: 50%;
   }
 
-  /* ============================================================
-     USUÁRIOS / AVATARES
-     ============================================================ */
-
   .seg-people {
     height: 42px;
     display: inline-flex;
@@ -438,10 +434,6 @@
     background: #050505;
   }
 
-  /* ============================================================
-     CONTEÚDO
-     ============================================================ */
-
   .interno-main,
   main.interno-main,
   .interno-content {
@@ -449,10 +441,6 @@
     margin-left: auto;
     margin-right: auto;
   }
-
-  /* ============================================================
-     RESPONSIVO
-     ============================================================ */
 
   @media (max-width: 1180px) {
     .seg-topbar {
@@ -586,12 +574,11 @@
   }
 </style>
 
-
 <div class="seg-interno-app-chrome" data-seg-interno-app-chrome>
   {% set path = request.url.path %}
   {% set usuario_nome_header = (user.nome if user and user.nome is defined else usuario_nome|default("Usuário", true)) %}
   {% set usuario_inicial_header = usuario_nome_header[:1]|upper if usuario_nome_header else "U" %}
-  {% set usuario_admin = user and (user.is_admin or user.permissao == 'admin') %}
+  {% set usuario_admin = user and (user.is_admin or user.permissao == "admin") %}
   {% set usuario_acessos = user.acessos if user and user.acessos is defined and user.acessos else [] %}
 
   <aside class="seg-side-rail" aria-label="Atalhos internos SEG">
@@ -605,49 +592,49 @@
         <span class="seg-rail-tooltip">Voltar ao site</span>
       </a>
 
-      {% if usuario_admin or 'dashboard' in usuario_acessos %}
+      {% if usuario_admin or "dashboard" in usuario_acessos %}
       <a href="/interno/dashboard" class="seg-rail-button {% if path == '/interno' or path == '/interno/' or path == '/interno/dashboard' %}active{% endif %}" aria-label="Dashboard">
         <i class="fa-solid fa-chart-line"></i>
         <span class="seg-rail-tooltip">Dashboard</span>
       </a>
       {% endif %}
 
-      {% if usuario_admin or 'funcionarios' in usuario_acessos %}
+      {% if usuario_admin or "funcionarios" in usuario_acessos %}
       <a href="/interno/funcionarios" class="seg-rail-button {% if path.startswith('/interno/funcionarios') %}active{% endif %}" aria-label="Funcionários">
         <i class="fa-solid fa-user-pen"></i>
         <span class="seg-rail-tooltip">Funcionários</span>
       </a>
       {% endif %}
 
-      {% if usuario_admin or 'ponto' in usuario_acessos %}
+      {% if usuario_admin or "ponto" in usuario_acessos %}
       <a href="/interno/ponto" class="seg-rail-button {% if path.startswith('/interno/ponto') %}active{% endif %}" aria-label="Ponto online">
         <i class="fa-regular fa-clock"></i>
         <span class="seg-rail-tooltip">Ponto</span>
       </a>
       {% endif %}
 
-      {% if usuario_admin or 'plantao' in usuario_acessos %}
+      {% if usuario_admin or "plantao" in usuario_acessos %}
       <a href="/interno/plantao" class="seg-rail-button {% if path.startswith('/interno/plantao') %}active{% endif %}" aria-label="Plantão">
         <i class="fa-regular fa-comment-dots"></i>
         <span class="seg-rail-tooltip">Plantão</span>
       </a>
       {% endif %}
 
-      {% if usuario_admin or 'passagem' in usuario_acessos %}
+      {% if usuario_admin or "passagem" in usuario_acessos %}
       <a href="/interno/passagem" class="seg-rail-button {% if path.startswith('/interno/passagem') %}active{% endif %}" aria-label="Passagem de plantão">
         <i class="fa-regular fa-file-lines"></i>
         <span class="seg-rail-tooltip">Passagem</span>
       </a>
       {% endif %}
 
-      {% if usuario_admin or 'manual' in usuario_acessos %}
+      {% if usuario_admin or "manual" in usuario_acessos %}
       <a href="/interno/manual" class="seg-rail-button {% if path.startswith('/interno/manual') %}active{% endif %}" aria-label="Manual interno">
         <i class="fa-regular fa-folder-open"></i>
         <span class="seg-rail-tooltip">Manual</span>
       </a>
       {% endif %}
 
-      {% if usuario_admin or 'ocorrencias' in usuario_acessos %}
+      {% if usuario_admin or "ocorrencias" in usuario_acessos %}
       <a href="/interno/ocorrencias" class="seg-rail-button {% if path.startswith('/interno/ocorrencias') %}active{% endif %}" aria-label="Ocorrências internas">
         <i class="fa-regular fa-clipboard"></i>
         <span class="seg-rail-tooltip">Ocorrências</span>
@@ -660,7 +647,7 @@
     <div class="seg-rail-bottom">
       <form method="post" action="/interno/logout" class="seg-rail-logout-form">
         <button type="submit" class="seg-rail-logout" aria-label="Sair">
-          <i class="fa-solid fa-headset"></i>
+          <i class="fa-solid fa-right-from-bracket"></i>
           <span class="seg-rail-tooltip">Sair</span>
         </button>
       </form>
@@ -670,45 +657,52 @@
   <header class="seg-topbar" data-seg-topbar aria-label="Cabeçalho do painel interno SEG">
     <div class="seg-topbar-left">
       <nav class="seg-top-nav" id="segInternoTopNav" aria-label="Menu interno">
-        {% if usuario_admin or 'dashboard' in usuario_acessos %}
+        {% if usuario_admin or "dashboard" in usuario_acessos %}
         <a href="/interno/dashboard" class="seg-top-link {% if path == '/interno' or path == '/interno/' or path == '/interno/dashboard' %}active{% endif %}">
-          <i class="fa-solid fa-table-cells-large"></i><span>Dashboard</span>
+          <i class="fa-solid fa-table-cells-large"></i>
+          <span>Dashboard</span>
         </a>
         {% endif %}
 
-        {% if usuario_admin or 'funcionarios' in usuario_acessos %}
+        {% if usuario_admin or "funcionarios" in usuario_acessos %}
         <a href="/interno/funcionarios" class="seg-top-link {% if path.startswith('/interno/funcionarios') %}active{% endif %}">
-          <i class="fa-solid fa-users"></i><span>Funcionários</span>
+          <i class="fa-solid fa-users"></i>
+          <span>Funcionários</span>
         </a>
         {% endif %}
 
-        {% if usuario_admin or 'ponto' in usuario_acessos %}
+        {% if usuario_admin or "ponto" in usuario_acessos %}
         <a href="/interno/ponto" class="seg-top-link {% if path.startswith('/interno/ponto') %}active{% endif %}">
-          <i class="fa-regular fa-clock"></i><span>Ponto</span>
+          <i class="fa-regular fa-clock"></i>
+          <span>Ponto</span>
         </a>
         {% endif %}
 
-        {% if usuario_admin or 'plantao' in usuario_acessos %}
+        {% if usuario_admin or "plantao" in usuario_acessos %}
         <a href="/interno/plantao" class="seg-top-link {% if path.startswith('/interno/plantao') %}active{% endif %}">
-          <i class="fa-solid fa-wave-square"></i><span>Plantão</span>
+          <i class="fa-solid fa-wave-square"></i>
+          <span>Plantão</span>
         </a>
         {% endif %}
 
-        {% if usuario_admin or 'passagem' in usuario_acessos %}
+        {% if usuario_admin or "passagem" in usuario_acessos %}
         <a href="/interno/passagem" class="seg-top-link {% if path.startswith('/interno/passagem') %}active{% endif %}">
-          <i class="fa-solid fa-database"></i><span>Passagem</span>
+          <i class="fa-solid fa-database"></i>
+          <span>Passagem</span>
         </a>
         {% endif %}
 
-        {% if usuario_admin or 'manual' in usuario_acessos %}
+        {% if usuario_admin or "manual" in usuario_acessos %}
         <a href="/interno/manual" class="seg-top-link {% if path.startswith('/interno/manual') %}active{% endif %}">
-          <i class="fa-regular fa-folder-open"></i><span>Manual</span>
+          <i class="fa-regular fa-folder-open"></i>
+          <span>Manual</span>
         </a>
         {% endif %}
 
-        {% if usuario_admin or 'ocorrencias' in usuario_acessos %}
+        {% if usuario_admin or "ocorrencias" in usuario_acessos %}
         <a href="/interno/ocorrencias" class="seg-top-link {% if path.startswith('/interno/ocorrencias') %}active{% endif %}">
-          <i class="fa-regular fa-clipboard"></i><span>Ocorrências</span>
+          <i class="fa-regular fa-clipboard"></i>
+          <span>Ocorrências</span>
         </a>
         {% endif %}
       </nav>
@@ -716,22 +710,21 @@
 
     <div class="seg-topbar-right">
       <div class="seg-people" aria-label="Equipe online">
-        <img class="seg-people-avatar" src="https://randomuser.me/api/portraits/women/44.jpg" alt="Ana" loading="lazy" referrerpolicy="no-referrer">
-        <img class="seg-people-avatar" src="https://randomuser.me/api/portraits/women/68.jpg" alt="Carla" loading="lazy" referrerpolicy="no-referrer">
-        <img class="seg-people-avatar" src="https://randomuser.me/api/portraits/men/32.jpg" alt="Marcos" loading="lazy" referrerpolicy="no-referrer">
-        <span class="seg-people-more">+5</span>
+        <span class="seg-people-more">SEG</span>
       </div>
 
       <button class="seg-share-button" type="button" data-seg-refresh title="Atualizar página" aria-label="Atualizar página">
-        <i class="fa-solid fa-arrow-up-from-bracket"></i><span>Atualizar</span>
+        <i class="fa-solid fa-rotate-right"></i>
+        <span>Atualizar</span>
       </button>
 
       <button class="seg-icon-button" type="button" title="Notificações" aria-label="Notificações">
-        <i class="fa-regular fa-bell"></i><span class="seg-notify-dot" aria-hidden="true"></span>
+        <i class="fa-regular fa-bell"></i>
+        <span class="seg-notify-dot" aria-hidden="true"></span>
       </button>
 
       <button class="seg-user-button" type="button" title="{{ usuario_nome_header }}" aria-label="Usuário {{ usuario_nome_header }}">
-        <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="{{ usuario_nome_header }}" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove(); this.parentElement.textContent='{{ usuario_inicial_header }}'; this.parentElement.style.fontSize='13px';">
+        <span style="font-size: 13px; font-weight: 700;">{{ usuario_inicial_header }}</span>
       </button>
 
       <button class="seg-mobile-toggle" id="segInternoMobileToggle" type="button" aria-label="Abrir menu" aria-expanded="false">
