@@ -1,4 +1,5 @@
 from sqlalchemy import Boolean, Column, Date, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -15,7 +16,13 @@ class InternoFuncionario(Base):
     tipo = Column(String(40), nullable=False, default="plantonista")
     usuario = Column(String(80), nullable=False, unique=True, index=True)
     permissao = Column(String(40), nullable=False, default="operador")
-    acessos = Column(Text, nullable=False, default="")
+
+    # IMPORTANTE:
+    # No banco essa coluna já está como JSONB.
+    # Então aqui também precisa ser JSONB para aceitar lista:
+    # ["dashboard", "ponto", "plantao", ...]
+    acessos = Column(JSONB, nullable=False, default=list)
+
     ativo = Column(Boolean, nullable=False, default=True)
     senha_hash = Column(Text, nullable=False, default="")
     criado_em = Column(DateTime(timezone=True), nullable=True)
