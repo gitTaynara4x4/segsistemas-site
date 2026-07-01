@@ -1,7 +1,6 @@
 import os
-import re
 from dataclasses import dataclass
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, urlsplit
 from zoneinfo import ZoneInfo
 
 
@@ -85,61 +84,6 @@ def _env_int(name: str, default: int) -> int:
         return default
 
 
-def _env_bool(name: str, default: bool = False) -> bool:
-    value = _env_str(name)
-
-    if not value:
-        return default
-
-    return value.lower() in {"1", "true", "yes", "sim", "on"}
-
-
-# No EasyPanel, dentro do mesmo projeto/rede, o app deve falar com o Postgres
-# pelo nome do serviço e pela porta interna 5432. Os nomes abaixo apareceram
-# nos logs, mas não resolvem/conectam no container do site.
-EASYPANEL_DB_SERVICE_HOST = "bd-segsistemas"
-EASYPANEL_DB_SERVICE_PORT = "5432"
-WRONG_DB_HOSTS_FOR_THIS_PROJECT = {
-    "sites_bd-segsistemas",
-    "9ywrah.easypanel.host",
-}
-
-
-def _auto_fix_db_hosts_enabled() -> bool:
-    # Deixa ligado por padrão para evitar repetir os erros dos logs.
-    return _env_bool("POSTGRES_AUTO_FIX_EASYPANEL_HOSTS", True)
-
-
-def _normalize_postgres_host(host: str) -> str:
-    host = (host or "").strip()
-
-    if not _auto_fix_db_hosts_enabled():
-        return host
-
-    if host.lower() in WRONG_DB_HOSTS_FOR_THIS_PROJECT:
-        print(
-            f"[CONFIG] POSTGRES_HOST '{host}' corrigido automaticamente para "
-            f"'{EASYPANEL_DB_SERVICE_HOST}'."
-        )
-        return EASYPANEL_DB_SERVICE_HOST
-
-    return host
-
-
-def _normalize_postgres_port(host: str, port: str) -> str:
-    host = (host or "").strip().lower()
-    port = (port or "").strip() or EASYPANEL_DB_SERVICE_PORT
-
-    if _auto_fix_db_hosts_enabled() and host in WRONG_DB_HOSTS_FOR_THIS_PROJECT:
-        print(
-            f"[CONFIG] POSTGRES_PORT '{port}' corrigido automaticamente para "
-            f"'{EASYPANEL_DB_SERVICE_PORT}'."
-        )
-        return EASYPANEL_DB_SERVICE_PORT
-
-    return port
-
-
 def _fix_database_url(raw_url: str) -> str:
     """
     Corrige URLs copiadas do EasyPanel/Postgres.
@@ -148,7 +92,6 @@ def _fix_database_url(raw_url: str) -> str:
     - postgres:// vira postgresql+psycopg2://, que o SQLAlchemy entende.
     - postgresql:// também é forçado para psycopg2.
     - senhas com @ sem escape viram %40, por exemplo Pc1234@@@@.
-    - host externo/errado do EasyPanel vira bd-segsistemas:5432 neste projeto.
     """
     url = (raw_url or "").strip()
     if not url:
@@ -175,42 +118,14 @@ def _fix_database_url(raw_url: str) -> str:
     userinfo, host_part = rest.rsplit("@", 1)
 
     if ":" not in userinfo:
-        safe_userinfo = quote_plus(userinfo)
-    else:
-        user, password = userinfo.split(":", 1)
-        safe_userinfo = f"{quote_plus(user)}:{quote_plus(password)}"
+        user = quote_plus(userinfo)
+        return f"{scheme}://{user}@{host_part}"
 
-    # host_part vem como: host:porta/banco?sslmode=disable
-    # Troca host externo/errado pelo nome interno do serviço do EasyPanel.
-    if _auto_fix_db_hosts_enabled():
-        match = re.match(r"([^/?#]*)(.*)", host_part)
-        if match:
-            authority = match.group(1)
-            suffix = match.group(2)
-            host_only = authority.split(":", 1)[0].strip().lower()
+    user, password = userinfo.split(":", 1)
+    user = quote_plus(user)
+    password = quote_plus(password)
 
-            if host_only in WRONG_DB_HOSTS_FOR_THIS_PROJECT:
-                print(
-                    f"[CONFIG] DATABASE_URL host '{host_only}' corrigido automaticamente para "
-                    f"'{EASYPANEL_DB_SERVICE_HOST}:{EASYPANEL_DB_SERVICE_PORT}'."
-                )
-                host_part = f"{EASYPANEL_DB_SERVICE_HOST}:{EASYPANEL_DB_SERVICE_PORT}{suffix}"
-
-    return f"{scheme}://{safe_userinfo}@{host_part}"
-
-
-def _mask_database_url(url: str) -> str:
-    if not url or "@" not in url or "://" not in url:
-        return url
-
-    scheme, rest = url.split("://", 1)
-    userinfo, host_part = rest.rsplit("@", 1)
-
-    if ":" in userinfo:
-        user, _password = userinfo.split(":", 1)
-        return f"{scheme}://{user}:***@{host_part}"
-
-    return f"{scheme}://***@{host_part}"
+    return f"{scheme}://{user}:{password}@{host_part}"
 
 
 # ============================================================
@@ -250,12 +165,8 @@ class Settings:
     interno_secret: str = _env_str("SEG_INTERNO_SECRET") or _env_str("SECRET_KEY")
 
     # Banco PostgreSQL.
-    _raw_postgres_host: str = _env_str("POSTGRES_HOST")
-    postgres_host: str = _normalize_postgres_host(_env_str("POSTGRES_HOST"))
-    postgres_port: str = _normalize_postgres_port(
-        _env_str("POSTGRES_HOST"),
-        _env_str("POSTGRES_PORT", EASYPANEL_DB_SERVICE_PORT),
-    )
+    postgres_host: str = _env_str("POSTGRES_HOST")
+    postgres_port: str = _env_str("POSTGRES_PORT", "5432")
     postgres_user: str = _env_str("POSTGRES_USER")
     postgres_password: str = _env_str("POSTGRES_PASSWORD")
     postgres_db: str = _env_str("POSTGRES_DB")
@@ -266,9 +177,7 @@ class Settings:
         direct_url = _env_str("DATABASE_URL") or _env_str("SQLALCHEMY_DATABASE_URL")
 
         if direct_url:
-            fixed_url = _fix_database_url(direct_url)
-            print(f"[CONFIG] DATABASE_URL final: {_mask_database_url(fixed_url)}")
-            return fixed_url
+            return _fix_database_url(direct_url)
 
         user = quote_plus(self.postgres_user)
         password = quote_plus(self.postgres_password)
@@ -277,9 +186,7 @@ class Settings:
         db = quote_plus(self.postgres_db)
         sslmode = quote_plus(self.postgres_sslmode)
 
-        url = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}?sslmode={sslmode}"
-        print(f"[CONFIG] DATABASE_URL montada: {_mask_database_url(url)}")
-        return url
+        return f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}?sslmode={sslmode}"
 
     def validar_configuracao_obrigatoria(self) -> None:
         faltando = []
