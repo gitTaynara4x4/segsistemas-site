@@ -689,3 +689,51 @@ footer,
   .logo-img{width:48px;height:48px}
   header.scrolled .logo-img{width:44px;height:44px}
 }
+/* ==========================================================
+   FIX ONLINE / CACHE: reforço do botão Trabalhe Conosco
+   ========================================================== */
+#header .btn-work,
+#navLinks .btn-work{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  min-height:44px !important;
+  padding:9px 15px !important;
+  border:1px solid rgba(255,255,255,.72) !important;
+  border-radius:4px !important;
+  background:rgba(15,23,42,.22) !important;
+  color:#fff !important;
+  font-size:.82rem !important;
+  font-weight:800 !important;
+  line-height:1 !important;
+  text-transform:uppercase !important;
+  letter-spacing:.02em !important;
+  text-decoration:none !important;
+  white-space:nowrap !important;
+}
+#header .btn-work:hover,
+#navLinks .btn-work:hover{
+  border-color:var(--gold-metallic) !important;
+  background:rgba(212,175,55,.08) !important;
+  color:var(--gold-metallic) !important;
+  padding-left:15px !important;
+}
+#header.scrolled .btn-work,
+#header.scrolled #navLinks .btn-work{
+  border-color:rgba(15,23,42,.32) !important;
+  background:rgba(15,23,42,.03) !important;
+  color:var(--navy-deep) !important;
+}
+#header .btn-login,
+#navLinks .btn-login{
+  text-decoration:none !important;
+  white-space:nowrap !important;
+}
+@media (max-width:900px){
+  #header .desktop-only{display:none !important;}
+  #navLinks .mobile-only{display:inline-flex !important;}
+}
+@media (min-width:901px){
+  #header .desktop-only{display:inline-flex !important;}
+  #navLinks .mobile-only{display:none !important;}
+}
