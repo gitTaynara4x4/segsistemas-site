@@ -331,3 +331,24 @@ class AreaClienteConta(Base):
     ultimo_login_em = Column(DateTime(timezone=True), nullable=True)
     ultimo_login_ip = Column(String(80), nullable=False, default="")
 
+
+
+class AreaClienteAssinatura(Base):
+    __tablename__ = "area_cliente_assinaturas"
+
+    id = Column(Integer, primary_key=True, index=True)
+    assinatura_id = Column(String(96), nullable=False, unique=True, index=True)
+    cliente_id = Column(Integer, nullable=False, index=True)
+    orcamento_id = Column(Integer, nullable=False, index=True)
+    contrato_numero = Column(String(120), nullable=False, default="")
+    contrato_versao = Column(Integer, nullable=False, default=1)
+    assinante_nome = Column(String(220), nullable=False, default="")
+    assinante_documento_mascarado = Column(String(40), nullable=False, default="")
+    documento_hash_sha256 = Column(String(64), nullable=False, default="", index=True)
+    pdf_final_hash_sha256 = Column(String(64), nullable=False, default="", index=True)
+    ip = Column(String(80), nullable=False, default="")
+    user_agent = Column(String(500), nullable=False, default="")
+    session_fingerprint = Column(String(128), nullable=False, default="")
+    assinado_em = Column(DateTime(timezone=True), nullable=False, index=True)
+    criado_em = Column(DateTime(timezone=True), nullable=False, index=True)
+    evidencias = Column(JSONB, nullable=False, default=dict)

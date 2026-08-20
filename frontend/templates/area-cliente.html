@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" type="image/png" href="/static/img/favicon.png">
-  <link rel="stylesheet" href="/static/css/area-cliente.css?v=20260820-auth-v3">
+  <link rel="stylesheet" href="/static/css/area-cliente.css?v=20260820-sign-v5">
 </head>
 <body class="client-portal-body">
   <div class="portal-toast" id="portalToast" role="status" aria-live="polite" hidden></div>
@@ -232,6 +232,10 @@
           <button class="portal-nav-item" type="button" data-view-target="monitoramento">
             <i class="fa-solid fa-shield-halved"></i><span>Meu monitoramento</span>
           </button>
+          <button class="portal-nav-item" type="button" data-view-target="contratos">
+            <i class="fa-solid fa-file-signature"></i><span>Contratos</span>
+            <span class="nav-counter" id="contractsNavCounter" hidden>0</span>
+          </button>
           <button class="portal-nav-item" type="button" data-view-target="contatos">
             <i class="fa-regular fa-address-book"></i><span>Contatos</span>
           </button>
@@ -360,6 +364,14 @@
             </div>
             <div class="recent-finance-list" id="dashboardFinanceList"></div>
           </article>
+
+          <article class="content-card dashboard-signature-card" id="dashboardSignatureCard" hidden>
+            <div class="content-card-head">
+              <div><span class="section-kicker">Contratos</span><h2>Assinatura pendente</h2></div>
+              <button class="text-button" type="button" data-view-target="contratos">Ver contrato</button>
+            </div>
+            <div class="dashboard-signature-preview"><i class="fa-solid fa-file-signature"></i><div><strong id="dashboardSignatureTitle">Contrato aguardando assinatura</strong><span id="dashboardSignatureText">Revise e assine pela Área do Cliente.</span></div></div>
+          </article>
         </section>
 
         <section class="portal-view" data-view="dados">
@@ -468,6 +480,15 @@
           </div>
         </section>
 
+        <section class="portal-view" data-view="contratos">
+          <div class="page-heading">
+            <div><span class="page-eyebrow">Documentos</span><h1>Contratos e assinaturas</h1><p>Visualize as versões enviadas pela SEG e assine eletronicamente quando houver uma solicitação pendente.</p></div>
+          </div>
+          <div class="contract-portal-list" id="contractsList"></div>
+          <div class="finance-empty" id="contractsEmpty" hidden><i class="fa-regular fa-file-lines"></i><strong>Nenhum contrato disponível</strong><span>Quando a SEG enviar um contrato para assinatura, ele aparecerá aqui.</span></div>
+          <div class="information-note"><i class="fa-solid fa-shield-halved"></i><div><strong>Aceite eletrônico com evidências.</strong><span>A SEG registra a versão do contrato, hash SHA-256, data/hora, conta autenticada e IP do aceite. Este fluxo não é um certificado digital ICP-Brasil.</span></div></div>
+        </section>
+
         <section class="portal-view" data-view="contatos">
           <div class="page-heading">
             <div>
@@ -554,7 +575,7 @@
             <i class="fa-solid fa-barcode"></i>
             <div>
               <strong>Segunda via de boleto</strong>
-              <span>Quando o emissor bancário estiver integrado, linha digitável, PDF e Pix aparecerão automaticamente nos títulos correspondentes.</span>
+              <span>Os títulos configurados como boleto podem disponibilizar segunda via, linha digitável e Pix diretamente nesta área.</span>
             </div>
           </div>
         </section>
@@ -562,9 +583,25 @@
     </div>
   </div>
 
+  <div class="contract-sign-modal" id="contractSignModal" hidden>
+    <div class="contract-sign-dialog" role="dialog" aria-modal="true" aria-labelledby="contractSignTitle">
+      <div class="contract-sign-head"><div><span>Assinatura eletrônica</span><h2 id="contractSignTitle">Revisar contrato</h2><p id="contractSignMeta">—</p></div><button type="button" id="closeContractSignModal" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="contract-sign-document"><iframe id="contractPdfFrame" title="Contrato para assinatura"></iframe></div>
+      <div class="contract-sign-form" id="contractSignFormWrap">
+        <div class="contract-signer-summary"><span>Assinante</span><strong id="contractSignerName">—</strong><small id="contractSignerDocument">—</small></div>
+        <label for="contractDocumentConfirm" id="contractDocumentLabel">CPF do assinante</label>
+        <input id="contractDocumentConfirm" type="text" inputmode="numeric" autocomplete="off" placeholder="Digite o CPF para confirmar">
+        <label class="contract-consent"><input id="contractConsent" type="checkbox"><span>Li integralmente o contrato exibido acima e concordo com seus termos. Confirmo a realização do aceite eletrônico desta versão.</span></label>
+        <div class="contract-hash"><span>Hash da versão</span><code id="contractDocumentHash">—</code></div>
+        <button class="primary-button" id="confirmContractSignature" type="button"><i class="fa-solid fa-signature"></i> Assinar contrato</button>
+      </div>
+      <div class="contract-sign-success" id="contractSignSuccess" hidden><i class="fa-solid fa-circle-check"></i><div><strong>Contrato assinado com sucesso</strong><span id="contractSignSuccessText">Seu aceite foi registrado.</span><code id="contractFinalHash">—</code><a id="contractSignedPdfLink" href="#" target="_blank" rel="noopener noreferrer">Abrir contrato assinado</a></div></div>
+    </div>
+  </div>
+
   <script>
     window.SEG_AREA_CLIENTE = { apiBase: "" };
   </script>
-  <script src="/static/js/pages/area-cliente.js?v=20260820-auth-v3" defer></script>
+  <script src="/static/js/pages/area-cliente.js?v=20260820-finance-v6" defer></script>
 </body>
 </html>

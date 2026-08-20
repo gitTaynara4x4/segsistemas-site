@@ -19,6 +19,7 @@ from .routers import (
     notificacoes,
     documentos,
     public,
+    proposta_publica,
     status_sistemas,
 )
 
@@ -54,6 +55,7 @@ app.include_router(tarefas.router)
 app.include_router(notificacoes.router)
 app.include_router(documentos.router)
 app.include_router(public.router)
+app.include_router(proposta_publica.router)
 app.include_router(status_sistemas.router)
 
 

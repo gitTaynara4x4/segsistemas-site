@@ -1,16 +1,17 @@
 import json
+import hashlib
 from datetime import timedelta
 from urllib import parse as urllib_parse
 from urllib import request as urllib_request
 from urllib.error import HTTPError, URLError
 
 from fastapi import APIRouter, Depends, Query, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from sqlalchemy.orm import Session
 
 from ..config import settings
 from ..database import get_db
-from ..models import AreaClienteConta
+from ..models import AreaClienteAssinatura, AreaClienteConta
 from ..security import (
     cookie_secure,
     create_area_cliente_session,
@@ -19,9 +20,15 @@ from ..security import (
     verify_password,
 )
 from ..services.valora_seg import (
+    atualizar_boleto_cliente,
+    emitir_boleto_cliente,
     ValoraSegError,
+    assinar_contrato_cliente,
     localizar_cliente_portal,
+    marcar_contrato_visualizado,
     obter_cliente_por_id,
+    obter_contrato_pdf,
+    obter_contratos_cliente,
     validar_primeiro_acesso_portal,
 )
 from ..utils import client_ip, now_utc
@@ -384,3 +391,144 @@ async def area_cliente_portal_integrado(request: Request, db: Session = Depends(
 
     except ValoraSegError as exc:
         return _no_store({"detail": exc.detail}, exc.status_code)
+
+
+
+def _area_session_account(request: Request, db: Session):
+    sessao = read_area_cliente_session(request)
+    if not sessao:
+        return None, None
+    cliente_id = int(sessao.get("sub") or 0)
+    account = _get_account(db, cliente_id) if cliente_id > 0 else None
+    if not account or not bool(account.ativo):
+        return None, None
+    return sessao, account
+
+
+@router.post("/financeiro/{lancamento_id}/boleto/emitir")
+async def area_cliente_emitir_boleto(lancamento_id: int, request: Request, db: Session = Depends(get_db)):
+    sessao, account = _area_session_account(request, db)
+    if not sessao or not account:
+        return _no_store({"detail": "Sua sessão expirou. Entre novamente."}, 401)
+    try:
+        data = await emitir_boleto_cliente(int(account.cliente_id), int(lancamento_id))
+        return _no_store(data)
+    except ValoraSegError as exc:
+        return _no_store({"detail": exc.detail}, exc.status_code)
+
+
+@router.post("/financeiro/{lancamento_id}/boleto/atualizar")
+async def area_cliente_atualizar_boleto(lancamento_id: int, request: Request, db: Session = Depends(get_db)):
+    sessao, account = _area_session_account(request, db)
+    if not sessao or not account:
+        return _no_store({"detail": "Sua sessão expirou. Entre novamente."}, 401)
+    try:
+        data = await atualizar_boleto_cliente(int(account.cliente_id), int(lancamento_id))
+        return _no_store(data)
+    except ValoraSegError as exc:
+        return _no_store({"detail": exc.detail}, exc.status_code)
+
+
+@router.get("/contratos")
+async def area_cliente_contratos(request: Request, db: Session = Depends(get_db)):
+    sessao, account = _area_session_account(request, db)
+    if not sessao or not account:
+        return _no_store({"detail": "Sua sessão expirou. Entre novamente."}, 401)
+    try:
+        data = await obter_contratos_cliente(int(account.cliente_id))
+        return _no_store(data)
+    except ValoraSegError as exc:
+        return _no_store({"detail": exc.detail}, exc.status_code)
+
+
+@router.post("/contratos/{orcamento_id}/visualizar")
+async def area_cliente_visualizar_contrato(orcamento_id: int, request: Request, db: Session = Depends(get_db)):
+    sessao, account = _area_session_account(request, db)
+    if not sessao or not account:
+        return _no_store({"detail": "Sua sessão expirou. Entre novamente."}, 401)
+    try:
+        data = await marcar_contrato_visualizado(int(account.cliente_id), int(orcamento_id))
+        return _no_store(data)
+    except ValoraSegError as exc:
+        return _no_store({"detail": exc.detail}, exc.status_code)
+
+
+@router.get("/contratos/{orcamento_id}/pdf")
+async def area_cliente_pdf_contrato(orcamento_id: int, request: Request, db: Session = Depends(get_db)):
+    sessao, account = _area_session_account(request, db)
+    if not sessao or not account:
+        return Response(status_code=401, content=b"Sessao expirada.", media_type="text/plain")
+    try:
+        content, content_type, _ = await obter_contrato_pdf(int(account.cliente_id), int(orcamento_id), assinado=False)
+        return Response(content=content, media_type=content_type or "application/pdf", headers={"Cache-Control": "private, no-store, max-age=0", "Content-Disposition": "inline", "X-Content-Type-Options": "nosniff"})
+    except ValoraSegError as exc:
+        return Response(status_code=exc.status_code, content=exc.detail.encode("utf-8"), media_type="text/plain; charset=utf-8")
+
+
+@router.get("/contratos/{orcamento_id}/pdf-assinado")
+async def area_cliente_pdf_assinado(orcamento_id: int, request: Request, db: Session = Depends(get_db)):
+    sessao, account = _area_session_account(request, db)
+    if not sessao or not account:
+        return Response(status_code=401, content=b"Sessao expirada.", media_type="text/plain")
+    try:
+        content, content_type, _ = await obter_contrato_pdf(int(account.cliente_id), int(orcamento_id), assinado=True)
+        return Response(content=content, media_type=content_type or "application/pdf", headers={"Cache-Control": "private, no-store, max-age=0", "Content-Disposition": "inline", "X-Content-Type-Options": "nosniff"})
+    except ValoraSegError as exc:
+        return Response(status_code=exc.status_code, content=exc.detail.encode("utf-8"), media_type="text/plain; charset=utf-8")
+
+
+@router.post("/contratos/{orcamento_id}/assinar")
+async def area_cliente_assinar_contrato(orcamento_id: int, request: Request, db: Session = Depends(get_db)):
+    sessao, account = _area_session_account(request, db)
+    if not sessao or not account:
+        return _no_store({"detail": "Sua sessão expirou. Entre novamente."}, 401)
+    try:
+        payload = await request.json()
+    except Exception:
+        payload = {}
+    documento = str(payload.get("documento") or "").strip()
+    if payload.get("aceite") is not True:
+        return _no_store({"detail": "Marque a confirmação de leitura e concordância antes de assinar."}, 422)
+    if not documento:
+        return _no_store({"detail": "Informe o CPF do assinante para confirmar a assinatura."}, 422)
+    token = request.cookies.get(settings.area_cliente_cookie_name) or ""
+    user_agent = str(request.headers.get("user-agent") or "")[:500]
+    fingerprint = hashlib.sha256(f"{token}|{account.cliente_id}|{user_agent}".encode("utf-8")).hexdigest()
+    upstream_payload = {
+        "aceite": True,
+        "documento": documento,
+        "versao": int(payload.get("versao") or 0),
+        "documento_hash_sha256": str(payload.get("documento_hash_sha256") or ""),
+        "ip": client_ip(request),
+        "user_agent": user_agent,
+        "session_fingerprint": fingerprint,
+    }
+    try:
+        data = await assinar_contrato_cliente(int(account.cliente_id), int(orcamento_id), upstream_payload)
+    except ValoraSegError as exc:
+        return _no_store({"detail": exc.detail}, exc.status_code)
+
+    assinatura_id = str(data.get("assinatura_id") or "")
+    if assinatura_id:
+        local = db.query(AreaClienteAssinatura).filter(AreaClienteAssinatura.assinatura_id == assinatura_id).first()
+        if not local:
+            local = AreaClienteAssinatura(assinatura_id=assinatura_id, cliente_id=int(account.cliente_id), orcamento_id=int(orcamento_id), criado_em=now_utc(), assinado_em=now_utc())
+            db.add(local)
+        local.contrato_numero = str(data.get("contrato_numero") or "")
+        local.contrato_versao = int(data.get("versao") or 0)
+        local.assinante_nome = str((data.get("assinante") or {}).get("nome") or "")
+        local.assinante_documento_mascarado = str((data.get("assinante") or {}).get("documento_mascarado") or "")
+        local.documento_hash_sha256 = str(data.get("documento_hash_sha256") or "")
+        local.pdf_final_hash_sha256 = str(data.get("pdf_final_hash_sha256") or "")
+        local.ip = client_ip(request)
+        local.user_agent = user_agent
+        local.session_fingerprint = fingerprint
+        local.evidencias = {"fonte": "valora", "status": data.get("status"), "assinatura_id": assinatura_id}
+        try:
+            if data.get("assinado_em"):
+                from datetime import datetime
+                local.assinado_em = datetime.fromisoformat(str(data.get("assinado_em")).replace("Z", "+00:00"))
+        except Exception:
+            local.assinado_em = now_utc()
+        db.commit()
+    return _no_store(data)

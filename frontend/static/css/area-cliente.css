@@ -1784,3 +1784,77 @@ button {
   line-height: 1.45;
   color: #667085;
 }
+
+
+/* Contratos e assinatura eletrônica */
+.contract-portal-list { display: grid; gap: 12px; }
+.contract-portal-card { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 16px; align-items: center; padding: 18px; border: 1px solid var(--portal-border); border-radius: 12px; background: #fff; }
+.contract-portal-main { min-width: 0; }
+.contract-portal-main > span { display: block; margin-bottom: 4px; color: var(--portal-muted); font-size: .72rem; }
+.contract-portal-main > strong { display: block; color: var(--portal-navy); font-size: .95rem; }
+.contract-portal-main > small { display: block; margin-top: 5px; color: var(--portal-muted); font-size: .74rem; }
+.contract-portal-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.contract-portal-action { min-height: 36px; padding: 0 12px; display: inline-flex; align-items: center; gap: 7px; border: 1px solid #d5dce3; border-radius: 8px; background: #fff; color: #31475a; font-size: .76rem; font-weight: 600; text-decoration: none; cursor: pointer; }
+.contract-portal-action.is-primary { border-color: var(--portal-navy); background: var(--portal-navy); color: #fff; }
+.contract-status { display: inline-flex; width: fit-content; margin-top: 8px; padding: 4px 7px; border-radius: 999px; font-size: .67rem; font-weight: 700; }
+.contract-status.is-pending, .contract-status.is-viewed { background: #fff4d8; color: #7b5a19; }
+.contract-status.is-signed { background: #e8f5ee; color: #236c48; }
+.dashboard-signature-preview { display: flex; gap: 12px; align-items: center; }
+.dashboard-signature-preview > i { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 10px; background: #eef3f6; color: var(--portal-navy); }
+.dashboard-signature-preview strong, .dashboard-signature-preview span { display: block; }
+.dashboard-signature-preview span { margin-top: 3px; color: var(--portal-muted); font-size: .76rem; }
+.contract-sign-modal { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; padding: 18px; background: rgba(13,25,35,.66); }
+.contract-sign-modal[hidden] { display: none !important; }
+.contract-sign-dialog { width: min(980px, 100%); max-height: calc(100vh - 36px); overflow: auto; border-radius: 14px; background: #fff; box-shadow: 0 22px 70px rgba(0,0,0,.25); }
+.contract-sign-head { display: flex; justify-content: space-between; gap: 16px; padding: 18px 20px 14px; border-bottom: 1px solid var(--portal-border); }
+.contract-sign-head span { color: var(--portal-muted); font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; }
+.contract-sign-head h2 { margin: 3px 0 3px; color: var(--portal-navy); font-size: 1.05rem; }
+.contract-sign-head p { margin: 0; color: var(--portal-muted); font-size: .75rem; }
+.contract-sign-head button { width: 36px; height: 36px; border: 0; border-radius: 8px; background: #f2f4f6; color: #596674; cursor: pointer; }
+.contract-sign-document { height: min(55vh, 620px); background: #eef1f4; }
+.contract-sign-document iframe { width: 100%; height: 100%; border: 0; background: #fff; }
+.contract-sign-form { padding: 18px 20px 20px; }
+.contract-signer-summary { padding: 11px 12px; border: 1px solid var(--portal-border); border-radius: 9px; background: #f8fafb; }
+.contract-signer-summary span, .contract-signer-summary strong, .contract-signer-summary small { display: block; }
+.contract-signer-summary span { color: var(--portal-muted); font-size: .67rem; text-transform: uppercase; }
+.contract-signer-summary strong { margin-top: 3px; color: var(--portal-navy); font-size: .88rem; }
+.contract-signer-summary small { margin-top: 2px; color: var(--portal-muted); }
+.contract-sign-form > label:not(.contract-consent) { display: block; margin: 14px 0 6px; color: #4e5d6a; font-size: .76rem; font-weight: 600; }
+.contract-sign-form > input { width: 100%; height: 42px; padding: 0 12px; border: 1px solid #d5dce3; border-radius: 8px; outline: 0; }
+.contract-sign-form > input:focus { border-color: #8398aa; box-shadow: 0 0 0 3px rgba(49,93,138,.08); }
+.contract-consent { display: flex; gap: 9px; align-items: flex-start; margin: 14px 0; color: #4d5c67; font-size: .75rem; line-height: 1.5; cursor: pointer; }
+.contract-consent input { margin-top: 3px; }
+.contract-hash { margin-bottom: 14px; padding: 9px 11px; border-radius: 8px; background: #f4f6f7; }
+.contract-hash span { display: block; color: var(--portal-muted); font-size: .65rem; }
+.contract-hash code { display: block; margin-top: 3px; overflow-wrap: anywhere; color: #5a6872; font-size: .64rem; }
+.contract-sign-success { display: flex; gap: 13px; padding: 22px 20px; border-top: 1px solid var(--portal-border); background: #f3faf6; }
+.contract-sign-success > i { color: #2b8458; font-size: 1.35rem; }
+.contract-sign-success strong, .contract-sign-success span, .contract-sign-success code, .contract-sign-success a { display: block; }
+.contract-sign-success strong { color: #285c43; }
+.contract-sign-success span { margin-top: 3px; color: #557264; font-size: .76rem; }
+.contract-sign-success code { margin-top: 8px; overflow-wrap: anywhere; color: #65766d; font-size: .63rem; }
+.contract-sign-success a { margin-top: 10px; width: fit-content; color: var(--portal-navy); font-size: .76rem; font-weight: 700; }
+@media (max-width: 720px) { .contract-portal-card { grid-template-columns: 1fr; } .contract-portal-actions { justify-content: flex-start; } .contract-sign-modal { padding: 0; } .contract-sign-dialog { max-height: 100vh; min-height: 100vh; border-radius: 0; } .contract-sign-document { height: 48vh; } }
+
+.contract-portal-blocked { max-width: 280px; color: #8a5a24; font-size: .72rem; line-height: 1.4; text-align: right; }
+@media (max-width: 720px) { .contract-portal-blocked { text-align: left; } }
+
+.finance-action.is-primary {
+  border-color: #1f3555;
+  background: #1f3555;
+  color: #fff;
+}
+
+.finance-action.is-primary:hover {
+  background: #182b46;
+}
+
+.finance-action:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+.boleto-note.is-sandbox {
+  border-color: #e5c98f;
+  background: #fffaf0;
+}

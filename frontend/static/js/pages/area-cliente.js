@@ -6,6 +6,8 @@
 
   const state = {
     portal: null,
+    contracts: [],
+    currentContract: null,
     loading: false,
     authMode: 'login',
     toastTimer: null,
@@ -204,6 +206,7 @@
     dom.logoutButton = byId('logoutButton');
     dom.financialBlockWarning = byId('financialBlockWarning');
     dom.financeNavCounter = byId('financeNavCounter');
+    dom.contractsNavCounter = byId('contractsNavCounter');
   }
 
   function closeMobileMenu() {
@@ -377,6 +380,7 @@
     const boleto = item?.boleto || {};
     const actions = [];
     const pdfUrl = safeUrl(boleto.pdf_url);
+    const pending = ['aberto', 'parcial', 'vencido'].includes(lower(item?.status));
 
     if (pdfUrl) {
       actions.push(`<a class="finance-action" href="${escapeHtml(pdfUrl)}" target="_blank" rel="noopener noreferrer">Ver boleto</a>`);
@@ -387,6 +391,12 @@
     if (text(boleto.pix_copia_cola, '')) {
       actions.push(`<button class="finance-action" type="button" data-copy-value="${escapeHtml(boleto.pix_copia_cola)}">Copiar Pix</button>`);
     }
+    if (pending && boleto.e_forma_boleto && boleto.pode_emitir && !boleto.emitido) {
+      actions.push(`<button class="finance-action is-primary" type="button" data-issue-boleto="${Number(item.id)}">Emitir boleto</button>`);
+    }
+    if (pending && boleto.emitido) {
+      actions.push(`<button class="finance-action" type="button" data-refresh-boleto="${Number(item.id)}">Atualizar</button>`);
+    }
 
     if (!actions.length) return '<span class="finance-status">—</span>';
     return `<div class="finance-actions">${actions.join('')}</div>`;
@@ -396,6 +406,23 @@
     const financeiro = data.financeiro || {};
     const resumo = financeiro.resumo || {};
     const titulos = Array.isArray(financeiro.titulos) ? financeiro.titulos : [];
+    const cobrancaOnline = financeiro.cobranca_online || {};
+    const boletoNote = byId('boletoIntegrationNote');
+    if (boletoNote) {
+      const strong = boletoNote.querySelector('strong');
+      const span = boletoNote.querySelector('span');
+      if (cobrancaOnline.configurado) {
+        if (strong) strong.textContent = cobrancaOnline.ambiente === 'sandbox' ? 'Boleto em ambiente de homologação' : 'Boleto e Pix online';
+        if (span) span.textContent = cobrancaOnline.ambiente === 'sandbox'
+          ? 'O emissor Asaas está configurado em Sandbox. Os dados servem para homologação e não representam uma cobrança real.'
+          : 'Boletos são emitidos pelo Asaas. Linha digitável, PDF e Pix ficam disponíveis diretamente neste portal.';
+        boletoNote.classList.toggle('is-sandbox', cobrancaOnline.ambiente === 'sandbox');
+      } else {
+        if (strong) strong.textContent = 'Emissão bancária ainda não configurada';
+        if (span) span.textContent = 'Os títulos continuam visíveis, mas a segunda via só será liberada após a configuração do emissor bancário pela SEG.';
+        boletoNote.classList.remove('is-sandbox');
+      }
+    }
 
     setText('summaryOpenBalance', formatMoney(resumo.saldo_em_aberto || 0), 'R$ 0,00');
     setText(
@@ -474,6 +501,157 @@
     }
   }
 
+  async function processBoletoAction(lancamentoId, action, button) {
+    const id = Number(lancamentoId || 0);
+    if (!id) return;
+    const original = button?.innerHTML || '';
+    if (button) {
+      button.disabled = true;
+      button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Aguarde';
+    }
+    try {
+      const result = await apiJson(`/api/area-cliente-publica/financeiro/${id}/boleto/${action}`, { method: 'POST' });
+      if (!state.portal) state.portal = {};
+      if (result?.financeiro) state.portal.financeiro = result.financeiro;
+      renderFinanceiro(state.portal);
+      showToast(action === 'emitir' ? 'Boleto emitido com sucesso.' : 'Cobrança atualizada.', 'success');
+    } catch (error) {
+      showToast(error.message || 'Não foi possível processar o boleto.', 'error');
+      if (button) {
+        button.disabled = false;
+        button.innerHTML = original;
+      }
+    }
+  }
+
+  function contractStatusInfo(status) {
+    const map = {
+      aguardando_assinatura: { label: 'Aguardando assinatura', cls: 'is-pending' },
+      visualizado: { label: 'Visualizado', cls: 'is-viewed' },
+      assinado: { label: 'Assinado', cls: 'is-signed' },
+    };
+    return map[lower(status)] || { label: text(status, 'Contrato'), cls: '' };
+  }
+
+  function renderContracts(data) {
+    const contracts = Array.isArray(data?.contratos) ? data.contratos : [];
+    state.contracts = contracts;
+    const pending = Number(data?.pendentes || contracts.filter((x) => ['aguardando_assinatura', 'visualizado'].includes(lower(x.status))).length);
+    if (dom.contractsNavCounter) {
+      dom.contractsNavCounter.hidden = pending <= 0;
+      dom.contractsNavCounter.textContent = String(pending);
+    }
+    const dashboardCard = byId('dashboardSignatureCard');
+    if (dashboardCard) dashboardCard.hidden = pending <= 0;
+    const firstPending = contracts.find((x) => ['aguardando_assinatura', 'visualizado'].includes(lower(x.status)));
+    if (firstPending) {
+      setText('dashboardSignatureTitle', firstPending.contrato_numero || firstPending.titulo, 'Contrato aguardando assinatura');
+      setText('dashboardSignatureText', `Versão ${firstPending.versao || 1} • enviado ${firstPending.solicitada_em ? formatDateTime(firstPending.solicitada_em) : 'pela SEG'}`);
+    }
+
+    const list = byId('contractsList');
+    const empty = byId('contractsEmpty');
+    if (!contracts.length) {
+      if (list) list.innerHTML = '';
+      if (empty) empty.hidden = false;
+      return;
+    }
+    if (empty) empty.hidden = true;
+    if (list) list.innerHTML = contracts.map((item) => {
+      const status = contractStatusInfo(item.status);
+      const pendingItem = ['aguardando_assinatura', 'visualizado'].includes(lower(item.status));
+      const actions = pendingItem
+        ? (item.pode_assinar
+          ? `<button class="contract-portal-action is-primary" type="button" data-contract-open="${Number(item.orcamento_id)}"><i class="fa-solid fa-signature"></i> Visualizar e assinar</button>`
+          : `<span class="contract-portal-blocked">${escapeHtml(item.motivo_bloqueio || 'Dados do assinante incompletos.')}</span>`)
+        : item.status === 'assinado'
+          ? `<a class="contract-portal-action is-primary" href="/api/area-cliente-publica/contratos/${Number(item.orcamento_id)}/pdf-assinado" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-download"></i> Contrato assinado</a>`
+          : '';
+      const signedInfo = item.status === 'assinado' && item.assinatura_id ? ` • ${escapeHtml(item.assinatura_id)}` : '';
+      return `<article class="contract-portal-card"><div class="contract-portal-main"><span>${escapeHtml(item.orcamento_codigo ? `Proposta ${item.orcamento_codigo}` : 'Contrato')}</span><strong>${escapeHtml(item.contrato_numero || item.titulo || 'Contrato')}</strong><small>Versão ${Number(item.versao || 1)}${signedInfo}</small><span class="contract-status ${escapeHtml(status.cls)}">${escapeHtml(status.label)}</span></div><div class="contract-portal-actions">${actions}</div></article>`;
+    }).join('');
+  }
+
+  async function loadContracts() {
+    try {
+      const data = await apiJson('/api/area-cliente-publica/contratos');
+      renderContracts(data);
+      return data;
+    } catch (error) {
+      console.warn('[Área do Cliente] Contratos indisponíveis:', error);
+      renderContracts({ contratos: [], pendentes: 0 });
+      return null;
+    }
+  }
+
+  function closeContractModal() {
+    const modal = byId('contractSignModal');
+    const frame = byId('contractPdfFrame');
+    if (frame) frame.removeAttribute('src');
+    if (modal) modal.hidden = true;
+    state.currentContract = null;
+  }
+
+  async function openContractForSignature(orcamentoId) {
+    const item = state.contracts.find((x) => Number(x.orcamento_id) === Number(orcamentoId));
+    if (!item) return;
+    state.currentContract = item;
+    try {
+      const updated = await apiJson(`/api/area-cliente-publica/contratos/${Number(orcamentoId)}/visualizar`, { method: 'POST' });
+      Object.assign(item, updated || {});
+    } catch (error) {
+      if (![409].includes(error.status)) showToast(error.message || 'Não foi possível registrar a visualização.', 'error');
+    }
+    setText('contractSignTitle', item.contrato_numero || 'Contrato');
+    setText('contractSignMeta', `Versão ${item.versao || 1} • ${contractStatusInfo(item.status).label}`);
+    setText('contractSignerName', item.assinante?.nome, 'Assinante não identificado');
+    setText('contractSignerDocument', item.assinante?.documento_mascarado, 'CPF cadastrado no contrato');
+    setText('contractDocumentLabel', item.assinante?.rotulo_documento || 'CPF do assinante');
+    setText('contractDocumentHash', item.documento_hash_sha256, 'Hash indisponível');
+    const input = byId('contractDocumentConfirm');
+    const consent = byId('contractConsent');
+    if (input) input.value = '';
+    if (consent) consent.checked = false;
+    const wrap = byId('contractSignFormWrap');
+    const success = byId('contractSignSuccess');
+    if (wrap) wrap.hidden = false;
+    if (success) success.hidden = true;
+    const frame = byId('contractPdfFrame');
+    if (frame) frame.src = `/api/area-cliente-publica/contratos/${Number(orcamentoId)}/pdf`;
+    const modal = byId('contractSignModal');
+    if (modal) modal.hidden = false;
+  }
+
+  async function confirmContractSignature() {
+    const item = state.currentContract;
+    if (!item) return;
+    const documento = text(byId('contractDocumentConfirm')?.value, '');
+    const aceite = Boolean(byId('contractConsent')?.checked);
+    if (!aceite) return showToast('Confirme que leu e concorda com o contrato.', 'error');
+    if (!documento) return showToast('Informe o CPF do assinante.', 'error');
+    const button = byId('confirmContractSignature');
+    if (button) { button.disabled = true; button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registrando assinatura...'; }
+    try {
+      const signed = await apiJson(`/api/area-cliente-publica/contratos/${Number(item.orcamento_id)}/assinar`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ aceite: true, documento, versao: Number(item.versao || 0), documento_hash_sha256: item.documento_hash_sha256 || '' }),
+      });
+      const wrap = byId('contractSignFormWrap');
+      const success = byId('contractSignSuccess');
+      if (wrap) wrap.hidden = true;
+      if (success) success.hidden = false;
+      setText('contractSignSuccessText', `${signed.assinatura_id || 'Assinatura registrada'}${signed.assinado_em ? ` • ${formatDateTime(signed.assinado_em)}` : ''}`);
+      setText('contractFinalHash', signed.pdf_final_hash_sha256, 'Hash final indisponível');
+      const link = byId('contractSignedPdfLink');
+      if (link) link.href = `/api/area-cliente-publica/contratos/${Number(item.orcamento_id)}/pdf-assinado`;
+      showToast('Contrato assinado com sucesso.', 'success');
+      await loadContracts();
+    } catch (error) {
+      showToast(error.message || 'Não foi possível assinar o contrato.', 'error');
+    } finally {
+      if (button) { button.disabled = false; button.innerHTML = '<i class="fa-solid fa-signature"></i> Assinar contrato'; }
+    }
+  }
+
   function renderPortal(data) {
     state.portal = data;
     renderIdentity(data);
@@ -544,6 +722,7 @@
       const data = await apiJson('/api/area-cliente-publica/portal');
       if (!data || data.ok !== true) throw new Error('O portal retornou uma resposta inválida.');
       renderPortal(data);
+      await loadContracts();
       showPortal();
       if (options.notify) showToast('Dados atualizados com sucesso.', 'success');
       return data;
@@ -728,6 +907,9 @@
 
     dom.mobileSidebarOverlay?.addEventListener('click', closeMobileMenu);
     dom.logoutButton?.addEventListener('click', logout);
+    byId('closeContractSignModal')?.addEventListener('click', closeContractModal);
+    byId('confirmContractSignature')?.addEventListener('click', confirmContractSignature);
+    byId('contractSignModal')?.addEventListener('click', (event) => { if (event.target?.id === 'contractSignModal') closeContractModal(); });
 
     dom.refreshPortalButton?.addEventListener('click', async () => {
       try {
@@ -748,6 +930,27 @@
       if (viewTarget) {
         event.preventDefault();
         showView(viewTarget.dataset.viewTarget);
+        return;
+      }
+
+      const contractOpen = event.target.closest('[data-contract-open]');
+      if (contractOpen) {
+        event.preventDefault();
+        openContractForSignature(Number(contractOpen.dataset.contractOpen));
+        return;
+      }
+
+      const issueBoleto = event.target.closest('[data-issue-boleto]');
+      if (issueBoleto) {
+        event.preventDefault();
+        processBoletoAction(issueBoleto.dataset.issueBoleto, 'emitir', issueBoleto);
+        return;
+      }
+
+      const refreshBoleto = event.target.closest('[data-refresh-boleto]');
+      if (refreshBoleto) {
+        event.preventDefault();
+        processBoletoAction(refreshBoleto.dataset.refreshBoleto, 'atualizar', refreshBoleto);
         return;
       }
 
