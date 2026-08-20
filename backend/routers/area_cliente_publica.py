@@ -170,12 +170,38 @@ async def area_cliente_primeiro_acesso(request: Request, db: Session = Depends(g
     if not _senha_valida(senha):
         return _no_store({"detail": "Crie uma senha de 8 a 128 caracteres contendo letras e números."}, 422)
 
+    identificador_digitos = "".join(ch for ch in identificador if ch.isdigit())
+    verificacao_digitos = "".join(ch for ch in verificacao if ch.isdigit())
+    if (
+        len(identificador_digitos) in {11, 14}
+        and identificador_digitos == verificacao_digitos
+    ):
+        return _no_store(
+            {
+                "detail": (
+                    "Você usou o CPF/CNPJ como identificador. "
+                    "Para confirmar o primeiro acesso, informe o telefone cadastrado no Valora."
+                )
+            },
+            422,
+        )
+
     try:
         validacao = await validar_primeiro_acesso_portal(identificador, verificacao)
     except ValoraSegError as exc:
-        # Não expõe qual dado cadastral divergiu.
-        if exc.status_code in {401, 404}:
-            return _no_store({"detail": "Não foi possível validar os dados informados. Confira e tente novamente."}, 401)
+        if exc.status_code == 401:
+            # A mensagem do Valora não contém o dado cadastral; apenas orienta o usuário.
+            return _no_store({"detail": exc.detail}, 401)
+        if exc.status_code == 404:
+            return _no_store(
+                {
+                    "detail": (
+                        "Não encontramos um cliente de monitoramento com esse identificador. "
+                        "Use o Código do Cliente ou a Conta Monit24hs."
+                    )
+                },
+                404,
+            )
         return _no_store({"detail": exc.detail}, exc.status_code)
 
     cliente_id = int(validacao.get("cliente_id") or 0)

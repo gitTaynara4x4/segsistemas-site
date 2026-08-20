@@ -1776,3 +1776,11 @@ button {
     grid-template-columns: 1fr;
   }
 }
+
+
+.field-help {
+  margin: -4px 0 2px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #667085;
+}

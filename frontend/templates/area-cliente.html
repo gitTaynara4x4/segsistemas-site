@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" type="image/png" href="/static/img/favicon.png">
-  <link rel="stylesheet" href="/static/css/area-cliente.css?v=20260820-auth-v2">
+  <link rel="stylesheet" href="/static/css/area-cliente.css?v=20260820-auth-v3">
 </head>
 <body class="client-portal-body">
   <div class="portal-toast" id="portalToast" role="status" aria-live="polite" hidden></div>
@@ -117,6 +117,7 @@
           </div>
 
           <label for="firstVerification">CPF/CNPJ ou telefone cadastrado</label>
+          <p class="field-help">Se você usou CPF ou CNPJ no campo acima, confirme aqui com o telefone cadastrado.</p>
           <div class="access-input-field">
             <i class="fa-solid fa-fingerprint"></i>
             <input
@@ -564,6 +565,6 @@
   <script>
     window.SEG_AREA_CLIENTE = { apiBase: "" };
   </script>
-  <script src="/static/js/pages/area-cliente.js?v=20260820-auth-v2" defer></script>
+  <script src="/static/js/pages/area-cliente.js?v=20260820-auth-v3" defer></script>
 </body>
 </html>

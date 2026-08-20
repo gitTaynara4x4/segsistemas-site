@@ -623,6 +623,16 @@
       setAccessMessage('Informe seu código/conta e o CPF/CNPJ ou telefone cadastrado.');
       return;
     }
+
+    const identificadorDigitos = identificador.replace(/\D/g, '');
+    const verificacaoDigitos = verificacao.replace(/\D/g, '');
+    if (
+      (identificadorDigitos.length === 11 || identificadorDigitos.length === 14) &&
+      identificadorDigitos === verificacaoDigitos
+    ) {
+      setAccessMessage('Você entrou com CPF/CNPJ. Para confirmar o primeiro acesso, informe o telefone cadastrado.');
+      return;
+    }
     if (senha !== confirmarSenha) {
       setAccessMessage('As senhas informadas não conferem.');
       return;
