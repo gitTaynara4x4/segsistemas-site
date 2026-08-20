@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Busca geral | SEG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/static/css/interno.css">
+  <link rel="stylesheet" href="/static/css/interno-valora.css">
+  <link rel="stylesheet" href="/static/css/interno-busca.css">
+</head>
+<body class="interno-app-body">
+  {% include "partials/sidebar.html" %}
+
+  <main class="seg-search-page">
+    <section class="seg-search-hero">
+      <div class="seg-search-eyebrow">PESQUISA INTERNA</div>
+      <h1>Busca geral</h1>
+      <p>Encontre ocorrências, funcionários, passagens, tarefas e documentos em um só lugar.</p>
+
+      <form class="seg-search-box" id="global-search-form" role="search">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input id="global-search-input" name="q" type="search" autocomplete="off" spellcheck="false" placeholder="Digite o que você procura..." aria-label="Pesquisar no interno">
+        <button type="submit">Pesquisar</button>
+      </form>
+
+      <div class="seg-search-shortcuts">
+        <span><kbd>Ctrl</kbd><kbd>K</kbd> abrir busca</span>
+        <span>mínimo de 2 caracteres</span>
+      </div>
+    </section>
+
+    <section class="seg-search-toolbar" id="search-toolbar" hidden>
+      <div>
+        <strong id="search-summary">0 resultados</strong>
+        <span id="search-query-label"></span>
+      </div>
+      <button type="button" id="search-clear"><i class="fa-solid fa-xmark"></i> Limpar</button>
+    </section>
+
+    <section id="search-results" class="seg-search-results" aria-live="polite">
+      <div class="seg-search-empty" id="search-empty">
+        <div class="seg-search-empty-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <strong>Pesquise no interno</strong>
+        <span>Digite um nome, cliente, palavra-chave, procedimento ou qualquer informação que você lembra.</span>
+      </div>
+      <div class="seg-search-empty" id="search-minimum" hidden>
+        <div class="seg-search-empty-icon"><i class="fa-regular fa-keyboard"></i></div>
+        <strong>Continue digitando</strong>
+        <span>Use pelo menos 2 caracteres para iniciar a busca.</span>
+      </div>
+      <div class="seg-search-empty" id="search-loading" hidden>
+        <div class="seg-search-empty-icon is-loading"><i class="fa-solid fa-rotate"></i></div>
+        <strong>Pesquisando...</strong>
+        <span>Consultando os módulos disponíveis para o seu usuário.</span>
+      </div>
+      <div class="seg-search-empty" id="search-no-results" hidden>
+        <div class="seg-search-empty-icon"><i class="fa-regular fa-face-frown"></i></div>
+        <strong>Nada encontrado</strong>
+        <span>Tente outro termo ou uma palavra mais curta.</span>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/js/pages/interno-base.js"></script>
+  <script src="/static/js/pages/interno-busca.js"></script>
+</body>
+</html>

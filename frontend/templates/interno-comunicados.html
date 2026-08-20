@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Mural / Comunicados | Painel Interno SEG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="/static/img/favicon.png">
+  <link rel="stylesheet" href="/static/css/interno.css">
+  <link rel="stylesheet" href="/static/css/interno-valora.css?v=20260820-mural-v1">
+</head>
+<body class="interno-app-body comunicados-body">
+  <div class="interno-shell comunicados-shell">
+    {% include "partials/sidebar.html" %}
+
+    <main class="comunicados-main" id="comunicados-page">
+      <section class="comunicados-header">
+        <div>
+          <h1>Mural / Comunicados</h1>
+          <p>Centralize os avisos da administração e registre quem já leu cada comunicado.</p>
+        </div>
+        {% if comunicados_pode_publicar %}
+        <button type="button" class="comunicados-primary-btn" id="btn-novo-comunicado">
+          <i class="fa-solid fa-plus"></i> Novo comunicado
+        </button>
+        {% endif %}
+      </section>
+
+      {% if comunicados_pode_publicar %}
+      <section class="comunicados-publish-card" id="comunicado-form-card" hidden>
+        <div class="comunicados-card-heading">
+          <div>
+            <strong>Publicar aviso</strong>
+            <small>O comunicado aparecerá no mural e nas notificações da equipe.</small>
+          </div>
+          <button type="button" class="comunicados-icon-btn" id="btn-fechar-comunicado" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <form id="comunicado-form" class="comunicados-form">
+          <label>
+            <span>Título *</span>
+            <input type="text" id="comunicado-titulo" maxlength="220" placeholder="Ex.: Alteração no procedimento de plantão" required>
+          </label>
+          <label>
+            <span>Mensagem *</span>
+            <textarea id="comunicado-mensagem" rows="5" maxlength="5000" placeholder="Escreva o aviso para a equipe..." required></textarea>
+          </label>
+          <div class="comunicados-form-actions">
+            <button type="submit" class="comunicados-primary-btn" id="btn-publicar-comunicado"><i class="fa-solid fa-paper-plane"></i> Publicar aviso</button>
+            <button type="button" class="comunicados-secondary-btn" id="btn-cancelar-comunicado">Cancelar</button>
+          </div>
+          <div class="comunicados-message" id="comunicado-form-message" role="status" aria-live="polite"></div>
+        </form>
+      </section>
+      {% endif %}
+
+      <section class="comunicados-list-card">
+        <div class="comunicados-card-heading">
+          <div>
+            <strong>Últimos avisos</strong>
+            <small>Os mais recentes ficam no topo.</small>
+          </div>
+          <span class="comunicados-count">{{ comunicados|length }} aviso{% if comunicados|length != 1 %}s{% endif %}</span>
+        </div>
+
+        <div class="comunicados-list" id="comunicados-list">
+          {% for comunicado in comunicados %}
+          <article class="comunicado-item{% if not comunicado.lido %} is-unread{% endif %}" data-comunicado-id="{{ comunicado.id }}">
+            <div class="comunicado-icon"><i class="fa-solid fa-bullhorn"></i></div>
+            <div class="comunicado-content">
+              <div class="comunicado-meta">
+                <span>{{ comunicado.publicado_em.strftime('%d/%m/%Y %H:%M') if comunicado.publicado_em else '' }}</span>
+                <span>por {{ comunicado.criado_por_nome }}</span>
+              </div>
+              <h2>{{ comunicado.titulo }}</h2>
+              <p>{{ comunicado.mensagem }}</p>
+            </div>
+            <div class="comunicado-read-wrap">
+              {% if comunicado.lido %}
+              <span class="comunicado-read-badge"><i class="fa-solid fa-check"></i> Lido</span>
+              {% else %}
+              <button type="button" class="comunicado-read-btn" data-comunicado-read="{{ comunicado.id }}"><i class="fa-regular fa-circle-check"></i> Marcar como lido</button>
+              {% endif %}
+            </div>
+          </article>
+          {% else %}
+          <div class="comunicados-empty">
+            <i class="fa-regular fa-bell-slash"></i>
+            <strong>Nenhum comunicado ainda</strong>
+            <span>Quando a administração publicar um aviso, ele aparecerá aqui.</span>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/js/pages/interno-base.js"></script>
+  <script>
+  (function () {
+    const formCard = document.getElementById('comunicado-form-card');
+    const novo = document.getElementById('btn-novo-comunicado');
+    const fechar = document.getElementById('btn-fechar-comunicado');
+    const cancelar = document.getElementById('btn-cancelar-comunicado');
+    const form = document.getElementById('comunicado-form');
+    const message = document.getElementById('comunicado-form-message');
+
+    function abrirForm() { if (formCard) formCard.hidden = false; document.getElementById('comunicado-titulo')?.focus(); }
+    function fecharForm() { if (formCard) formCard.hidden = true; if (form) form.reset(); if (message) message.textContent = ''; }
+    novo?.addEventListener('click', abrirForm);
+    fechar?.addEventListener('click', fecharForm);
+    cancelar?.addEventListener('click', fecharForm);
+
+    form?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const button = document.getElementById('btn-publicar-comunicado');
+      button.disabled = true;
+      message.textContent = 'Publicando...';
+      try {
+        const response = await fetch('/api/interno/comunicados', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            titulo: document.getElementById('comunicado-titulo').value.trim(),
+            mensagem: document.getElementById('comunicado-mensagem').value.trim(),
+          }),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.detail || 'Não foi possível publicar o comunicado.');
+        window.location.reload();
+      } catch (error) {
+        message.textContent = error.message || 'Não foi possível publicar.';
+        button.disabled = false;
+      }
+    });
+
+    document.querySelectorAll('[data-comunicado-read]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const id = button.getAttribute('data-comunicado-read');
+        if (!id) return;
+        button.disabled = true;
+        try {
+          const response = await fetch(`/api/interno/comunicados/${id}/ler`, { method: 'POST', headers: { 'Accept': 'application/json' } });
+          if (!response.ok) throw new Error('Não foi possível marcar como lido.');
+          const item = document.querySelector(`[data-comunicado-id="${id}"]`);
+          if (item) {
+            item.classList.remove('is-unread');
+            const wrap = item.querySelector('.comunicado-read-wrap');
+            if (wrap) wrap.innerHTML = '<span class="comunicado-read-badge"><i class="fa-solid fa-check"></i> Lido</span>';
+          }
+        } catch (_) {
+          button.disabled = false;
+        }
+      });
+    });
+  })();
+  </script>
+</body>
+</html>

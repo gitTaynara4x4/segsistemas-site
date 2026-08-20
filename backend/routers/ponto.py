@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from ..deps import require_interno_module_api
 from ..models import InternoPonto, InternoPontoPausa
+from ..services.auditoria import registrar_auditoria
 from ..services.interno import (
     ponto_aberto_do_usuario,
     ponto_duracoes,
@@ -13,7 +14,7 @@ from ..services.interno import (
     pontos_resumo,
     ultima_pausa_aberta,
 )
-from ..utils import client_ip, now_utc, parse_bool, read_json_body_safe, safe_lower, safe_str, today_local_iso
+from ..utils import client_ip, now_local, now_utc, parse_bool, read_json_body_safe, safe_lower, safe_str, today_local_iso
 
 router = APIRouter(prefix="/api/interno", tags=["Interno - Ponto"])
 
@@ -66,7 +67,7 @@ async def api_interno_ponto_entrada(request: Request, db: Session = Depends(get_
     now = now_utc()
     ponto = InternoPonto(
         status="aberto",
-        data_ponto=now.date(),
+        data_ponto=now_local().date(),
         funcionario_id=user_or_response.get("funcionario_id"),
         funcionario_nome=user_or_response.get("nome") or user_or_response.get("username"),
         usuario=user_or_response.get("username") or "",
@@ -86,6 +87,8 @@ async def api_interno_ponto_entrada(request: Request, db: Session = Depends(get_
         atualizado_por=user_or_response.get("username") or "",
     )
     db.add(ponto)
+    db.flush()
+    registrar_auditoria(db, user_or_response, request, modulo="ponto", entidade="ponto", entidade_id=ponto.id, acao="CRIAR", descricao=f"Registrou entrada de ponto para {ponto.funcionario_nome}.")
     db.commit()
     db.refresh(ponto)
     return JSONResponse(status_code=201, content={"ok": True, "ponto": ponto_publico(ponto)})
@@ -124,6 +127,7 @@ async def api_interno_ponto_iniciar_pausa(request: Request, db: Session = Depend
     ponto.status = "pausado"
     ponto.atualizado_em = now
     ponto.atualizado_por = user_or_response.get("username") or ""
+    registrar_auditoria(db, user_or_response, request, modulo="ponto", entidade="ponto", entidade_id=ponto.id, acao="ALTERAR", descricao=f"Iniciou uma pausa no ponto de {ponto.funcionario_nome}.")
     db.commit()
     db.refresh(ponto)
     return {"ok": True, "ponto": ponto_publico(ponto)}
@@ -159,6 +163,7 @@ async def api_interno_ponto_finalizar_pausa(request: Request, db: Session = Depe
     ponto.status = "aberto"
     ponto.atualizado_em = now
     ponto.atualizado_por = user_or_response.get("username") or ""
+    registrar_auditoria(db, user_or_response, request, modulo="ponto", entidade="ponto", entidade_id=ponto.id, acao="ALTERAR", descricao=f"Finalizou uma pausa no ponto de {ponto.funcionario_nome}.")
     db.commit()
     db.refresh(ponto)
     return {"ok": True, "ponto": ponto_publico(ponto)}
@@ -204,6 +209,7 @@ async def api_interno_ponto_saida(request: Request, db: Session = Depends(get_db
     ponto.duracao_pausas_segundos = duracoes["duracao_pausas_segundos"]
     ponto.duracao_liquida_segundos = duracoes["duracao_liquida_segundos"]
 
+    registrar_auditoria(db, user_or_response, request, modulo="ponto", entidade="ponto", entidade_id=ponto.id, acao="ENCERRAR", descricao=f"Encerrou o ponto de {ponto.funcionario_nome}.")
     db.commit()
     db.refresh(ponto)
     return {"ok": True, "ponto": ponto_publico(ponto)}

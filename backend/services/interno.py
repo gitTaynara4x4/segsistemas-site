@@ -10,16 +10,20 @@ from ..config import (
     OCORRENCIA_PRIORIDADES,
     OCORRENCIA_STATUS,
     OCORRENCIA_TIPOS,
+    TAREFA_PRIORIDADES,
+    TAREFA_STATUS,
 )
 from ..models import (
+    InternoEscala,
     InternoFuncionario,
     InternoOcorrencia,
     InternoPassagem,
     InternoPlantao,
     InternoPonto,
     InternoPontoPausa,
+    InternoTarefa,
 )
-from ..utils import dt_to_iso, duracao_label, duracao_segundos, now_iso, safe_lower, safe_str, today_local_iso
+from ..utils import dt_to_iso, duracao_label, duracao_segundos, now_iso, now_local, now_utc, safe_lower, safe_str, today_local_iso
 from ..security import normalizar_usuario_login
 
 
@@ -55,8 +59,12 @@ ACESSOS_PADRAO_OPERACAO = [
     "dashboard",
     "ponto",
     "plantao",
+    "escala",
     "passagem",
     "ocorrencias",
+    "tarefas",
+    "comunicados",
+    "documentos",
     "manual",
 ]
 
@@ -500,6 +508,131 @@ def ocorrencias_resumo(db: Session) -> dict:
     }
 
 
+
+def validar_payload_tarefa(payload: dict) -> tuple[dict | None, str | None]:
+    titulo = safe_str(payload.get("titulo"))
+    descricao = safe_str(payload.get("descricao"))
+    prioridade = safe_lower(payload.get("prioridade"), "media")
+    status = safe_lower(payload.get("status"), "pendente")
+    prazo_raw = safe_str(payload.get("prazo"))
+
+    responsavel_id = payload.get("responsavel_id")
+    try:
+        responsavel_id = int(responsavel_id) if responsavel_id not in (None, "") else None
+    except Exception:
+        responsavel_id = None
+
+    responsavel_nome = safe_str(payload.get("responsavel_nome"))
+
+    if not titulo:
+        return None, "Informe o título da tarefa."
+    if len(titulo) > 220:
+        return None, "O título deve ter no máximo 220 caracteres."
+    if prioridade not in TAREFA_PRIORIDADES:
+        return None, "Prioridade inválida."
+    if status not in TAREFA_STATUS:
+        return None, "Status inválido."
+
+    prazo = None
+    if prazo_raw:
+        try:
+            prazo = date.fromisoformat(prazo_raw)
+        except Exception:
+            return None, "Prazo inválido."
+
+    return {
+        "titulo": titulo,
+        "descricao": descricao,
+        "responsavel_id": responsavel_id,
+        "responsavel_nome": responsavel_nome,
+        "prioridade": prioridade,
+        "status": status,
+        "prazo": prazo,
+    }, None
+
+
+def tarefa_publica(tarefa: InternoTarefa | None) -> dict | None:
+    if not tarefa:
+        return None
+
+    status = safe_lower(tarefa.status, "pendente")
+    prioridade = safe_lower(tarefa.prioridade, "media")
+    hoje = now_local().date()
+    aberta = status in {"pendente", "em_andamento"}
+    atrasada = bool(aberta and tarefa.prazo and tarefa.prazo < hoje)
+    vence_hoje = bool(aberta and tarefa.prazo and tarefa.prazo == hoje)
+
+    return {
+        "id": tarefa.id,
+        "titulo": tarefa.titulo or "",
+        "descricao": tarefa.descricao or "",
+        "responsavel_id": tarefa.responsavel_id,
+        "responsavel_nome": tarefa.responsavel_nome or "",
+        "prioridade": prioridade,
+        "prioridade_label": TAREFA_PRIORIDADES.get(prioridade, prioridade.title()),
+        "status": status,
+        "status_label": TAREFA_STATUS.get(status, status.title()),
+        "prazo": _date_to_iso(tarefa.prazo),
+        "atrasada": atrasada,
+        "vence_hoje": vence_hoje,
+        "criado_por_id": tarefa.criado_por_id,
+        "criado_por_nome": tarefa.criado_por_nome or "",
+        "criado_por_usuario": tarefa.criado_por_usuario or "",
+        "criado_em": dt_to_iso(tarefa.criado_em),
+        "atualizado_em": dt_to_iso(tarefa.atualizado_em),
+        "atualizado_por": tarefa.atualizado_por or "",
+        "concluido_por_id": tarefa.concluido_por_id,
+        "concluido_por_nome": tarefa.concluido_por_nome or "",
+        "concluido_por_usuario": tarefa.concluido_por_usuario or "",
+        "concluido_em": dt_to_iso(tarefa.concluido_em),
+    }
+
+
+def tarefas_abertas(db: Session) -> list[InternoTarefa]:
+    return list(
+        db.query(InternoTarefa)
+        .filter(InternoTarefa.status.in_(["pendente", "em_andamento"]))
+        .order_by(
+            InternoTarefa.prazo.is_(None),
+            InternoTarefa.prazo.asc(),
+            InternoTarefa.id.desc(),
+        )
+        .all()
+    )
+
+
+def tarefas_resumo(db: Session, user: dict | None = None) -> dict:
+    hoje = now_local().date()
+    abertas = tarefas_abertas(db)
+    atrasadas = [t for t in abertas if t.prazo and t.prazo < hoje]
+    vencem_hoje = [t for t in abertas if t.prazo == hoje]
+
+    minhas = []
+    if user:
+        funcionario_id = user.get("funcionario_id")
+        nome = safe_lower(user.get("nome"))
+        username = safe_lower(user.get("username"))
+        for tarefa in abertas:
+            if funcionario_id is not None and tarefa.responsavel_id == funcionario_id:
+                minhas.append(tarefa)
+                continue
+            responsavel_nome = safe_lower(tarefa.responsavel_nome)
+            if responsavel_nome and responsavel_nome in {nome, username}:
+                minhas.append(tarefa)
+
+    return {
+        "abertas": len(abertas),
+        "atrasadas": len(atrasadas),
+        "vencem_hoje": len(vencem_hoje),
+        "minhas": len(minhas),
+    }
+
+
+def tarefas_dashboard(db: Session, limite: int = 5) -> list[dict]:
+    itens = tarefas_abertas(db)[: max(1, min(int(limite or 5), 12))]
+    return [tarefa_publica(item) for item in itens]
+
+
 def ponto_pausas_publicas(ponto: InternoPonto) -> list[dict]:
     pausas = []
     for pausa in ponto.pausas or []:
@@ -619,3 +752,158 @@ def pontos_resumo(db: Session) -> dict:
         "horas_liquidas_segundos": total_liquido,
         "horas_liquidas_label": duracao_label(total_liquido),
     }
+
+
+ESCALA_STATUS_LABELS = {
+    "agendado": "Agendado",
+    "em_andamento": "Em andamento",
+    "concluido": "Concluído",
+    "folga": "Folga",
+    "cancelado": "Cancelado",
+}
+
+
+def escala_publica(item: InternoEscala | None) -> dict | None:
+    if not item:
+        return None
+    status = safe_lower(item.status, "agendado")
+    efetivo_id = item.substituto_id or item.funcionario_id
+    efetivo_nome = item.substituto_nome or item.funcionario_nome or ""
+    return {
+        "id": item.id,
+        "data_escala": _date_to_iso(item.data_escala),
+        "funcionario_id": item.funcionario_id,
+        "funcionario_nome": item.funcionario_nome or "",
+        "horario_inicio": item.horario_inicio or "",
+        "horario_fim": item.horario_fim or "",
+        "status": status,
+        "status_label": ESCALA_STATUS_LABELS.get(status, status.replace("_", " ").title()),
+        "substituto_id": item.substituto_id,
+        "substituto_nome": item.substituto_nome or "",
+        "tem_substituicao": bool(item.substituto_id),
+        "motivo_substituicao": item.motivo_substituicao or "",
+        "observacao": item.observacao or "",
+        "plantao_id": item.plantao_id,
+        "efetivo_id": efetivo_id,
+        "efetivo_nome": efetivo_nome,
+        "criado_em": dt_to_iso(item.criado_em),
+        "atualizado_em": dt_to_iso(item.atualizado_em),
+    }
+
+
+def escalas_periodo(db: Session, data_inicio: date, data_fim: date) -> list[InternoEscala]:
+    return list(
+        db.query(InternoEscala)
+        .filter(InternoEscala.data_escala >= data_inicio, InternoEscala.data_escala <= data_fim)
+        .order_by(InternoEscala.data_escala.asc(), InternoEscala.horario_inicio.asc(), InternoEscala.funcionario_nome.asc())
+        .all()
+    )
+
+
+def escalas_do_dia(db: Session, dia: date | None = None) -> list[InternoEscala]:
+    dia = dia or now_local().date()
+    return list(
+        db.query(InternoEscala)
+        .filter(InternoEscala.data_escala == dia, InternoEscala.status != "cancelado")
+        .order_by(InternoEscala.horario_inicio.asc(), InternoEscala.funcionario_nome.asc())
+        .all()
+    )
+
+
+def escala_do_usuario_no_dia(db: Session, user: dict, dia: date | None = None) -> InternoEscala | None:
+    dia = dia or now_local().date()
+    funcionario_id = user.get("funcionario_id")
+    if funcionario_id is None:
+        return None
+    try:
+        fid = int(funcionario_id)
+    except Exception:
+        return None
+
+    itens = (
+        db.query(InternoEscala)
+        .filter(
+            InternoEscala.data_escala == dia,
+            InternoEscala.status.notin_(["cancelado", "folga"]),
+        )
+        .order_by(InternoEscala.horario_inicio.asc(), InternoEscala.id.asc())
+        .all()
+    )
+    for item in itens:
+        efetivo_id = item.substituto_id or item.funcionario_id
+        if efetivo_id == fid:
+            return item
+    return None
+
+
+def proxima_escala_usuario(db: Session, user: dict) -> InternoEscala | None:
+    funcionario_id = user.get("funcionario_id")
+    if funcionario_id is None:
+        return None
+    try:
+        fid = int(funcionario_id)
+    except Exception:
+        return None
+    hoje = now_local().date()
+    itens = (
+        db.query(InternoEscala)
+        .filter(
+            InternoEscala.data_escala >= hoje,
+            InternoEscala.status.notin_(["cancelado", "folga", "concluido"]),
+        )
+        .order_by(InternoEscala.data_escala.asc(), InternoEscala.horario_inicio.asc(), InternoEscala.id.asc())
+        .limit(100)
+        .all()
+    )
+    for item in itens:
+        efetivo_id = item.substituto_id or item.funcionario_id
+        if efetivo_id == fid:
+            return item
+    return None
+
+
+def escala_resumo(db: Session, user: dict | None = None) -> dict:
+    hoje = now_local().date()
+    itens = escalas_do_dia(db, hoje)
+    trabalhando = [i for i in itens if safe_lower(i.status) == "em_andamento"]
+    folgas = [i for i in itens if safe_lower(i.status) == "folga"]
+    agendados = [i for i in itens if safe_lower(i.status) == "agendado"]
+    substituicoes = [i for i in itens if bool(i.substituto_id)]
+    proxima = proxima_escala_usuario(db, user) if user else None
+    minha_hoje = escala_do_usuario_no_dia(db, user, hoje) if user else None
+    return {
+        "data": hoje.isoformat(),
+        "total_hoje": len(itens),
+        "agendados": len(agendados),
+        "em_andamento": len(trabalhando),
+        "folgas": len(folgas),
+        "substituicoes": len(substituicoes),
+        "minha_escala_hoje": escala_publica(minha_hoje),
+        "proxima_escala": escala_publica(proxima),
+    }
+
+
+def integrar_escala_inicio_plantao(db: Session, user: dict, plantao: InternoPlantao) -> InternoEscala | None:
+    item = escala_do_usuario_no_dia(db, user, plantao.data_plantao)
+    if not item:
+        return None
+    item.status = "em_andamento"
+    item.plantao_id = plantao.id
+    item.atualizado_em = now_utc()
+    item.atualizado_por = user.get("username") or ""
+    return item
+
+
+def integrar_escala_fim_plantao(db: Session, user: dict, plantao: InternoPlantao) -> InternoEscala | None:
+    item = None
+    if plantao.id:
+        item = db.query(InternoEscala).filter(InternoEscala.plantao_id == plantao.id).first()
+    if not item:
+        item = escala_do_usuario_no_dia(db, user, plantao.data_plantao)
+    if not item:
+        return None
+    item.status = "concluido"
+    item.plantao_id = plantao.id
+    item.atualizado_em = now_utc()
+    item.atualizado_por = user.get("username") or ""
+    return item

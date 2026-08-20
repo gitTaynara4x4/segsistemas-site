@@ -5,6 +5,9 @@ from .config import settings
 from .database import init_db
 from .routers import (
     area_cliente_publica,
+    auditoria,
+    busca,
+    escala,
     funcionarios,
     interno_auth,
     interno_pages,
@@ -12,7 +15,11 @@ from .routers import (
     passagem,
     plantao,
     ponto,
+    tarefas,
+    notificacoes,
+    documentos,
     public,
+    status_sistemas,
 )
 
 
@@ -36,11 +43,18 @@ app.include_router(area_cliente_publica.router)
 app.include_router(interno_auth.router)
 app.include_router(interno_pages.router)
 app.include_router(funcionarios.router)
+app.include_router(auditoria.router)
+app.include_router(busca.router)
+app.include_router(escala.router)
 app.include_router(ponto.router)
 app.include_router(plantao.router)
 app.include_router(passagem.router)
 app.include_router(ocorrencias.router)
+app.include_router(tarefas.router)
+app.include_router(notificacoes.router)
+app.include_router(documentos.router)
 app.include_router(public.router)
+app.include_router(status_sistemas.router)
 
 
 print("=== SEG SISTEMAS PATH DEBUG ===")

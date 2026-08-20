@@ -688,6 +688,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="/static/css/interno-valora.css?v=20260820-sistemas-v1">
 </head>
 
 <body class="interno-app-body dash-v2-body">
@@ -711,6 +712,21 @@
             <i class="fa-solid fa-calendar-check"></i>
             Ponto Online
           </a>
+
+{% if escala_pode_acessar %}
+          <a href="/interno/escala" class="ec-main-btn secondary">
+            <i class="fa-solid fa-calendar-days"></i>
+            Escala
+          </a>
+{% endif %}
+
+{% if tarefas_pode_acessar %}
+          <a href="/interno/tarefas" class="ec-main-btn secondary">
+            <i class="fa-solid fa-list-check"></i>
+            Nova tarefa
+          </a>
+
+          {% endif %}
 
           <a href="/interno/ocorrencias" class="ec-main-btn">
             <i class="fa-solid fa-plus"></i>
@@ -761,6 +777,103 @@
               Ver data
             </button>
           </form>
+        </div>
+      </section>
+
+      <section class="dashboard-personal-card" aria-label="Minha rotina">
+        <div class="dashboard-personal-head">
+          <div>
+            <strong>Minha rotina</strong>
+            <small>Ponto, plantão, pendências, comunicados e próxima escala em um só lugar.</small>
+          </div>
+          <span>Hoje</span>
+        </div>
+
+        <div class="dashboard-personal-grid">
+          {% if dashboard_pessoal.pode_ponto %}
+          <a href="/interno/ponto" class="dashboard-personal-item">
+            <span class="dashboard-personal-icon"><i class="fa-regular fa-clock"></i></span>
+            <div>
+              <small>Meu ponto hoje</small>
+              <strong>{{ dashboard_pessoal.ponto.status_label if dashboard_pessoal.ponto else 'Não registrado' }}</strong>
+              <span>{% if dashboard_pessoal.ponto and dashboard_pessoal.ponto.entrada_em %}Entrada {{ dashboard_pessoal.ponto.entrada_em[11:16] }}{% else %}Nenhuma batida hoje{% endif %}</span>
+            </div>
+          </a>
+          {% else %}
+          <div class="dashboard-personal-item is-disabled">
+            <span class="dashboard-personal-icon"><i class="fa-regular fa-clock"></i></span>
+            <div><small>Meu ponto hoje</small><strong>Sem acesso</strong><span>Módulo não liberado</span></div>
+          </div>
+          {% endif %}
+
+          {% if dashboard_pessoal.pode_plantao %}
+          <a href="/interno/plantao" class="dashboard-personal-item">
+            <span class="dashboard-personal-icon"><i class="fa-solid fa-business-time"></i></span>
+            <div>
+              <small>Meu plantão</small>
+              <strong>{{ dashboard_pessoal.plantao.status_label if dashboard_pessoal.plantao else 'Sem plantão hoje' }}</strong>
+              <span>{% if dashboard_pessoal.plantao and dashboard_pessoal.plantao.iniciado_em %}Início {{ dashboard_pessoal.plantao.iniciado_em[11:16] }}{% else %}Nenhum turno registrado{% endif %}</span>
+            </div>
+          </a>
+          {% else %}
+          <div class="dashboard-personal-item is-disabled">
+            <span class="dashboard-personal-icon"><i class="fa-solid fa-business-time"></i></span>
+            <div><small>Meu plantão</small><strong>Sem acesso</strong><span>Módulo não liberado</span></div>
+          </div>
+          {% endif %}
+
+          {% if dashboard_pessoal.pode_tarefas %}
+          <a href="/interno/tarefas" class="dashboard-personal-item">
+            <span class="dashboard-personal-icon"><i class="fa-solid fa-list-check"></i></span>
+            <div>
+              <small>Minhas pendências</small>
+              <strong>{{ dashboard_pessoal.minhas_pendencias }}</strong>
+              <span>{{ 'tarefa aberta' if dashboard_pessoal.minhas_pendencias == 1 else 'tarefas abertas' }}</span>
+            </div>
+          </a>
+          {% else %}
+          <div class="dashboard-personal-item is-disabled">
+            <span class="dashboard-personal-icon"><i class="fa-solid fa-list-check"></i></span>
+            <div><small>Minhas pendências</small><strong>Sem acesso</strong><span>Módulo não liberado</span></div>
+          </div>
+          {% endif %}
+
+          {% if dashboard_pessoal.pode_comunicados %}
+          <a href="/interno/comunicados" class="dashboard-personal-item{% if dashboard_pessoal.comunicados_nao_lidos %} has-alert{% endif %}">
+            <span class="dashboard-personal-icon"><i class="fa-regular fa-bell"></i></span>
+            <div>
+              <small>Comunicados não lidos</small>
+              <strong>{{ dashboard_pessoal.comunicados_nao_lidos }}</strong>
+              <span>{{ 'aviso aguardando leitura' if dashboard_pessoal.comunicados_nao_lidos == 1 else 'avisos aguardando leitura' }}</span>
+            </div>
+          </a>
+          {% else %}
+          <div class="dashboard-personal-item is-disabled">
+            <span class="dashboard-personal-icon"><i class="fa-regular fa-bell"></i></span>
+            <div><small>Comunicados</small><strong>Sem acesso</strong><span>Módulo não liberado</span></div>
+          </div>
+          {% endif %}
+
+          {% if dashboard_pessoal.pode_escala %}
+          <a href="/interno/escala" class="dashboard-personal-item">
+            <span class="dashboard-personal-icon"><i class="fa-regular fa-calendar"></i></span>
+            <div>
+              <small>Próxima escala</small>
+              {% if dashboard_pessoal.proxima_escala %}
+              <strong>{{ dashboard_pessoal.proxima_escala.data_escala[8:10] }}/{{ dashboard_pessoal.proxima_escala.data_escala[5:7] }}</strong>
+              <span>{% if dashboard_pessoal.proxima_escala.status == 'folga' %}Folga{% else %}{{ dashboard_pessoal.proxima_escala.horario_inicio }} às {{ dashboard_pessoal.proxima_escala.horario_fim }}{% endif %}</span>
+              {% else %}
+              <strong>Sem escala</strong>
+              <span>Nenhum turno futuro cadastrado</span>
+              {% endif %}
+            </div>
+          </a>
+          {% else %}
+          <div class="dashboard-personal-item is-disabled">
+            <span class="dashboard-personal-icon"><i class="fa-regular fa-calendar"></i></span>
+            <div><small>Próxima escala</small><strong>Sem acesso</strong><span>Módulo não liberado</span></div>
+          </div>
+          {% endif %}
         </div>
       </section>
 
@@ -835,6 +948,130 @@
           </div>
         </article>
 
+        <article class="ec-card dashboard-systems-card" id="dashboard-sistemas-status">
+          <div class="dashboard-systems-head">
+            <div class="ec-section-title" style="margin:0;">
+              <div>
+                <strong>Status dos sistemas</strong>
+                <small>Disponibilidade dos serviços usados pela operação.</small>
+              </div>
+            </div>
+            <div class="dashboard-systems-meta">
+              <span data-systems-summary>Verificando...</span>
+              <button type="button" class="dashboard-systems-refresh" data-systems-refresh title="Atualizar status">
+                <i class="fa-solid fa-rotate-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="dashboard-systems-grid" data-systems-list>
+            <div class="dashboard-system-loading">
+              <i class="fa-solid fa-circle-notch fa-spin"></i>
+              <span>Verificando serviços...</span>
+            </div>
+          </div>
+        </article>
+
+        {% if escala_pode_acessar %}
+        <article class="ec-card dashboard-escala-card">
+          <div class="dashboard-escala-head">
+            <div class="ec-section-title" style="margin:0;">
+              <div>
+                <strong>Escala de hoje</strong>
+                <small>Quem está previsto, em plantão, de folga ou em substituição.</small>
+              </div>
+            </div>
+            <a href="/interno/escala">Ver escala <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+          <div class="dashboard-escala-summary">
+            <span><strong>{{ escala_resumo.total_hoje|default(0) }}</strong> na escala</span>
+            <span><strong>{{ escala_resumo.em_andamento|default(0) }}</strong> em andamento</span>
+            <span><strong>{{ escala_resumo.folgas|default(0) }}</strong> folgas</span>
+            <span><strong>{{ escala_resumo.substituicoes|default(0) }}</strong> substituições</span>
+          </div>
+          <div class="dashboard-escala-list">
+            {% for item in escala_hoje %}
+            <div class="dashboard-escala-row">
+              <div class="time">{% if item.status == 'folga' %}Folga{% else %}{{ item.horario_inicio }}–{{ item.horario_fim }}{% endif %}</div>
+              <div class="person">
+                <strong>{{ item.efetivo_nome }}</strong>
+                <small>{% if item.tem_substituicao %}substituindo {{ item.funcionario_nome }}{% else %}{{ item.status_label }}{% endif %}</small>
+              </div>
+              <div class="state">{{ item.status_label }}</div>
+            </div>
+            {% else %}
+            <div class="dashboard-tarefas-empty"><i class="fa-regular fa-calendar"></i><span>Nenhuma escala cadastrada para hoje.</span></div>
+            {% endfor %}
+          </div>
+        </article>
+        {% endif %}
+
+        {% if tarefas_pode_acessar %}
+        <article class="ec-card dashboard-tarefas-card">
+          <div class="ec-section-title dashboard-tarefas-title">
+            <div>
+              <strong>Pendências / Tarefas</strong>
+              <small>O que precisa de atenção da equipe agora.</small>
+            </div>
+            <a href="/interno/tarefas" class="dashboard-tarefas-link">Ver todas <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+
+          <div class="dashboard-tarefas-summary">
+            <span><strong>{{ tarefas_resumo.abertas|default(0) }}</strong> abertas</span>
+            <span class="danger"><strong>{{ tarefas_resumo.atrasadas|default(0) }}</strong> atrasadas</span>
+            <span><strong>{{ tarefas_resumo.vencem_hoje|default(0) }}</strong> para hoje</span>
+            <span><strong>{{ tarefas_resumo.minhas|default(0) }}</strong> minhas</span>
+          </div>
+
+          <div class="dashboard-tarefas-list">
+            {% for tarefa in tarefas_dashboard %}
+            <a href="/interno/tarefas" class="dashboard-tarefa-row{% if tarefa.atrasada %} is-overdue{% endif %}">
+              <span class="dashboard-tarefa-priority priority-{{ tarefa.prioridade }}"></span>
+              <div class="dashboard-tarefa-info">
+                <strong>{{ tarefa.titulo }}</strong>
+                <small>{{ tarefa.responsavel_nome or 'Sem responsável' }}{% if tarefa.prazo %} · prazo {{ tarefa.prazo[8:10] }}/{{ tarefa.prazo[5:7] }}/{{ tarefa.prazo[0:4] }}{% endif %}</small>
+              </div>
+              <span class="dashboard-tarefa-status">{{ tarefa.status_label }}</span>
+            </a>
+            {% else %}
+            <div class="dashboard-tarefas-empty">
+              <i class="fa-regular fa-circle-check"></i>
+              <span>Nenhuma tarefa aberta.</span>
+            </div>
+            {% endfor %}
+          </div>
+        </article>
+
+        {% endif %}
+
+        {% if comunicados_pode_acessar %}
+        <article class="ec-card dashboard-comunicados-card">
+          <div class="ec-section-title dashboard-comunicados-title">
+            <div>
+              <strong>Mural / Comunicados</strong>
+              <small>Últimos avisos publicados pela administração.</small>
+            </div>
+            <a href="/interno/comunicados">Ver mural <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+
+          <div class="dashboard-comunicados-list">
+            {% for comunicado in comunicados_ultimos %}
+            <div class="dashboard-comunicado-row{% if not comunicado.lido %} is-unread{% endif %}" data-dashboard-comunicado-id="{{ comunicado.id }}">
+              <div class="dashboard-comunicado-icon"><i class="fa-solid fa-bullhorn"></i></div>
+              <div class="dashboard-comunicado-info">
+                <strong>{{ comunicado.titulo }}</strong>
+                <small>{{ comunicado.mensagem }}</small>
+                <span>{{ comunicado.publicado_em.strftime('%d/%m/%Y %H:%M') if comunicado.publicado_em else '' }}</span>
+              </div>
+              <button type="button" class="dashboard-comunicado-read" data-dashboard-comunicado-read="{{ comunicado.id }}">{% if comunicado.lido %}Lido{% else %}Marcar como lido{% endif %}</button>
+            </div>
+            {% else %}
+            <div class="dashboard-comunicados-empty"><i class="fa-regular fa-bell-slash"></i><span>Nenhum comunicado publicado.</span></div>
+            {% endfor %}
+          </div>
+        </article>
+        {% endif %}
+
         <article class="ec-card card-modules">
           <div class="ec-section-title">
             <div>
@@ -844,6 +1081,27 @@
           </div>
 
           <div class="ec-module-list">
+            {% if escala_pode_acessar %}
+            <a href="/interno/escala" class="ec-module-row">
+              <div class="ec-module-icon"><i class="fa-solid fa-calendar-days"></i></div>
+              <div class="ec-module-info">
+                <strong>Escala da Equipe</strong>
+                <small>Turnos, horários, folgas, substituições e vínculo com o plantão.</small>
+              </div>
+              <div class="ec-circle-btn"><i class="fa-solid fa-arrow-right"></i></div>
+            </a>
+            {% endif %}
+            {% if tarefas_pode_acessar %}
+            <a href="/interno/tarefas" class="ec-module-row">
+              <div class="ec-module-icon"><i class="fa-solid fa-list-check"></i></div>
+              <div class="ec-module-info">
+                <strong>Pendências / Tarefas</strong>
+                <small>Responsáveis, prioridade, prazo e acompanhamento da execução.</small>
+              </div>
+              <div class="ec-circle-btn"><i class="fa-solid fa-arrow-right"></i></div>
+            </a>
+
+            {% endif %}
             <a href="/interno/ocorrencias" class="ec-module-row">
               <div class="ec-module-icon">
                 <i class="fa-regular fa-clipboard"></i>
@@ -945,6 +1203,13 @@
           </div>
 
           <div class="ec-action-grid">
+            {% if tarefas_pode_acessar %}
+            <a href="/interno/tarefas" class="ec-action-box">
+              <i class="fa-solid fa-list-check"></i>
+              Criar tarefa
+            </a>
+
+            {% endif %}
             <a href="/interno/ocorrencias" class="ec-action-box">
               <i class="fa-solid fa-triangle-exclamation"></i>
               Nova ocorrência
@@ -1011,5 +1276,103 @@
       </section>
     </main>
   </div>
+<script>
+(function () {
+  document.querySelectorAll('[data-dashboard-comunicado-read]').forEach((button) => {
+    button.addEventListener('click', async (event) => {
+      event.preventDefault();
+      const id = button.getAttribute('data-dashboard-comunicado-read');
+      if (!id) return;
+      button.disabled = true;
+      try {
+        const response = await fetch(`/api/interno/comunicados/${id}/ler`, { method: 'POST', headers: { 'Accept': 'application/json' } });
+        if (!response.ok) throw new Error('Falha ao marcar comunicado');
+        button.textContent = 'Lido';
+        const row = document.querySelector(`[data-dashboard-comunicado-id="${id}"]`);
+        if (row) row.classList.remove('is-unread');
+      } catch (_) {
+        button.disabled = false;
+      }
+    });
+  });
+})();
+</script>
+
+
+<script>
+(function () {
+  'use strict';
+  const root = document.querySelector('[data-systems-list]');
+  const summary = document.querySelector('[data-systems-summary]');
+  const refresh = document.querySelector('[data-systems-refresh]');
+  if (!root) return;
+
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>\"']/g, (char) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#039;'
+    }[char]));
+  }
+
+  function statusIcon(status) {
+    if (status === 'online') return 'fa-circle-check';
+    if (status === 'offline') return 'fa-circle-xmark';
+    return 'fa-circle-minus';
+  }
+
+  function render(data) {
+    const items = Array.isArray(data.sistemas) ? data.sistemas : [];
+    const r = data.resumo || {};
+    if (summary) {
+      const parts = [];
+      if (r.online) parts.push(`${r.online} online`);
+      if (r.offline) parts.push(`${r.offline} offline`);
+      if (r.nao_configurado) parts.push(`${r.nao_configurado} não configurado${r.nao_configurado === 1 ? '' : 's'}`);
+      summary.textContent = parts.join(' · ') || 'Sem dados';
+    }
+
+    if (!items.length) {
+      root.innerHTML = '<div class="dashboard-system-loading"><i class="fa-regular fa-circle-question"></i><span>Não foi possível obter o status.</span></div>';
+      return;
+    }
+
+    root.innerHTML = items.map((item) => {
+      const status = escapeHtml(item.status || 'nao_configurado');
+      const detail = item.detail ? escapeHtml(item.detail) : '';
+      const latency = item.latency_ms != null ? `${escapeHtml(item.latency_ms)} ms` : '';
+      return `
+        <div class="dashboard-system-item status-${status}">
+          <span class="dashboard-system-dot"><i class="fa-solid ${statusIcon(item.status)}"></i></span>
+          <div class="dashboard-system-info">
+            <strong>${escapeHtml(item.label)}</strong>
+            <small>${detail || (item.status_label || '')}${latency ? ` · ${latency}` : ''}</small>
+          </div>
+          <span class="dashboard-system-label">${escapeHtml(item.status_label || '')}</span>
+        </div>`;
+    }).join('');
+  }
+
+  async function carregar() {
+    if (refresh) refresh.classList.add('is-loading');
+    try {
+      const response = await fetch('/api/interno/status-sistemas', {
+        headers: { 'Accept': 'application/json' },
+        cache: 'no-store'
+      });
+      if (!response.ok) throw new Error('status');
+      render(await response.json());
+    } catch (_) {
+      if (summary) summary.textContent = 'Falha na verificação';
+      root.innerHTML = '<div class="dashboard-system-loading"><i class="fa-solid fa-triangle-exclamation"></i><span>Não foi possível consultar os sistemas agora.</span></div>';
+    } finally {
+      if (refresh) refresh.classList.remove('is-loading');
+    }
+  }
+
+  if (refresh) refresh.addEventListener('click', carregar);
+  carregar();
+  window.setInterval(carregar, 30000);
+})();
+</script>
+
 </body>
 </html>

@@ -12,22 +12,37 @@ from ..config import (
     OCORRENCIA_PRIORIDADES,
     OCORRENCIA_STATUS,
     OCORRENCIA_TIPOS,
+    TAREFA_PRIORIDADES,
+    TAREFA_STATUS,
     settings,
 )
 from ..database import get_db
-from ..deps import require_interno_user_html
+from ..deps import require_interno_module_html, require_interno_user_html, user_can_access, user_is_admin
 from ..models import (
+    InternoComunicado,
+    InternoComunicadoLeitura,
+    InternoEscala,
+    InternoFuncionario,
     InternoOcorrencia,
     InternoPassagem,
     InternoPlantao,
     InternoPonto,
+    InternoTarefa,
 )
 from ..services.interno import (
+    escala_publica,
+    escala_resumo,
+    escalas_do_dia,
     funcionarios_resumo,
     ocorrencias_resumo,
     passagens_resumo,
+    plantao_publico,
     plantoes_resumo,
+    ponto_publico,
     pontos_resumo,
+    proxima_escala_usuario,
+    tarefas_dashboard,
+    tarefas_resumo,
 )
 from ..utils import now_local
 
@@ -69,6 +84,14 @@ MODULOS_FUNCIONARIOS = {
         "icone": "fa-solid fa-business-time",
         "path": "/interno/plantao",
     },
+    "escala": {
+        "label": "Escala da Equipe",
+        "nome": "Escala da Equipe",
+        "descricao": "Quem trabalha, horários, folgas e substituições.",
+        "icon": "fa-solid fa-calendar-days",
+        "icone": "fa-solid fa-calendar-days",
+        "path": "/interno/escala",
+    },
     "passagem": {
         "label": "Passagem de Plantão",
         "nome": "Passagem de Plantão",
@@ -85,6 +108,30 @@ MODULOS_FUNCIONARIOS = {
         "icone": "fa-regular fa-clipboard",
         "path": "/interno/ocorrencias",
     },
+    "tarefas": {
+        "label": "Pendências / Tarefas",
+        "nome": "Pendências / Tarefas",
+        "descricao": "Tarefas internas com responsável, prioridade e prazo.",
+        "icon": "fa-solid fa-list-check",
+        "icone": "fa-solid fa-list-check",
+        "path": "/interno/tarefas",
+    },
+    "comunicados": {
+        "label": "Mural / Comunicados",
+        "nome": "Mural / Comunicados",
+        "descricao": "Avisos internos, comunicados e confirmações de leitura.",
+        "icon": "fa-solid fa-bullhorn",
+        "icone": "fa-solid fa-bullhorn",
+        "path": "/interno/comunicados",
+    },
+    "documentos": {
+        "label": "Documentos internos",
+        "nome": "Documentos internos",
+        "descricao": "Procedimentos, manuais, PDFs e contatos úteis organizados por categoria.",
+        "icon": "fa-regular fa-folder-open",
+        "icone": "fa-regular fa-folder-open",
+        "path": "/interno/documentos",
+    },
     "manual": {
         "label": "Manual Interno",
         "nome": "Manual Interno",
@@ -92,6 +139,14 @@ MODULOS_FUNCIONARIOS = {
         "icon": "fa-regular fa-folder-open",
         "icone": "fa-regular fa-folder-open",
         "path": "/interno/manual",
+    },
+    "auditoria": {
+        "label": "Histórico / Auditoria",
+        "nome": "Histórico / Auditoria",
+        "descricao": "Histórico das ações realizadas no painel interno.",
+        "icon": "fa-solid fa-clock-rotate-left",
+        "icone": "fa-solid fa-clock-rotate-left",
+        "path": "/interno/auditoria",
     },
     "relatorios": {
         "label": "Relatórios",
@@ -297,6 +352,66 @@ def dashboard_resumos_por_periodo(db: Session, data_inicio: date, data_fim: date
     }
 
 
+def _dashboard_pessoal(db: Session, user: dict, *, pode_ponto: bool, pode_plantao: bool, pode_tarefas: bool, pode_comunicados: bool, pode_escala: bool, leituras_comunicados: set[int] | None = None) -> dict:
+    hoje = now_local().date()
+    funcionario_id = user.get("funcionario_id")
+    username = str(user.get("username") or "").strip().lower()
+
+    meu_ponto = None
+    if pode_ponto:
+        query = db.query(InternoPonto).filter(InternoPonto.data_ponto == hoje)
+        if funcionario_id is not None:
+            query = query.filter(InternoPonto.funcionario_id == funcionario_id)
+        elif username:
+            query = query.filter(func.lower(InternoPonto.usuario) == username)
+        meu_ponto = ponto_publico(query.order_by(InternoPonto.id.desc()).first())
+
+    meu_plantao = None
+    if pode_plantao:
+        query = db.query(InternoPlantao).filter(InternoPlantao.data_plantao == hoje)
+        if funcionario_id is not None:
+            query = query.filter(InternoPlantao.funcionario_id == funcionario_id)
+        elif username:
+            query = query.filter(func.lower(InternoPlantao.usuario) == username)
+        meu_plantao = plantao_publico(query.order_by(InternoPlantao.id.desc()).first())
+
+    minhas_pendencias = 0
+    if pode_tarefas:
+        query = db.query(InternoTarefa).filter(InternoTarefa.status.in_(["pendente", "em_andamento"]))
+        if funcionario_id is not None:
+            query = query.filter(InternoTarefa.responsavel_id == funcionario_id)
+        else:
+            nome = str(user.get("nome") or "").strip().lower()
+            if nome or username:
+                query = query.filter(func.lower(InternoTarefa.responsavel_nome).in_([v for v in {nome, username} if v]))
+            else:
+                query = query.filter(InternoTarefa.id == -1)
+        minhas_pendencias = int(query.count() or 0)
+
+    comunicados_nao_lidos = 0
+    if pode_comunicados:
+        lidos = leituras_comunicados or set()
+        query = db.query(InternoComunicado).filter(InternoComunicado.ativo.is_(True))
+        if lidos:
+            query = query.filter(~InternoComunicado.id.in_(lidos))
+        comunicados_nao_lidos = int(query.count() or 0)
+
+    proxima_escala = escala_publica(proxima_escala_usuario(db, user)) if pode_escala else None
+
+    return {
+        "ponto": meu_ponto,
+        "plantao": meu_plantao,
+        "minhas_pendencias": minhas_pendencias,
+        "comunicados_nao_lidos": comunicados_nao_lidos,
+        "proxima_escala": proxima_escala,
+        "pode_ponto": pode_ponto,
+        "pode_plantao": pode_plantao,
+        "pode_tarefas": pode_tarefas,
+        "pode_comunicados": pode_comunicados,
+        "pode_escala": pode_escala,
+    }
+
+
 @router.get("/interno/dashboard", response_class=HTMLResponse)
 async def interno_dashboard(
     request: Request,
@@ -316,17 +431,110 @@ async def interno_dashboard(
         filtro["data_fim"],
     )
 
+    pode_escala = user_can_access(user_or_redirect, "escala")
+    resumo_escala = escala_resumo(db, user_or_redirect) if pode_escala else {}
+    escala_hoje = [escala_publica(item) for item in escalas_do_dia(db)][:6] if pode_escala else []
+
+    pode_tarefas = user_can_access(user_or_redirect, "tarefas")
+    resumo_tarefas = tarefas_resumo(db, user_or_redirect) if pode_tarefas else {"abertas": 0, "atrasadas": 0, "vencem_hoje": 0, "minhas": 0}
+    lista_tarefas = tarefas_dashboard(db, 5) if pode_tarefas else []
+
+    pode_comunicados = user_can_access(user_or_redirect, "comunicados")
+    login_comunicados = str(user_or_redirect.get("username") or user_or_redirect.get("nome") or "usuario").strip().lower()
+    leituras_comunicados = set()
+    if pode_comunicados:
+        leituras_comunicados = {
+            int(item.comunicado_id)
+            for item in db.query(InternoComunicadoLeitura.comunicado_id)
+            .filter(InternoComunicadoLeitura.usuario_login == login_comunicados)
+            .all()
+        }
+    comunicados_ultimos = []
+    if pode_comunicados:
+        for comunicado in (
+            db.query(InternoComunicado)
+            .filter(InternoComunicado.ativo.is_(True))
+            .order_by(InternoComunicado.publicado_em.desc(), InternoComunicado.id.desc())
+            .limit(4)
+            .all()
+        ):
+            comunicados_ultimos.append({
+                "id": comunicado.id,
+                "titulo": comunicado.titulo or "Novo comunicado",
+                "mensagem": comunicado.mensagem or "",
+                "publicado_em": comunicado.publicado_em or comunicado.criado_em,
+                "lido": comunicado.id in leituras_comunicados,
+            })
+
+    pode_ponto = user_can_access(user_or_redirect, "ponto")
+    pode_plantao = user_can_access(user_or_redirect, "plantao")
+    dashboard_pessoal = _dashboard_pessoal(
+        db,
+        user_or_redirect,
+        pode_ponto=pode_ponto,
+        pode_plantao=pode_plantao,
+        pode_tarefas=pode_tarefas,
+        pode_comunicados=pode_comunicados,
+        pode_escala=pode_escala,
+        leituras_comunicados=leituras_comunicados,
+    )
+
     return templates.TemplateResponse(
         "interno-dashboard.html",
         {
             "request": request,
             "user": user_or_redirect,
             "dashboard_filtro": filtro,
+            "dashboard_pessoal": dashboard_pessoal,
             "funcionarios_resumo": funcionarios_resumo(db),
             "pontos_resumo": resumos_periodo["pontos_resumo"],
             "plantoes_resumo": resumos_periodo["plantoes_resumo"],
             "passagens_resumo": resumos_periodo["passagens_resumo"],
             "ocorrencias_resumo": resumos_periodo["ocorrencias_resumo"],
+            "tarefas_resumo": resumo_tarefas,
+            "tarefas_dashboard": lista_tarefas,
+            "tarefas_pode_acessar": pode_tarefas,
+            "escala_pode_acessar": pode_escala,
+            "escala_resumo": resumo_escala,
+            "escala_hoje": escala_hoje,
+            "comunicados_pode_acessar": pode_comunicados,
+            "comunicados_ultimos": comunicados_ultimos,
+        },
+    )
+
+
+@router.get("/interno/comunicados", response_class=HTMLResponse)
+async def interno_comunicados_page(request: Request, db: Session = Depends(get_db)):
+    user_or_response = require_interno_module_html(request, "/interno/comunicados", "comunicados")
+    if isinstance(user_or_response, (RedirectResponse, HTMLResponse)):
+        return user_or_response
+
+    login = str(user_or_response.get("username") or user_or_response.get("nome") or "usuario").strip().lower()
+    lidos = {
+        int(item.comunicado_id)
+        for item in db.query(InternoComunicadoLeitura.comunicado_id)
+        .filter(InternoComunicadoLeitura.usuario_login == login)
+        .all()
+    }
+    itens = db.query(InternoComunicado).filter(InternoComunicado.ativo.is_(True)).order_by(InternoComunicado.publicado_em.desc(), InternoComunicado.id.desc()).limit(100).all()
+    comunicados = [
+        {
+            "id": item.id,
+            "titulo": item.titulo or "Novo comunicado",
+            "mensagem": item.mensagem or "",
+            "publicado_em": item.publicado_em or item.criado_em,
+            "criado_por_nome": item.criado_por_nome or "Administração",
+            "lido": item.id in lidos,
+        }
+        for item in itens
+    ]
+    return templates.TemplateResponse(
+        "interno-comunicados.html",
+        {
+            "request": request,
+            "user": user_or_response,
+            "comunicados": comunicados,
+            "comunicados_pode_publicar": user_is_admin(user_or_response),
         },
     )
 
@@ -381,6 +589,32 @@ async def interno_plantao_page(request: Request, db: Session = Depends(get_db)):
     )
 
 
+@router.get("/interno/escala", response_class=HTMLResponse)
+async def interno_escala_page(request: Request, db: Session = Depends(get_db)):
+    user_or_response = require_interno_module_html(request, "/interno/escala", "escala")
+    if isinstance(user_or_response, (RedirectResponse, HTMLResponse)):
+        return user_or_response
+
+    funcionarios = (
+        db.query(InternoFuncionario)
+        .filter(InternoFuncionario.ativo.is_(True))
+        .order_by(InternoFuncionario.nome.asc())
+        .all()
+    )
+    permissao = str(user_or_response.get("permissao") or "").lower()
+    pode_gerenciar = bool(user_or_response.get("is_admin")) or permissao in {"admin", "supervisor"}
+    return templates.TemplateResponse(
+        "interno-escala.html",
+        {
+            "request": request,
+            "user": user_or_response,
+            "funcionarios": funcionarios,
+            "escala_resumo": escala_resumo(db, user_or_response),
+            "escala_pode_gerenciar": pode_gerenciar,
+        },
+    )
+
+
 @router.get("/interno/passagem", response_class=HTMLResponse)
 async def interno_passagem_page(request: Request, db: Session = Depends(get_db)):
     user_or_redirect = require_interno_user_html(request, "/interno/passagem")
@@ -393,6 +627,47 @@ async def interno_passagem_page(request: Request, db: Session = Depends(get_db))
             "request": request,
             "user": user_or_redirect,
             "passagens_resumo": passagens_resumo(db),
+        },
+    )
+
+
+@router.get("/interno/tarefas", response_class=HTMLResponse)
+async def interno_tarefas_page(request: Request, db: Session = Depends(get_db)):
+    user_or_response = require_interno_module_html(request, "/interno/tarefas", "tarefas")
+    if isinstance(user_or_response, (RedirectResponse, HTMLResponse)):
+        return user_or_response
+
+    funcionarios = (
+        db.query(InternoFuncionario)
+        .filter(InternoFuncionario.ativo.is_(True))
+        .order_by(InternoFuncionario.nome.asc())
+        .all()
+    )
+
+    return templates.TemplateResponse(
+        "interno-tarefas.html",
+        {
+            "request": request,
+            "user": user_or_response,
+            "tarefas_resumo": tarefas_resumo(db, user_or_response),
+            "tarefas_prioridades": TAREFA_PRIORIDADES,
+            "tarefas_status": TAREFA_STATUS,
+            "funcionarios": funcionarios,
+        },
+    )
+
+
+@router.get("/interno/documentos", response_class=HTMLResponse)
+async def interno_documentos_page(request: Request):
+    user_or_response = require_interno_module_html(request, "/interno/documentos", "documentos")
+    if isinstance(user_or_response, (RedirectResponse, HTMLResponse)):
+        return user_or_response
+
+    return templates.TemplateResponse(
+        "interno-documentos.html",
+        {
+            "request": request,
+            "user": user_or_response,
         },
     )
 
@@ -428,4 +703,32 @@ async def interno_ocorrencias_page(request: Request, db: Session = Depends(get_d
             "ocorrencia_prioridades": OCORRENCIA_PRIORIDADES,
             "ocorrencia_status": OCORRENCIA_STATUS,
         },
+    )
+
+@router.get("/interno/auditoria", response_class=HTMLResponse)
+async def interno_auditoria_page(request: Request):
+    user_or_redirect = require_interno_user_html(request, "/interno/auditoria")
+    if isinstance(user_or_redirect, RedirectResponse):
+        return user_or_redirect
+
+    from ..deps import user_can_access
+    if not user_can_access(user_or_redirect, "auditoria"):
+        from ..deps import acesso_negado_html
+        return acesso_negado_html("auditoria")
+
+    return templates.TemplateResponse(
+        "interno-auditoria.html",
+        {"request": request, "user": user_or_redirect},
+    )
+
+
+@router.get("/interno/busca", response_class=HTMLResponse)
+async def interno_busca_page(request: Request):
+    user_or_redirect = require_interno_user_html(request, "/interno/busca")
+    if isinstance(user_or_redirect, RedirectResponse):
+        return user_or_redirect
+
+    return templates.TemplateResponse(
+        "interno-busca.html",
+        {"request": request, "user": user_or_redirect},
     )

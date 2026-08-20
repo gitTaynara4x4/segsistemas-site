@@ -152,6 +152,102 @@
     }).join('');
   }
 
+  function renderEscalaPlantao(escalaHoje, proximaEscala) {
+    const text = qs('#plantao-escala-texto');
+    if (!text) return;
+    const item = escalaHoje || proximaEscala;
+    if (!item) {
+      text.textContent = 'Nenhuma escala vinculada ao seu usuário.';
+      return;
+    }
+    const data = item.data_escala ? item.data_escala.split('-').reverse().join('/') : '';
+    if (escalaHoje) {
+      text.textContent = item.status === 'folga'
+        ? `Hoje · folga programada`
+        : `Hoje · ${item.horario_inicio || '--:--'} às ${item.horario_fim || '--:--'}${item.tem_substituicao ? ' · substituição' : ''}`;
+    } else {
+      text.textContent = `Próximo: ${data} · ${item.horario_inicio || '--:--'} às ${item.horario_fim || '--:--'}`;
+    }
+  }
+
+  function checklistEtapa() {
+    return state.plantao ? 'fim' : 'inicio';
+  }
+
+  function renderChecklist() {
+    const title = qs('#plantao-checklist-title');
+    const note = qs('#plantao-checklist-note');
+    const itemsBox = qs('#plantao-checklist-items');
+    const badge = qs('#plantao-checklist-badge');
+    const btn = qs('#btn-plantao-action');
+    if (!itemsBox) return;
+
+    const etapa = checklistEtapa();
+    const checklist = state.plantaoChecklist || {};
+    const bloco = checklist[etapa] || { itens: [], completo: false, confirmado: false };
+    const itens = Array.isArray(bloco.itens) ? bloco.itens : [];
+    const completos = itens.filter(function (item) { return Boolean(item.checked); }).length;
+
+    if (title) title.textContent = etapa === 'inicio' ? 'Checklist de início' : 'Checklist de encerramento';
+    if (note) note.textContent = etapa === 'inicio'
+      ? 'Confirme os itens antes de assumir o turno.'
+      : 'Confirme os itens antes de entregar e finalizar o turno.';
+
+    itemsBox.innerHTML = itens.map(function (item) {
+      const checked = Boolean(item.checked);
+      return `
+        <label class="plantao-check-item">
+          <input type="checkbox" data-plantao-check="${escapeHtml(item.id)}" ${checked ? 'checked' : ''}>
+          <span class="plantao-check-box" aria-hidden="true"></span>
+          <span class="plantao-check-copy">
+            <strong>${escapeHtml(item.label)}</strong>
+            <small>${etapa === 'inicio' ? 'Confirmação para assumir o turno' : 'Confirmação para encerrar o turno'}</small>
+          </span>
+        </label>
+      `;
+    }).join('');
+
+    if (badge) {
+      badge.classList.toggle('complete', completos === itens.length && itens.length > 0);
+      badge.innerHTML = completos === itens.length && itens.length > 0
+        ? '<i class="fa-solid fa-check"></i><span>Checklist concluído</span>'
+        : `<i class="fa-regular fa-circle"></i><span>${completos} de ${itens.length} concluídos</span>`;
+    }
+
+    if (btn) {
+      btn.disabled = !(itens.length > 0 && completos === itens.length);
+    }
+
+    qsa('[data-plantao-check]').forEach(function (input) {
+      input.addEventListener('change', function () {
+        const target = String(input.getAttribute('data-plantao-check') || '');
+        const blocoAtual = state.plantaoChecklist && state.plantaoChecklist[etapa];
+        if (blocoAtual && Array.isArray(blocoAtual.itens)) {
+          const found = blocoAtual.itens.find(function (item) { return item.id === target; });
+          if (found) found.checked = input.checked;
+          blocoAtual.completo = blocoAtual.itens.every(function (item) { return Boolean(item.checked); });
+        }
+        renderChecklist();
+      });
+    });
+  }
+
+  function checklistPayload() {
+    const etapa = checklistEtapa();
+    const bloco = (state.plantaoChecklist && state.plantaoChecklist[etapa]) || {};
+    const itens = Array.isArray(bloco.itens) ? bloco.itens : [];
+    return itens.reduce(function (acc, item) {
+      acc[item.id] = Boolean(item.checked);
+      return acc;
+    }, {});
+  }
+
+  function checklistCompleto() {
+    const etapa = checklistEtapa();
+    const bloco = (state.plantaoChecklist && state.plantaoChecklist[etapa]) || {};
+    return Boolean(bloco.completo);
+  }
+
   async function loadPlantao() {
     const page = qs('#plantao-page');
     if (!page || state.plantaoCarregando) return;
@@ -164,8 +260,14 @@
       const data = await apiFetch('/api/interno/plantao/status');
       state.plantao = data.plantao_aberto || null;
       state.plantoesHoje = Array.isArray(data.plantoes_hoje) ? data.plantoes_hoje : [];
+      state.plantaoChecklist = data.checklist || {
+        inicio: { itens: [], completo: false, confirmado: false },
+        fim: { itens: [], completo: false, confirmado: false },
+      };
       updatePlantaoStats(data.resumo || {});
+      renderEscalaPlantao(data.escala_hoje || null, data.proxima_escala || null);
       renderPlantaoStatus();
+      renderChecklist();
       renderPlantoesHoje();
       setPlantaoMessage('', '');
     } catch (error) {
@@ -185,6 +287,13 @@
     const confirmacao = confirm ? confirm.checked : false;
     const estavaComPlantaoAberto = Boolean(state.plantao);
 
+    if (!checklistCompleto()) {
+      setPlantaoMessage('error', state.plantao
+        ? 'Conclua o checklist de encerramento antes de finalizar o plantão.'
+        : 'Conclua o checklist de início antes de assumir o plantão.');
+      return;
+    }
+
     if (!confirmacao) {
       setPlantaoMessage('error', state.plantao
         ? 'Confirme que você está finalizando o plantão.'
@@ -202,14 +311,16 @@
     }
 
     try {
-      await apiFetch(url, {
+      const result = await apiFetch(url, {
         method: 'POST',
         body: JSON.stringify({
           confirmacao: true,
           observacao: observacao ? observacao.value.trim() : '',
+          [estavaComPlantaoAberto ? 'checklist_fim' : 'checklist_inicio']: checklistPayload(),
         }),
       });
 
+      if (result && result.checklist) state.plantaoChecklist = result.checklist;
       if (observacao) observacao.value = '';
       if (confirm) confirm.checked = false;
       await loadPlantao();
@@ -218,7 +329,8 @@
       setPlantaoMessage('error', error.message || 'Erro ao salvar plantão.');
       renderPlantaoStatus();
     } finally {
-      if (btn) btn.disabled = false;
+      renderChecklist();
+      renderPlantaoStatus();
     }
   }
 

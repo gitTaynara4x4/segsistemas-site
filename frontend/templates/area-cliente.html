@@ -1,373 +1,569 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portal do Cliente SEG Sistemas para acompanhar monitoramento, dados cadastrais e financeiro.">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Área do Cliente | SEG Sistemas</title>
 
-{% block title %}Área do Cliente | SEG Sistemas{% endblock %}
-{% block description %}Área do Cliente SEG Sistemas para preenchimento seguro de dados cadastrais e acompanhamento de contratos.{% endblock %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="/static/img/favicon.png">
+  <link rel="stylesheet" href="/static/css/area-cliente.css?v=20260820-auth-v2">
+</head>
+<body class="client-portal-body">
+  <div class="portal-toast" id="portalToast" role="status" aria-live="polite" hidden></div>
 
-{% block extra_css %}
-  <link rel="stylesheet" href="/static/css/area-cliente.css">
-{% endblock %}
+  <main class="access-shell" id="accessShell">
+    <section class="access-brand-panel">
+      <div class="access-brand-inner">
+        <a class="access-logo" href="/" aria-label="SEG Sistemas">
+          <img src="/static/img/logo-seg.png" alt="SEG Sistemas">
+        </a>
 
-{% block content %}
-<section class="portal-page" id="areaClientePublica">
-  <div class="container portal-container">
-    <div class="portal-hero" data-aos="fade-up">
-      <div class="portal-hero-copy">
-        <span class="portal-kicker">Área do Cliente SEG</span>
-        <h1>Finalize seus dados cadastrais com segurança</h1>
-        <p>
-          Use o link e a senha provisória enviados pela equipe SEG para preencher as informações necessárias para emissão do contrato.
-        </p>
+        <div class="access-copy">
+          <span class="access-eyebrow">Área do Cliente</span>
+          <h1>Sua segurança, seus dados e seu financeiro em um só lugar.</h1>
+          <p>Acompanhe as informações da sua conta SEG de forma simples e segura.</p>
+        </div>
+
+        <div class="access-highlights" aria-label="Recursos do portal">
+          <div><i class="fa-solid fa-shield-halved"></i><span>Monitoramento</span></div>
+          <div><i class="fa-regular fa-address-card"></i><span>Dados cadastrais</span></div>
+          <div><i class="fa-solid fa-receipt"></i><span>Financeiro</span></div>
+        </div>
       </div>
+    </section>
 
-      <div class="portal-hero-card">
-        <div class="hero-card-icon">
-          <i class="fas fa-shield-halved"></i>
-        </div>
-        <strong>Ambiente seguro</strong>
-        <span>O acesso é temporário e protegido por senha provisória.</span>
-      </div>
-    </div>
-
-    <div class="portal-grid">
-      <aside class="portal-side" data-aos="fade-right">
-        <div class="side-card brand-card">
-          <img src="/static/img/logo-seg.png" alt="SEG Sistemas" class="side-logo">
-          <h2>SEG Sistemas</h2>
-          <p>Segurança eletrônica, monitoramento e tecnologia para proteger seu patrimônio.</p>
-        </div>
-
-        <div class="side-card steps-card">
-          <h3>Como funciona</h3>
-          <div class="step-item is-active" data-step="1">
-            <span>1</span>
-            <div>
-              <strong>Validar acesso</strong>
-              <small>Informe a senha recebida.</small>
-            </div>
-          </div>
-          <div class="step-item" data-step="2">
-            <span>2</span>
-            <div>
-              <strong>Preencher dados</strong>
-              <small>Confira PF/PJ e endereço.</small>
-            </div>
-          </div>
-          <div class="step-item" data-step="3">
-            <span>3</span>
-            <div>
-              <strong>Enviar para análise</strong>
-              <small>A equipe SEG seguirá com o contrato.</small>
-            </div>
+    <section class="access-form-panel">
+      <div class="access-card">
+        <div class="access-card-head">
+          <span class="access-lock"><i class="fa-solid fa-user-shield"></i></span>
+          <div>
+            <h2 id="accessTitle">Acessar minha conta</h2>
+            <p id="accessStatusText">Entre com seu código, Conta Monit24hs, CPF ou CNPJ.</p>
           </div>
         </div>
 
-        <div class="side-card support-card">
-          <h3>Precisa de ajuda?</h3>
-          <p>Fale com nossa equipe pelo WhatsApp.</p>
-          <a href="https://wa.me/5512974101924" target="_blank" rel="noopener" class="support-link">
-            <i class="fab fa-whatsapp"></i>
-            Chamar no WhatsApp
+        <div class="access-tabs" role="tablist" aria-label="Tipo de acesso">
+          <button class="access-tab is-active" id="loginTab" type="button" data-auth-mode="login" role="tab" aria-selected="true">
+            Já tenho senha
+          </button>
+          <button class="access-tab" id="firstAccessTab" type="button" data-auth-mode="first" role="tab" aria-selected="false">
+            Primeiro acesso
+          </button>
+        </div>
+
+        <form id="loginForm" class="access-form" autocomplete="on">
+          <label for="loginIdentifier">Código do cliente, Conta Monit24hs, CPF ou CNPJ</label>
+          <div class="access-input-field">
+            <i class="fa-regular fa-id-card"></i>
+            <input
+              id="loginIdentifier"
+              name="identificador"
+              type="text"
+              autocomplete="username"
+              inputmode="text"
+              placeholder="Ex.: 100245 ou 5421"
+              required
+            >
+          </div>
+
+          <label for="loginPassword">Senha</label>
+          <div class="password-field">
+            <input
+              id="loginPassword"
+              name="senha"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Digite sua senha"
+              required
+            >
+            <button type="button" id="toggleLoginPassword" aria-label="Mostrar ou ocultar senha">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+
+          <button class="primary-button access-submit" id="btnEntrar" type="submit">
+            Entrar na Área do Cliente
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+
+          <button class="access-secondary-action" id="goFirstAccess" type="button">
+            É seu primeiro acesso? <strong>Criar minha senha</strong>
+          </button>
+        </form>
+
+        <form id="firstAccessForm" class="access-form" autocomplete="off" hidden>
+          <div class="first-access-note">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Vamos conferir seu cadastro no Valora antes de criar sua senha.</span>
+          </div>
+
+          <label for="firstIdentifier">Código do cliente, Conta Monit24hs, CPF ou CNPJ</label>
+          <div class="access-input-field">
+            <i class="fa-regular fa-id-card"></i>
+            <input
+              id="firstIdentifier"
+              name="identificador"
+              type="text"
+              autocomplete="off"
+              placeholder="Ex.: 100245 ou 5421"
+              required
+            >
+          </div>
+
+          <label for="firstVerification">CPF/CNPJ ou telefone cadastrado</label>
+          <div class="access-input-field">
+            <i class="fa-solid fa-fingerprint"></i>
+            <input
+              id="firstVerification"
+              name="verificacao"
+              type="text"
+              autocomplete="off"
+              inputmode="tel"
+              placeholder="Use um dado já cadastrado na SEG"
+              required
+            >
+          </div>
+
+          <label for="newPassword">Crie sua senha</label>
+          <div class="password-field">
+            <input
+              id="newPassword"
+              name="senha"
+              type="password"
+              autocomplete="new-password"
+              placeholder="Mínimo 8 caracteres, com letras e números"
+              required
+              minlength="8"
+            >
+            <button type="button" id="toggleNewPassword" aria-label="Mostrar ou ocultar senha">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+
+          <label for="confirmPassword">Confirmar senha</label>
+          <div class="password-field">
+            <input
+              id="confirmPassword"
+              name="confirmar_senha"
+              type="password"
+              autocomplete="new-password"
+              placeholder="Digite a senha novamente"
+              required
+              minlength="8"
+            >
+            <button type="button" id="toggleConfirmPassword" aria-label="Mostrar ou ocultar senha">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+
+          <button class="primary-button access-submit" id="btnPrimeiroAcesso" type="submit">
+            Criar acesso
+            <i class="fa-solid fa-check"></i>
+          </button>
+
+          <button class="access-secondary-action" id="backToLogin" type="button">
+            Já criou sua senha? <strong>Voltar para entrar</strong>
+          </button>
+        </form>
+
+        <div class="access-message" id="accessMessage" hidden></div>
+
+        <div class="access-help">
+          <span>Não conseguiu validar seus dados?</span>
+          <a href="https://wa.me/5512974101924" target="_blank" rel="noopener noreferrer">
+            Falar com a SEG
           </a>
+        </div>
+      </div>
+
+      <p class="access-security"><i class="fa-solid fa-shield"></i> Sua sessão usa cookie seguro e a senha nunca é armazenada no navegador.</p>
+    </section>
+  </main>
+
+  <div class="portal-app" id="portalApp" hidden>
+    <header class="portal-topbar">
+      <div class="portal-topbar-left">
+        <button class="mobile-menu-button" id="mobileMenuButton" type="button" aria-label="Abrir menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <a class="portal-logo" href="#" data-view-target="dashboard" aria-label="Início da Área do Cliente">
+          <img src="/static/img/logo-seg.png" alt="SEG Sistemas">
+        </a>
+      </div>
+
+      <div class="portal-topbar-actions">
+        <button class="icon-button" id="refreshPortalButton" type="button" title="Atualizar dados" aria-label="Atualizar dados">
+          <i class="fa-solid fa-rotate"></i>
+        </button>
+        <div class="portal-account">
+          <div class="account-avatar" id="accountAvatar">S</div>
+          <div class="account-copy">
+            <strong id="accountName">Cliente SEG</strong>
+            <span id="accountCode">Código ---</span>
+          </div>
+        </div>
+        <button class="logout-button" id="logoutButton" type="button" title="Sair">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <span>Sair</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="portal-layout">
+      <aside class="portal-sidebar" id="portalSidebar">
+        <div class="sidebar-caption">Minha conta</div>
+        <nav class="portal-nav" aria-label="Navegação da Área do Cliente">
+          <button class="portal-nav-item is-active" type="button" data-view-target="dashboard">
+            <i class="fa-solid fa-house"></i><span>Início</span>
+          </button>
+          <button class="portal-nav-item" type="button" data-view-target="dados">
+            <i class="fa-regular fa-building"></i><span>Meus dados</span>
+          </button>
+          <button class="portal-nav-item" type="button" data-view-target="local">
+            <i class="fa-solid fa-location-dot"></i><span>Local monitorado</span>
+          </button>
+          <button class="portal-nav-item" type="button" data-view-target="monitoramento">
+            <i class="fa-solid fa-shield-halved"></i><span>Meu monitoramento</span>
+          </button>
+          <button class="portal-nav-item" type="button" data-view-target="contatos">
+            <i class="fa-regular fa-address-book"></i><span>Contatos</span>
+          </button>
+          <button class="portal-nav-item" type="button" data-view-target="financeiro">
+            <i class="fa-solid fa-receipt"></i><span>Financeiro</span>
+            <span class="nav-counter" id="financeNavCounter" hidden>0</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-support">
+          <span class="sidebar-support-icon"><i class="fa-brands fa-whatsapp"></i></span>
+          <div>
+            <strong>Precisa de ajuda?</strong>
+            <span>Fale com nossa equipe.</span>
+          </div>
+          <a href="https://wa.me/5512974101924" target="_blank" rel="noopener noreferrer">Abrir WhatsApp</a>
         </div>
       </aside>
 
-      <div class="portal-main" data-aos="fade-left">
-        <div class="portal-alert" id="portalAlert" hidden></div>
+      <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay" hidden></div>
 
-        <article class="portal-card token-card" id="tokenCard">
-          <div class="card-head">
+      <section class="portal-content">
+        <div class="portal-sync-banner" id="syncBanner">
+          <span><i class="fa-solid fa-arrows-rotate"></i> Dados sincronizados com o Valora</span>
+          <small id="lastSyncText">Atualizando...</small>
+        </div>
+
+        <div class="portal-warning" id="financialBlockWarning" hidden>
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <div>
+            <strong>Atenção à sua conta</strong>
+            <span>Seu monitoramento está com bloqueio financeiro. Consulte os títulos em aberto ou fale com a SEG.</span>
+          </div>
+          <button type="button" data-view-target="financeiro">Ver financeiro</button>
+        </div>
+
+        <section class="portal-view is-active" data-view="dashboard">
+          <div class="page-heading dashboard-heading">
             <div>
-              <span class="portal-kicker">Acesso provisório</span>
-              <h2>Digite sua senha para continuar</h2>
-              <p id="tokenStatusText">Verificando o link recebido...</p>
+              <span class="page-eyebrow">Visão geral</span>
+              <h1 id="dashboardGreeting">Olá.</h1>
+              <p id="dashboardSubtitle">Aqui está um resumo da sua conta SEG.</p>
             </div>
-            <span class="status-pill" id="statusPill">Verificando</span>
           </div>
 
-          <div class="token-info" id="tokenInfo" hidden>
+          <div class="summary-grid">
+            <article class="summary-card">
+              <div class="summary-card-icon"><i class="fa-solid fa-shield-halved"></i></div>
+              <div class="summary-card-copy">
+                <span>Monitoramento 24h</span>
+                <strong id="summaryMonitorStatus">---</strong>
+                <small id="summaryMonitorHint">Situação contratual</small>
+              </div>
+              <span class="status-dot" id="summaryMonitorDot"></span>
+            </article>
+
+            <article class="summary-card">
+              <div class="summary-card-icon"><i class="fa-solid fa-hashtag"></i></div>
+              <div class="summary-card-copy">
+                <span>Conta de monitoramento</span>
+                <strong id="summaryAccount">---</strong>
+                <small>Identificação no Monit24hs</small>
+              </div>
+            </article>
+
+            <article class="summary-card">
+              <div class="summary-card-icon"><i class="fa-solid fa-wallet"></i></div>
+              <div class="summary-card-copy">
+                <span>Saldo em aberto</span>
+                <strong id="summaryOpenBalance">R$ 0,00</strong>
+                <small id="summaryOpenTitles">Nenhum título em aberto</small>
+              </div>
+            </article>
+
+            <article class="summary-card">
+              <div class="summary-card-icon"><i class="fa-regular fa-calendar"></i></div>
+              <div class="summary-card-copy">
+                <span>Próximo vencimento</span>
+                <strong id="summaryNextDue">---</strong>
+                <small>Financeiro Valora</small>
+              </div>
+            </article>
+          </div>
+
+          <div class="dashboard-grid">
+            <article class="content-card dashboard-location-card">
+              <div class="content-card-head">
+                <div>
+                  <span class="section-kicker">Local monitorado</span>
+                  <h2>Seu endereço</h2>
+                </div>
+                <button class="text-button" type="button" data-view-target="local">Ver detalhes</button>
+              </div>
+              <div class="location-preview">
+                <span class="location-preview-icon"><i class="fa-solid fa-location-dot"></i></span>
+                <div>
+                  <strong id="dashboardAddressLine">Endereço não informado</strong>
+                  <span id="dashboardAddressCity">---</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="content-card dashboard-contract-card">
+              <div class="content-card-head">
+                <div>
+                  <span class="section-kicker">Contrato</span>
+                  <h2>Seu monitoramento</h2>
+                </div>
+                <button class="text-button" type="button" data-view-target="monitoramento">Ver detalhes</button>
+              </div>
+              <dl class="compact-details">
+                <div><dt>Tipo de contrato</dt><dd id="dashboardContractType">---</dd></div>
+                <div><dt>Tipo de imóvel</dt><dd id="dashboardPropertyType">---</dd></div>
+                <div><dt>Segmento</dt><dd id="dashboardSegment">---</dd></div>
+              </dl>
+            </article>
+          </div>
+
+          <article class="content-card dashboard-finance-card">
+            <div class="content-card-head">
+              <div>
+                <span class="section-kicker">Financeiro</span>
+                <h2>Movimentações recentes</h2>
+              </div>
+              <button class="text-button" type="button" data-view-target="financeiro">Ver todos</button>
+            </div>
+            <div class="recent-finance-list" id="dashboardFinanceList"></div>
+          </article>
+        </section>
+
+        <section class="portal-view" data-view="dados">
+          <div class="page-heading">
             <div>
-              <small>Token</small>
-              <strong id="tokenHint">---</strong>
+              <span class="page-eyebrow">Cadastro</span>
+              <h1>Meus dados</h1>
+              <p>Informações principais do seu cadastro na SEG.</p>
             </div>
+          </div>
+
+          <article class="content-card">
+            <div class="content-card-head">
+              <div>
+                <span class="section-kicker">Identificação</span>
+                <h2>Dados do cliente</h2>
+              </div>
+              <span class="read-only-badge"><i class="fa-solid fa-lock"></i> Dados oficiais</span>
+            </div>
+            <dl class="detail-grid">
+              <div><dt>Nome / Razão Social</dt><dd id="dataLegalName">---</dd></div>
+              <div><dt>Nome Fantasia</dt><dd id="dataTradeName">---</dd></div>
+              <div><dt>Código do cliente</dt><dd id="dataClientCode">---</dd></div>
+              <div><dt>Tipo de cliente</dt><dd id="dataClientType">---</dd></div>
+            </dl>
+          </article>
+
+          <article class="content-card help-card-inline">
+            <span class="help-card-icon"><i class="fa-regular fa-pen-to-square"></i></span>
             <div>
-              <small>Expira em</small>
-              <strong id="tokenExpires">---</strong>
+              <strong>Encontrou alguma informação incorreta?</strong>
+              <span>Solicite a atualização à equipe SEG. O cadastro oficial é mantido no Valora.</span>
             </div>
-          </div>
+            <a href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20preciso%20atualizar%20meus%20dados%20cadastrais%20na%20SEG." target="_blank" rel="noopener noreferrer">Solicitar atualização</a>
+          </article>
+        </section>
 
-          <form class="portal-auth-form" id="authForm">
-            <div class="field-group">
-              <label for="senha_provisoria">Senha provisória</label>
-              <div class="password-wrap">
-                <input id="senha_provisoria" name="senha_provisoria" type="password" inputmode="numeric" autocomplete="one-time-code" placeholder="Digite a senha recebida" required>
-                <button type="button" id="toggleSenha" aria-label="Mostrar ou ocultar senha">
-                  <i class="fas fa-eye"></i>
-                </button>
-              </div>
-              <small>A senha foi enviada junto com o link de acesso.</small>
-            </div>
-
-            <button class="btn btn-gold btn-full" type="submit" id="btnEntrar">
-              <i class="fas fa-unlock-keyhole"></i>
-              Entrar na Área do Cliente
-            </button>
-          </form>
-        </article>
-
-        <article class="portal-card cliente-card" id="clienteCard" hidden>
-          <div class="cliente-card-top">
+        <section class="portal-view" data-view="local">
+          <div class="page-heading">
             <div>
-              <span class="portal-kicker">Cliente</span>
-              <h2 id="clienteNome">---</h2>
-              <p id="clienteResumo">---</p>
+              <span class="page-eyebrow">Endereço</span>
+              <h1>Local monitorado</h1>
+              <p>Endereço vinculado ao seu cadastro de monitoramento.</p>
             </div>
-            <span class="client-code" id="clienteCodigo">---</span>
           </div>
-        </article>
 
-        <form class="portal-card dados-form" id="dadosForm" hidden>
-          <div class="card-head form-title-head">
+          <article class="content-card">
+            <div class="content-card-head">
+              <div>
+                <span class="section-kicker">Endereço principal</span>
+                <h2>Local cadastrado</h2>
+              </div>
+            </div>
+            <dl class="detail-grid address-detail-grid">
+              <div class="detail-wide"><dt>Logradouro</dt><dd id="addressStreet">---</dd></div>
+              <div><dt>Número</dt><dd id="addressNumber">---</dd></div>
+              <div><dt>Complemento</dt><dd id="addressComplement">---</dd></div>
+              <div><dt>Bairro</dt><dd id="addressDistrict">---</dd></div>
+              <div><dt>Cidade</dt><dd id="addressCity">---</dd></div>
+              <div><dt>UF</dt><dd id="addressState">---</dd></div>
+              <div><dt>CEP</dt><dd id="addressZip">---</dd></div>
+            </dl>
+          </article>
+        </section>
+
+        <section class="portal-view" data-view="monitoramento">
+          <div class="page-heading">
             <div>
-              <span class="portal-kicker">Dados para contrato</span>
-              <h2>Confira e complete seu cadastro</h2>
-              <p>Preencha com atenção. Essas informações serão usadas pela equipe administrativa para emissão do contrato.</p>
+              <span class="page-eyebrow">Segurança</span>
+              <h1>Meu monitoramento</h1>
+              <p>Informações contratuais do serviço de monitoramento 24 horas.</p>
             </div>
           </div>
 
-          <section class="form-section">
-            <div class="section-title-inline">
-              <h3>Tipo de cadastro</h3>
-              <p>Selecione se o contrato será em pessoa física ou jurídica.</p>
+          <article class="monitor-status-panel" id="monitorStatusPanel">
+            <div class="monitor-status-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="monitor-status-copy">
+              <span>Status do Monit24hs</span>
+              <strong id="monitorStatusText">---</strong>
+              <small>Esta situação vem diretamente do cadastro da SEG no Valora.</small>
             </div>
+            <span class="monitor-status-badge" id="monitorStatusBadge">---</span>
+          </article>
 
-            <div class="form-row three-cols">
-              <div class="field-group">
-                <label for="tipo_pessoa">Tipo de pessoa *</label>
-                <select id="tipo_pessoa" name="tipo_pessoa" required>
-                  <option value="PF">Pessoa Física</option>
-                  <option value="PJ">Pessoa Jurídica</option>
-                </select>
-              </div>
-            </div>
-          </section>
-
-          <section class="form-section pf-section">
-            <div class="section-title-inline">
-              <h3>Pessoa Física</h3>
-              <p>Dados pessoais do titular ou contratante.</p>
-            </div>
-
-            <div class="form-row">
-              <div class="field-group">
-                <label for="nome_completo">Nome completo *</label>
-                <input id="nome_completo" name="nome_completo" type="text" autocomplete="name">
-              </div>
-              <div class="field-group">
-                <label for="cpf">CPF *</label>
-                <input id="cpf" name="cpf" type="text" inputmode="numeric">
+          <article class="content-card">
+            <div class="content-card-head">
+              <div>
+                <span class="section-kicker">Contrato</span>
+                <h2>Informações do serviço</h2>
               </div>
             </div>
+            <dl class="detail-grid">
+              <div><dt>Conta Monit24hs</dt><dd id="monitorAccount">---</dd></div>
+              <div><dt>Tipo de contrato</dt><dd id="monitorContract">---</dd></div>
+              <div><dt>Tipo de imóvel</dt><dd id="monitorProperty">---</dd></div>
+              <div><dt>Segmento</dt><dd id="monitorSegment">---</dd></div>
+            </dl>
+          </article>
 
-            <div class="form-row three-cols">
-              <div class="field-group">
-                <label for="rg">RG *</label>
-                <input id="rg" name="rg" type="text">
-              </div>
-              <div class="field-group">
-                <label for="nacionalidade">Nacionalidade</label>
-                <input id="nacionalidade" name="nacionalidade" type="text" placeholder="Brasileira">
-              </div>
-              <div class="field-group">
-                <label for="profissao">Profissão</label>
-                <input id="profissao" name="profissao" type="text">
-              </div>
+          <div class="information-note">
+            <i class="fa-solid fa-circle-info"></i>
+            <div>
+              <strong>Status contratual, não status técnico do equipamento.</strong>
+              <span>O indicador acima informa a situação do seu cadastro Monit24hs. A integração de eventos e equipamentos do Sentor será exibida separadamente quando for habilitada.</span>
             </div>
-
-            <div class="form-row three-cols">
-              <div class="field-group">
-                <label for="estado_civil">Estado civil</label>
-                <input id="estado_civil" name="estado_civil" type="text">
-              </div>
-              <div class="field-group">
-                <label for="data_nascimento">Data de nascimento</label>
-                <input id="data_nascimento" name="data_nascimento" type="date">
-              </div>
-              <div class="field-group">
-                <label for="telefone_pessoal">Telefone pessoal *</label>
-                <input id="telefone_pessoal" name="telefone_pessoal" type="text" autocomplete="tel">
-              </div>
-            </div>
-
-            <div class="form-row single-col">
-              <div class="field-group">
-                <label for="email_pessoal">E-mail pessoal *</label>
-                <input id="email_pessoal" name="email_pessoal" type="email" autocomplete="email">
-              </div>
-            </div>
-          </section>
-
-          <section class="form-section pj-section" id="pjSection" hidden>
-            <div class="section-title-inline">
-              <h3>Pessoa Jurídica</h3>
-              <p>Dados da empresa e do representante legal.</p>
-            </div>
-
-            <div class="form-row">
-              <div class="field-group">
-                <label for="razao_social">Razão social *</label>
-                <input id="razao_social" name="razao_social" type="text">
-              </div>
-              <div class="field-group">
-                <label for="cnpj">CNPJ *</label>
-                <input id="cnpj" name="cnpj" type="text" inputmode="numeric">
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="field-group">
-                <label for="email_empresa">E-mail da empresa *</label>
-                <input id="email_empresa" name="email_empresa" type="email">
-              </div>
-              <div class="field-group">
-                <label for="telefone_whatsapp_empresa">WhatsApp da empresa *</label>
-                <input id="telefone_whatsapp_empresa" name="telefone_whatsapp_empresa" type="text">
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="field-group">
-                <label for="representante_nome">Nome do representante *</label>
-                <input id="representante_nome" name="representante_nome" type="text">
-              </div>
-              <div class="field-group">
-                <label for="representante_cpf">CPF do representante *</label>
-                <input id="representante_cpf" name="representante_cpf" type="text" inputmode="numeric">
-              </div>
-            </div>
-
-            <div class="form-row three-cols">
-              <div class="field-group">
-                <label for="representante_rg">RG do representante</label>
-                <input id="representante_rg" name="representante_rg" type="text">
-              </div>
-              <div class="field-group">
-                <label for="representante_nacionalidade">Nacionalidade</label>
-                <input id="representante_nacionalidade" name="representante_nacionalidade" type="text">
-              </div>
-              <div class="field-group">
-                <label for="representante_profissao">Profissão</label>
-                <input id="representante_profissao" name="representante_profissao" type="text">
-              </div>
-            </div>
-
-            <div class="form-row three-cols">
-              <div class="field-group">
-                <label for="representante_estado_civil">Estado civil</label>
-                <input id="representante_estado_civil" name="representante_estado_civil" type="text">
-              </div>
-              <div class="field-group">
-                <label for="representante_data_nascimento">Data de nascimento</label>
-                <input id="representante_data_nascimento" name="representante_data_nascimento" type="date">
-              </div>
-              <div class="field-group">
-                <label for="representante_telefone_pessoal">Telefone pessoal</label>
-                <input id="representante_telefone_pessoal" name="representante_telefone_pessoal" type="text">
-              </div>
-            </div>
-
-            <div class="form-row single-col">
-              <div class="field-group">
-                <label for="representante_email_pessoal">E-mail pessoal do representante</label>
-                <input id="representante_email_pessoal" name="representante_email_pessoal" type="email">
-              </div>
-            </div>
-          </section>
-
-          <section class="form-section">
-            <div class="section-title-inline">
-              <h3>Endereço do imóvel</h3>
-              <p>Endereço onde o sistema será instalado, monitorado ou atendido.</p>
-            </div>
-
-            <div class="form-row address-row">
-              <div class="field-group">
-                <label for="imovel_rua">Rua *</label>
-                <input id="imovel_rua" name="imovel_rua" type="text" autocomplete="address-line1">
-              </div>
-              <div class="field-group number-field">
-                <label for="imovel_numero">Número *</label>
-                <input id="imovel_numero" name="imovel_numero" type="text">
-              </div>
-            </div>
-
-            <div class="form-row three-cols">
-              <div class="field-group">
-                <label for="imovel_bairro">Bairro *</label>
-                <input id="imovel_bairro" name="imovel_bairro" type="text">
-              </div>
-              <div class="field-group">
-                <label for="imovel_cidade">Cidade *</label>
-                <input id="imovel_cidade" name="imovel_cidade" type="text" autocomplete="address-level2">
-              </div>
-              <div class="field-group">
-                <label for="imovel_uf">UF *</label>
-                <input id="imovel_uf" name="imovel_uf" type="text" maxlength="2" autocomplete="address-level1">
-              </div>
-            </div>
-
-            <div class="form-row single-col">
-              <div class="field-group cep-field">
-                <label for="imovel_cep">CEP *</label>
-                <input id="imovel_cep" name="imovel_cep" type="text" autocomplete="postal-code">
-              </div>
-            </div>
-          </section>
-
-          <section class="form-section">
-            <div class="section-title-inline">
-              <h3>Observações</h3>
-              <p>Use este campo caso precise informar algo para a equipe administrativa.</p>
-            </div>
-
-            <div class="field-group">
-              <label for="observacoes_contrato">Observações para contrato</label>
-              <textarea id="observacoes_contrato" name="observacoes_contrato" rows="4"></textarea>
-            </div>
-          </section>
-
-          <div class="form-actions">
-            <button class="btn btn-outline portal-btn-outline" type="button" id="btnSalvarRascunho">
-              <i class="fas fa-floppy-disk"></i>
-              Salvar rascunho
-            </button>
-            <button class="btn btn-gold" type="button" id="btnFinalizar">
-              <i class="fas fa-paper-plane"></i>
-              Finalizar e enviar para análise
-            </button>
           </div>
-        </form>
+        </section>
 
-        <article class="portal-card success-card" id="successCard" hidden>
-          <div class="success-icon">
-            <i class="fas fa-check"></i>
+        <section class="portal-view" data-view="contatos">
+          <div class="page-heading">
+            <div>
+              <span class="page-eyebrow">Comunicação</span>
+              <h1>Contatos</h1>
+              <p>Contatos atualmente vinculados à sua conta.</p>
+            </div>
           </div>
-          <h2>Dados enviados com sucesso</h2>
-          <p>
-            Recebemos suas informações. A equipe SEG vai analisar os dados e seguir com a emissão do contrato.
-          </p>
-          <a class="btn btn-gold" href="/">
-            Voltar para o site
-          </a>
-        </article>
-      </div>
+
+          <article class="content-card">
+            <div class="content-card-head">
+              <div>
+                <span class="section-kicker">Contato principal</span>
+                <h2>Dados para comunicação</h2>
+              </div>
+            </div>
+            <dl class="detail-grid">
+              <div><dt>Telefone / WhatsApp</dt><dd id="contactMainPhone">---</dd></div>
+              <div><dt>E-mail</dt><dd id="contactEmail">---</dd></div>
+              <div><dt>Pessoa de contato</dt><dd id="contactPerson">---</dd></div>
+              <div><dt>Telefone do contato</dt><dd id="contactPhone">---</dd></div>
+              <div><dt>Pessoa responsável</dt><dd id="contactResponsible">---</dd></div>
+            </dl>
+          </article>
+
+          <article class="content-card help-card-inline">
+            <span class="help-card-icon"><i class="fa-brands fa-whatsapp"></i></span>
+            <div>
+              <strong>Precisa alterar telefone ou e-mail?</strong>
+              <span>Envie uma solicitação para manter seus contatos atualizados.</span>
+            </div>
+            <a href="https://wa.me/5512974101924?text=Ol%C3%A1%2C%20quero%20atualizar%20meus%20dados%20de%20contato%20na%20SEG." target="_blank" rel="noopener noreferrer">Solicitar alteração</a>
+          </article>
+        </section>
+
+        <section class="portal-view" data-view="financeiro">
+          <div class="page-heading finance-heading">
+            <div>
+              <span class="page-eyebrow">Financeiro</span>
+              <h1>Financeiro e boletos</h1>
+              <p>Acompanhe títulos em aberto, vencimentos e pagamentos registrados no Valora.</p>
+            </div>
+          </div>
+
+          <div class="finance-summary-grid">
+            <article><span>Saldo em aberto</span><strong id="financeOpenBalance">R$ 0,00</strong></article>
+            <article><span>Títulos em aberto</span><strong id="financeOpenCount">0</strong></article>
+            <article><span>Vencidos</span><strong id="financeOverdueCount">0</strong></article>
+            <article><span>Recebidos</span><strong id="financePaidCount">0</strong></article>
+          </div>
+
+          <article class="content-card finance-table-card">
+            <div class="content-card-head">
+              <div>
+                <span class="section-kicker">Títulos</span>
+                <h2>Histórico financeiro</h2>
+              </div>
+              <span class="finance-source-badge">Valora em tempo real</span>
+            </div>
+
+            <div class="finance-empty" id="financeUnavailable" hidden>
+              <i class="fa-regular fa-folder-open"></i>
+              <strong>Financeiro indisponível</strong>
+              <span>Não há uma base financeira disponível para este cadastro no momento.</span>
+            </div>
+
+            <div class="finance-table-wrap" id="financeTableWrap">
+              <table class="finance-table">
+                <thead>
+                  <tr>
+                    <th>Descrição</th>
+                    <th>Vencimento</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th>Pagamento</th>
+                  </tr>
+                </thead>
+                <tbody id="financeTableBody"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <div class="information-note boleto-note" id="boletoIntegrationNote">
+            <i class="fa-solid fa-barcode"></i>
+            <div>
+              <strong>Segunda via de boleto</strong>
+              <span>Quando o emissor bancário estiver integrado, linha digitável, PDF e Pix aparecerão automaticamente nos títulos correspondentes.</span>
+            </div>
+          </div>
+        </section>
+      </section>
     </div>
   </div>
-</section>
 
-<script>
-  window.SEG_AREA_CLIENTE = {
-    apiBase: ""
-  };
-</script>
-<script type="module" src="/static/js/pages/area-cliente.js"></script>
-{% endblock %}
+  <script>
+    window.SEG_AREA_CLIENTE = { apiBase: "" };
+  </script>
+  <script src="/static/js/pages/area-cliente.js?v=20260820-auth-v2" defer></script>
+</body>
+</html>

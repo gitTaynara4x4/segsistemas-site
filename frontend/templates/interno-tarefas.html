@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Pendências / Tarefas | Painel Interno SEG</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="/static/img/favicon.png">
+  <link rel="stylesheet" href="/static/css/interno.css">
+  <link rel="stylesheet" href="/static/css/interno-valora.css?v=20260820-notificacoes-v1">
+</head>
+<body class="interno-app-body tarefas-body">
+  <div class="interno-shell tarefas-shell">
+    {% include "partials/sidebar.html" %}
+
+    <main class="tarefas-main" id="tarefas-page">
+      <section class="tarefas-header">
+        <div>
+          <h1>Pendências / Tarefas</h1>
+          <p>Organize o que precisa ser feito, defina um responsável, prioridade e prazo.</p>
+        </div>
+        <button class="tarefas-primary-btn" type="button" id="btn-nova-tarefa">
+          <i class="fa-solid fa-plus"></i>
+          Nova tarefa
+        </button>
+      </section>
+
+      <section class="tarefas-stats" aria-label="Resumo das tarefas">
+        <article class="tarefas-stat">
+          <span>Abertas</span>
+          <strong id="tarefas-stat-abertas">{{ tarefas_resumo.abertas|default(0) }}</strong>
+          <small>Pendentes ou em andamento</small>
+        </article>
+        <article class="tarefas-stat is-danger">
+          <span>Atrasadas</span>
+          <strong id="tarefas-stat-atrasadas">{{ tarefas_resumo.atrasadas|default(0) }}</strong>
+          <small>Prazo já vencido</small>
+        </article>
+        <article class="tarefas-stat is-warning">
+          <span>Para hoje</span>
+          <strong id="tarefas-stat-hoje">{{ tarefas_resumo.vencem_hoje|default(0) }}</strong>
+          <small>Vencem hoje</small>
+        </article>
+        <article class="tarefas-stat is-user">
+          <span>Minhas</span>
+          <strong id="tarefas-stat-minhas">{{ tarefas_resumo.minhas|default(0) }}</strong>
+          <small>Atribuídas a você</small>
+        </article>
+      </section>
+
+      <div class="tarefas-message" id="tarefas-message" role="status" aria-live="polite"></div>
+
+      <section class="tarefas-layout">
+        <aside class="tarefas-form-panel" id="tarefa-form-panel">
+          <div class="tarefas-panel-heading">
+            <div>
+              <h2 id="tarefa-form-title">Nova tarefa</h2>
+              <p>Preencha somente o necessário para a equipe executar.</p>
+            </div>
+            <button type="button" class="tarefas-icon-btn" id="btn-fechar-form" title="Limpar formulário" aria-label="Limpar formulário">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <form id="tarefa-form" class="tarefas-form">
+            <input type="hidden" id="tarefa-id">
+
+            <label class="tarefas-field full">
+              <span>Título *</span>
+              <input type="text" id="tarefa-titulo" maxlength="220" placeholder="Ex.: Retornar cliente sobre visita técnica" required>
+            </label>
+
+            <label class="tarefas-field full">
+              <span>Responsável</span>
+              <select id="tarefa-responsavel">
+                <option value="">Sem responsável</option>
+                {% for funcionario in funcionarios %}
+                <option value="{{ funcionario.id }}">{{ funcionario.nome }}</option>
+                {% endfor %}
+              </select>
+            </label>
+
+            <div class="tarefas-form-grid">
+              <label class="tarefas-field">
+                <span>Prioridade</span>
+                <select id="tarefa-prioridade">
+                  {% for chave, label in tarefas_prioridades.items() %}
+                  <option value="{{ chave }}"{% if chave == 'media' %} selected{% endif %}>{{ label }}</option>
+                  {% endfor %}
+                </select>
+              </label>
+
+              <label class="tarefas-field">
+                <span>Prazo</span>
+                <input type="date" id="tarefa-prazo">
+              </label>
+            </div>
+
+            <label class="tarefas-field full">
+              <span>Status</span>
+              <select id="tarefa-status">
+                {% for chave, label in tarefas_status.items() %}
+                <option value="{{ chave }}"{% if chave == 'pendente' %} selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </label>
+
+            <label class="tarefas-field full">
+              <span>Descrição</span>
+              <textarea id="tarefa-descricao" rows="4" placeholder="Detalhes, orientação ou contexto para quem vai executar."></textarea>
+            </label>
+
+            <div class="tarefas-form-actions">
+              <button type="submit" class="tarefas-primary-btn" id="btn-salvar-tarefa">
+                <i class="fa-solid fa-floppy-disk"></i>
+                Salvar tarefa
+              </button>
+              <button type="button" class="tarefas-secondary-btn" id="btn-cancelar-edicao">Limpar</button>
+            </div>
+          </form>
+        </aside>
+
+        <section class="tarefas-list-panel">
+          <div class="tarefas-panel-heading tarefas-list-heading">
+            <div>
+              <h2>Tarefas da equipe</h2>
+              <p>Priorize o que está atrasado e acompanhe o andamento.</p>
+            </div>
+            <button type="button" class="tarefas-icon-btn" id="btn-reload-tarefas" title="Atualizar" aria-label="Atualizar tarefas">
+              <i class="fa-solid fa-rotate-right"></i>
+            </button>
+          </div>
+
+          <div class="tarefas-filters">
+            <label class="tarefas-search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="search" id="tarefas-busca" placeholder="Buscar tarefa ou responsável">
+            </label>
+            <select id="tarefas-filtro-status" aria-label="Filtrar por status">
+              <option value="">Todos os status</option>
+              {% for chave, label in tarefas_status.items() %}<option value="{{ chave }}">{{ label }}</option>{% endfor %}
+            </select>
+            <select id="tarefas-filtro-prioridade" aria-label="Filtrar por prioridade">
+              <option value="">Todas as prioridades</option>
+              {% for chave, label in tarefas_prioridades.items() %}<option value="{{ chave }}">{{ label }}</option>{% endfor %}
+            </select>
+            <select id="tarefas-filtro-responsavel" aria-label="Filtrar por responsável">
+              <option value="">Todos os responsáveis</option>
+              {% for funcionario in funcionarios %}<option value="{{ funcionario.id }}">{{ funcionario.nome }}</option>{% endfor %}
+            </select>
+          </div>
+
+          <div class="tarefas-list" id="tarefas-list"></div>
+          <div class="tarefas-empty" id="tarefas-empty" hidden>
+            <i class="fa-regular fa-circle-check"></i>
+            <strong>Nenhuma tarefa encontrada</strong>
+            <span>Crie uma nova tarefa ou altere os filtros.</span>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/js/pages/interno-base.js"></script>
+  <script src="/static/js/pages/interno-tarefas.js?v=20260820-tarefas-v1"></script>
+</body>
+</html>

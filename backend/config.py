@@ -153,6 +153,30 @@ class Settings:
         or "https://segsis.com.br"
     ).rstrip("/")
 
+    # Integração privada SEG -> Valora. A chave fica somente no backend da SEG.
+    # VALORA_SEG_API_BASE é opcional; por padrão usa a mesma origem da Área do Cliente.
+    valora_seg_api_base: str = (
+        _env_str("VALORA_SEG_API_BASE")
+        or _env_str("VALORA_API_BASE")
+        or _env_str("AREA_CLIENTE_API_BASE")
+        or "https://segsis.com.br"
+    ).rstrip("/")
+    valora_seg_api_key: str = (
+        _env_str("VALORA_SEG_API_KEY")
+        or _env_str("SEG_INTEGRATION_API_KEY")
+    )
+    valora_seg_timeout_seconds: int = _env_int("VALORA_SEG_TIMEOUT_SECONDS", 10)
+
+    # Sessão da Área do Cliente. A chave pode ser separada em produção; se não
+    # existir, reutiliza o segredo interno já obrigatório no projeto.
+    area_cliente_cookie_name: str = "seg_area_cliente_session"
+    area_cliente_session_ttl_seconds: int = _env_int("SEG_AREA_CLIENTE_SESSION_TTL_SECONDS", 28800)
+    area_cliente_secret: str = (
+        _env_str("SEG_AREA_CLIENTE_SECRET")
+        or _env_str("SEG_INTERNO_SECRET")
+        or _env_str("SECRET_KEY")
+    )
+
     # Sessão interna
     interno_cookie_name: str = "seg_interno_session"
     interno_session_ttl_seconds: int = _env_int("SEG_INTERNO_SESSION_TTL_SECONDS", 28800)
@@ -171,6 +195,12 @@ class Settings:
     postgres_password: str = _env_str("POSTGRES_PASSWORD")
     postgres_db: str = _env_str("POSTGRES_DB")
     postgres_sslmode: str = _env_str("POSTGRES_SSLMODE", "disable")
+
+    # Monitoramento dos sistemas exibido no Dashboard interno.
+    # URLs devem apontar para um endpoint HTTP que responda quando o serviço estiver disponível.
+    status_sentor_url: str = _env_str("SEG_STATUS_SENTOR_URL")
+    status_active_net_url: str = _env_str("SEG_STATUS_ACTIVE_NET_URL")
+    status_services: str = _env_str("SEG_STATUS_SERVICES")
 
     @property
     def database_url(self) -> str:
@@ -270,6 +300,11 @@ MODULOS_INTERNOS = {
         "descricao": "Iniciar/finalizar plantão e acompanhar plantões do dia.",
         "icone": "fa-solid fa-wave-square",
     },
+    "escala": {
+        "label": "Escala da equipe",
+        "descricao": "Organizar quem trabalha, horários, folgas e substituições.",
+        "icone": "fa-solid fa-calendar-days",
+    },
     "passagem": {
         "label": "Passagem de plantão",
         "descricao": "Registrar, visualizar e assumir passagens de plantão.",
@@ -280,10 +315,30 @@ MODULOS_INTERNOS = {
         "descricao": "Criar, editar, resolver e reabrir ocorrências internas.",
         "icone": "fa-regular fa-clipboard",
     },
+    "tarefas": {
+        "label": "Pendências / Tarefas",
+        "descricao": "Criar e acompanhar tarefas, responsáveis, prioridades e prazos.",
+        "icone": "fa-solid fa-list-check",
+    },
+    "comunicados": {
+        "label": "Mural / Comunicados",
+        "descricao": "Consultar avisos internos e acompanhar comunicados não lidos.",
+        "icone": "fa-solid fa-bullhorn",
+    },
+    "documentos": {
+        "label": "Documentos internos",
+        "descricao": "Procedimentos, manuais, PDFs e contatos úteis organizados por categoria.",
+        "icone": "fa-regular fa-folder-open",
+    },
     "manual": {
         "label": "Manual interno",
         "descricao": "Acessar procedimentos e orientações internas.",
         "icone": "fa-regular fa-folder-open",
+    },
+    "auditoria": {
+        "label": "Histórico / Auditoria",
+        "descricao": "Consultar quem criou, alterou e encerrou registros, com data e horário.",
+        "icone": "fa-solid fa-clock-rotate-left",
     },
 }
 
@@ -312,5 +367,21 @@ OCORRENCIA_STATUS = {
     "aberta": "Aberta",
     "em_andamento": "Em andamento",
     "resolvida": "Resolvida",
+    "cancelada": "Cancelada",
+}
+
+
+TAREFA_PRIORIDADES = {
+    "baixa": "Baixa",
+    "media": "Média",
+    "alta": "Alta",
+    "urgente": "Urgente",
+}
+
+
+TAREFA_STATUS = {
+    "pendente": "Pendente",
+    "em_andamento": "Em andamento",
+    "concluida": "Concluída",
     "cancelada": "Cancelada",
 }

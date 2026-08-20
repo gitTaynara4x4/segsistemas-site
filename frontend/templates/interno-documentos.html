@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Documentos internos | Painel Interno SEG</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="/static/img/favicon.png">
+  <link rel="stylesheet" href="/static/css/interno.css">
+  <link rel="stylesheet" href="/static/css/interno-valora.css?v=20260820-documentos-v1">
+  <link rel="stylesheet" href="/static/css/interno-documentos.css?v=20260820-documentos-v1">
+</head>
+<body class="interno-app-body documentos-body">
+  <div class="interno-shell documentos-shell">
+    {% include "partials/sidebar.html" %}
+
+    <main class="documentos-main" id="documentos-page">
+      <section class="documentos-header">
+        <div>
+          <div class="documentos-breadcrumb">
+            <span>SEG Sistemas</span>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Interno</span>
+          </div>
+          <h1>Documentos internos</h1>
+          <p>Procedimentos, manuais, PDFs e contatos úteis em um só lugar.</p>
+        </div>
+
+        <button class="documentos-primary" type="button" id="btn-novo-documento" hidden>
+          <i class="fa-solid fa-plus"></i>
+          Novo documento
+        </button>
+      </section>
+
+      <section class="documentos-toolbar">
+        <label class="documentos-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input id="documentos-busca" type="search" placeholder="Pesquisar documento, contato ou categoria">
+        </label>
+        <div class="documentos-type-tabs" role="tablist" aria-label="Tipo de documento">
+          <button type="button" class="is-active" data-tipo="todos">Todos</button>
+          <button type="button" data-tipo="procedimento">Procedimentos</button>
+          <button type="button" data-tipo="manual">Manuais</button>
+          <button type="button" data-tipo="pdf">PDFs</button>
+          <button type="button" data-tipo="contato">Contatos úteis</button>
+        </div>
+      </section>
+
+      <section class="documentos-content">
+        <aside class="documentos-categorias">
+          <div class="documentos-side-title">
+            <strong>Categorias</strong>
+            <span id="documentos-total">0</span>
+          </div>
+          <button type="button" class="is-active" data-categoria="Todos">Todos</button>
+          <div id="documentos-categorias-list"></div>
+        </aside>
+
+        <section class="documentos-list-panel">
+          <div class="documentos-list-head">
+            <div>
+              <strong id="documentos-list-title">Todos os documentos</strong>
+              <span id="documentos-list-subtitle">Materiais disponíveis para a equipe.</span>
+            </div>
+            <button type="button" class="documentos-icon-btn" id="btn-reload-documentos" title="Atualizar" aria-label="Atualizar">
+              <i class="fa-solid fa-rotate-right"></i>
+            </button>
+          </div>
+
+          <div class="documentos-grid" id="documentos-grid"></div>
+
+          <div class="documentos-empty" id="documentos-empty" hidden>
+            <div class="documentos-empty-icon"><i class="fa-regular fa-folder-open"></i></div>
+            <strong>Nenhum documento encontrado</strong>
+            <span>Tente outra busca ou categoria.</span>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div class="documentos-modal" id="documentos-modal" hidden>
+    <div class="documentos-modal-backdrop" data-close-modal></div>
+    <section class="documentos-modal-card" role="dialog" aria-modal="true" aria-labelledby="documentos-modal-title">
+      <header class="documentos-modal-head">
+        <div>
+          <span class="documentos-modal-kicker" id="documentos-modal-kicker">Documento</span>
+          <h2 id="documentos-modal-title">Novo documento</h2>
+        </div>
+        <button type="button" class="documentos-icon-btn" data-close-modal aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+      </header>
+
+      <form id="documentos-form" class="documentos-form" enctype="multipart/form-data">
+        <input type="hidden" id="documento-id">
+        <div class="documentos-form-grid">
+          <label>
+            <span>Título *</span>
+            <input id="documento-titulo" name="titulo" maxlength="220" required placeholder="Ex.: Procedimento de atendimento noturno">
+          </label>
+          <label>
+            <span>Categoria *</span>
+            <input id="documento-categoria" name="categoria" list="documentos-categorias-datalist" required placeholder="Ex.: Operação">
+          </label>
+          <label>
+            <span>Tipo *</span>
+            <select id="documento-tipo" name="tipo">
+              <option value="procedimento">Procedimento</option>
+              <option value="manual">Manual</option>
+              <option value="pdf">PDF</option>
+              <option value="contato">Contato útil</option>
+            </select>
+          </label>
+          <label>
+            <span>Descrição</span>
+            <input id="documento-descricao" name="descricao" maxlength="500" placeholder="Resumo rápido para a equipe">
+          </label>
+        </div>
+
+        <label class="documentos-form-full" data-field-content>
+          <span>Conteúdo</span>
+          <textarea id="documento-conteudo" name="conteudo" rows="7" placeholder="Escreva o procedimento ou orientação aqui..."></textarea>
+        </label>
+
+        <div class="documentos-contact-fields" data-field-contact hidden>
+          <label>
+            <span>Nome do contato</span>
+            <input id="documento-contato-nome" name="contato_nome" placeholder="Ex.: Plantão técnico Intelbras">
+          </label>
+          <label>
+            <span>Telefone</span>
+            <input id="documento-telefone" name="telefone" placeholder="(00) 00000-0000">
+          </label>
+          <label>
+            <span>E-mail</span>
+            <input id="documento-email" name="email" type="email" placeholder="contato@empresa.com">
+          </label>
+        </div>
+
+        <label class="documentos-form-full" data-field-file hidden>
+          <span>Arquivo PDF</span>
+          <input id="documento-arquivo" name="arquivo" type="file" accept="application/pdf,.pdf">
+          <small id="documento-arquivo-atual">Máximo de 15 MB.</small>
+        </label>
+
+        <label class="documentos-form-full">
+          <span>Observação</span>
+          <textarea id="documento-observacao" name="observacao" rows="3" placeholder="Informações adicionais, validade ou orientação."></textarea>
+        </label>
+
+        <div class="documentos-form-message" id="documentos-form-message"></div>
+
+        <footer class="documentos-modal-actions">
+          <button type="button" class="documentos-secondary" data-close-modal>Cancelar</button>
+          <button type="submit" class="documentos-primary" id="btn-salvar-documento">
+            <i class="fa-solid fa-floppy-disk"></i>
+            Salvar documento
+          </button>
+        </footer>
+      </form>
+    </section>
+  </div>
+
+  <datalist id="documentos-categorias-datalist"></datalist>
+
+  <div class="documentos-modal" id="documentos-view-modal" hidden>
+    <div class="documentos-modal-backdrop" data-close-view></div>
+    <section class="documentos-modal-card documentos-view-card" role="dialog" aria-modal="true" aria-labelledby="documentos-view-title">
+      <header class="documentos-modal-head">
+        <div>
+          <span class="documentos-modal-kicker" id="documentos-view-type">Documento</span>
+          <h2 id="documentos-view-title">Visualização</h2>
+        </div>
+        <button type="button" class="documentos-icon-btn" data-close-view aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+      </header>
+      <div class="documentos-view-meta" id="documentos-view-meta"></div>
+      <div class="documentos-view-body" id="documentos-view-body"></div>
+    </section>
+  </div>
+
+  <script src="/static/js/pages/interno-base.js"></script>
+  <script src="/static/js/pages/interno-documentos.js?v=20260820-documentos-v1"></script>
+</body>
+</html>

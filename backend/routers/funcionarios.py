@@ -7,6 +7,7 @@ from ..deps import require_interno_module_api
 from ..models import InternoFuncionario
 from ..security import hash_password
 from ..services.interno import funcionario_publico, funcionarios_resumo, validar_payload_funcionario
+from ..services.auditoria import registrar_auditoria
 from ..utils import now_utc
 
 router = APIRouter(prefix="/api/interno/funcionarios", tags=["Interno - Funcionários"])
@@ -58,6 +59,8 @@ async def api_interno_criar_funcionario(request: Request, db: Session = Depends(
         criado_por=user_or_response.get("username") or "",
     )
     db.add(funcionario)
+    db.flush()
+    registrar_auditoria(db, user_or_response, request, modulo="funcionarios", entidade="funcionario", entidade_id=funcionario.id, acao="CRIAR", descricao=f"Criou o funcionário {funcionario.nome}.")
     db.commit()
     db.refresh(funcionario)
     return JSONResponse(status_code=201, content={"ok": True, "funcionario": funcionario_publico(funcionario)})
@@ -100,6 +103,7 @@ async def api_interno_atualizar_funcionario(funcionario_id: int, request: Reques
     if dados["senha"]:
         funcionario.senha_hash = hash_password(dados["senha"])
 
+    registrar_auditoria(db, user_or_response, request, modulo="funcionarios", entidade="funcionario", entidade_id=funcionario.id, acao="ALTERAR", descricao=f"Alterou o funcionário {funcionario.nome}.")
     db.commit()
     db.refresh(funcionario)
     return {"ok": True, "funcionario": funcionario_publico(funcionario)}
@@ -118,6 +122,7 @@ async def api_interno_ativar_funcionario(funcionario_id: int, request: Request, 
     funcionario.ativo = True
     funcionario.atualizado_em = now_utc()
     funcionario.atualizado_por = user_or_response.get("username") or ""
+    registrar_auditoria(db, user_or_response, request, modulo="funcionarios", entidade="funcionario", entidade_id=funcionario.id, acao="ATIVAR", descricao=f"Ativou o funcionário {funcionario.nome}.")
     db.commit()
     db.refresh(funcionario)
     return {"ok": True, "funcionario": funcionario_publico(funcionario)}
@@ -136,6 +141,7 @@ async def api_interno_inativar_funcionario(funcionario_id: int, request: Request
     funcionario.ativo = False
     funcionario.atualizado_em = now_utc()
     funcionario.atualizado_por = user_or_response.get("username") or ""
+    registrar_auditoria(db, user_or_response, request, modulo="funcionarios", entidade="funcionario", entidade_id=funcionario.id, acao="INATIVAR", descricao=f"Inativou o funcionário {funcionario.nome}.")
     db.commit()
     db.refresh(funcionario)
     return {"ok": True, "funcionario": funcionario_publico(funcionario)}

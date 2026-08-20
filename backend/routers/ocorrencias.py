@@ -6,6 +6,7 @@ from ..config import OCORRENCIA_PRIORIDADES, OCORRENCIA_STATUS, OCORRENCIA_TIPOS
 from ..database import get_db
 from ..deps import require_interno_module_api
 from ..models import InternoOcorrencia
+from ..services.auditoria import registrar_auditoria
 from ..services.interno import (
     ocorrencia_publica,
     ocorrencias_abertas,
@@ -13,7 +14,7 @@ from ..services.interno import (
     ocorrencias_resumo,
     validar_payload_ocorrencia,
 )
-from ..utils import client_ip, now_utc, read_json_body_safe, safe_lower, safe_str
+from ..utils import client_ip, now_local, now_utc, read_json_body_safe, safe_lower, safe_str
 
 router = APIRouter(prefix="/api/interno/ocorrencias", tags=["Interno - Ocorrências"])
 
@@ -105,7 +106,7 @@ async def api_interno_criar_ocorrencia(request: Request, db: Session = Depends(g
         status=dados["status"] if dados["status"] in {"aberta", "em_andamento"} else "aberta",
         tipo=dados["tipo"],
         prioridade=dados["prioridade"],
-        data_ocorrencia=now.date(),
+        data_ocorrencia=now_local().date(),
         titulo=dados["titulo"],
         cliente_nome=dados["cliente_nome"],
         local=dados["local"],
@@ -127,6 +128,8 @@ async def api_interno_criar_ocorrencia(request: Request, db: Session = Depends(g
         ip_atualizacao="",
     )
     db.add(ocorrencia)
+    db.flush()
+    registrar_auditoria(db, user_or_response, request, modulo="ocorrencias", entidade="ocorrencia", entidade_id=ocorrencia.id, acao="CRIAR", descricao=f"Criou a ocorrência: {ocorrencia.titulo}.")
     db.commit()
     db.refresh(ocorrencia)
     return JSONResponse(status_code=201, content={"ok": True, "ocorrencia": ocorrencia_publica(ocorrencia)})
@@ -180,6 +183,9 @@ async def api_interno_atualizar_ocorrencia(ocorrencia_id: int, request: Request,
         ocorrencia.resolvido_em = None
         ocorrencia.solucao = ""
 
+    acao_auditoria = "RESOLVER" if dados["status"] == "resolvida" else "ALTERAR"
+    descricao_auditoria = f"Resolveu a ocorrência: {ocorrencia.titulo}." if acao_auditoria == "RESOLVER" else f"Alterou a ocorrência: {ocorrencia.titulo}."
+    registrar_auditoria(db, user_or_response, request, modulo="ocorrencias", entidade="ocorrencia", entidade_id=ocorrencia.id, acao=acao_auditoria, descricao=descricao_auditoria)
     db.commit()
     db.refresh(ocorrencia)
     return {"ok": True, "ocorrencia": ocorrencia_publica(ocorrencia)}
@@ -215,6 +221,7 @@ async def api_interno_resolver_ocorrencia(ocorrencia_id: int, request: Request, 
     ocorrencia.atualizado_em = now
     ocorrencia.atualizado_por = user_or_response.get("username") or ""
     ocorrencia.ip_atualizacao = client_ip(request)
+    registrar_auditoria(db, user_or_response, request, modulo="ocorrencias", entidade="ocorrencia", entidade_id=ocorrencia.id, acao="RESOLVER", descricao=f"Resolveu a ocorrência: {ocorrencia.titulo}.")
     db.commit()
     db.refresh(ocorrencia)
     return {"ok": True, "ocorrencia": ocorrencia_publica(ocorrencia)}
@@ -240,6 +247,7 @@ async def api_interno_reabrir_ocorrencia(ocorrencia_id: int, request: Request, d
     ocorrencia.atualizado_em = now
     ocorrencia.atualizado_por = user_or_response.get("username") or ""
     ocorrencia.ip_atualizacao = client_ip(request)
+    registrar_auditoria(db, user_or_response, request, modulo="ocorrencias", entidade="ocorrencia", entidade_id=ocorrencia.id, acao="ALTERAR", descricao=f"Reabriu a ocorrência: {ocorrencia.titulo}.")
     db.commit()
     db.refresh(ocorrencia)
     return {"ok": True, "ocorrencia": ocorrencia_publica(ocorrencia)}

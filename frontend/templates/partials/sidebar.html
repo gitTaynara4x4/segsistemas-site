@@ -1,827 +1,330 @@
-<style>
-  /* ============================================================
-     SEG INTERNO — SIDEBAR + TOPBAR IGUAL REFERÊNCIA SAAS
-     Lateral fina fixa + topo horizontal com pills arredondados.
-     ============================================================ */
-
-  :root {
-    --seg-app-bg: #eef1ed;
-    --seg-app-bg-2: #f6f7f4;
-    --seg-surface: rgba(255, 255, 255, 0.72);
-    --seg-surface-strong: rgba(255, 255, 255, 0.9);
-    --seg-black: #050505;
-    --seg-text: #111111;
-    --seg-muted: #71746d;
-    --seg-muted-2: #a4a79f;
-    --seg-line: rgba(8, 15, 10, 0.075);
-    --seg-line-soft: rgba(8, 15, 10, 0.045);
-    --seg-shadow-soft: 0 10px 26px rgba(15, 23, 42, 0.045);
-    --seg-shadow-pill: 0 14px 34px rgba(15, 23, 42, 0.065);
-    --seg-shadow-active: 0 16px 34px rgba(0, 0, 0, 0.18);
-    --seg-radius-pill: 999px;
-    --seg-rail-width: 78px;
-    --seg-topbar-height: 86px;
-  }
-
-  html {
-    min-height: 100%;
-    background: var(--seg-app-bg);
-  }
-
-  body {
-    margin: 0;
-    min-height: 100vh;
-    padding-left: var(--seg-rail-width) !important;
-    padding-top: var(--seg-topbar-height) !important;
-    background:
-      radial-gradient(circle at 18% 10%, rgba(255, 255, 255, 0.7), transparent 30%),
-      radial-gradient(circle at 86% 0%, rgba(255, 255, 255, 0.55), transparent 28%),
-      var(--seg-app-bg) !important;
-    color: var(--seg-text);
-    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  }
-
-  .interno-shell {
-    display: block !important;
-    grid-template-columns: none !important;
-    min-height: 100vh;
-    background: transparent !important;
-  }
-
-  .seg-interno-public-header,
-  .interno-sidebar {
-    display: none !important;
-  }
-
-  .seg-interno-app-chrome,
-  .seg-interno-app-chrome * {
-    box-sizing: border-box;
-  }
-
-  /* ============================================================
-     SIDEBAR LATERAL FINA
-     ============================================================ */
-
-  .seg-side-rail {
-    position: fixed;
-    inset: 0 auto 0 0;
-    width: var(--seg-rail-width);
-    height: 100vh;
-    z-index: 1200;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 24px 0 24px;
-    background: rgba(238, 241, 237, 0.92);
-    border-right: 1px solid var(--seg-line);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-  }
-
-  .seg-rail-logo {
-    width: 46px;
-    height: 46px;
-    display: grid;
-    place-items: center;
-    margin: 0 0 66px;
-    text-decoration: none;
-    border-radius: 18px;
-  }
-
-  .seg-rail-logo img {
-    width: 42px;
-    height: 42px;
-    display: block;
-    object-fit: contain;
-    filter: none !important;
-  }
-
-  .seg-rail-main {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .seg-rail-spacer {
-    flex: 1;
-  }
-
-  .seg-rail-bottom {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-
-  .seg-rail-button,
-  .seg-rail-disabled,
-  .seg-rail-logout {
-    position: relative;
-    width: 38px;
-    height: 38px;
-    border: 0;
-    outline: 0;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    text-decoration: none;
-    background: rgba(255, 255, 255, 0.72);
-    color: #777b73;
-    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.035);
-    cursor: pointer;
-    font-family: inherit;
-    transition:
-      transform 0.18s ease,
-      background 0.18s ease,
-      color 0.18s ease,
-      box-shadow 0.18s ease,
-      opacity 0.18s ease;
-  }
-
-  .seg-rail-button i,
-  .seg-rail-disabled i,
-  .seg-rail-logout i {
-    font-size: 12px;
-    line-height: 1;
-  }
-
-  .seg-rail-button:hover,
-  .seg-rail-logout:hover {
-    transform: translateY(-1px);
-    background: #ffffff;
-    color: #111111;
-    box-shadow: 0 13px 30px rgba(15, 23, 42, 0.075);
-  }
-
-  .seg-rail-button.active {
-    width: 42px;
-    height: 42px;
-    background: #050505;
-    color: #ffffff;
-    box-shadow: var(--seg-shadow-active);
-  }
-
-  .seg-rail-disabled {
-    opacity: 0.52;
-    cursor: not-allowed;
-  }
-
-  .seg-rail-logout:hover {
-    color: #d93025;
-  }
-
-  .seg-rail-tooltip {
-    position: absolute;
-    left: 50px;
-    top: 50%;
-    transform: translateY(-50%) translateX(-5px);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    white-space: nowrap;
-    padding: 7px 11px;
-    border-radius: 999px;
-    background: #050505;
-    color: #ffffff;
-    font-size: 11px;
-    line-height: 1;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
-    transition:
-      opacity 0.16s ease,
-      visibility 0.16s ease,
-      transform 0.16s ease;
-  }
-
-  .seg-rail-button:hover .seg-rail-tooltip,
-  .seg-rail-disabled:hover .seg-rail-tooltip,
-  .seg-rail-logout:hover .seg-rail-tooltip {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(-50%) translateX(0);
-  }
-
-  .seg-rail-logout-form {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: transparent;
-  }
-
-  /* ============================================================
-     TOPBAR HORIZONTAL
-     ============================================================ */
-
-  .seg-topbar {
-    position: fixed;
-    top: 0;
-    left: var(--seg-rail-width);
-    right: 0;
-    height: var(--seg-topbar-height);
-    z-index: 1100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 22px;
-    padding: 0 30px 0 54px;
-    background: rgba(238, 241, 237, 0.88);
-    border-bottom: 1px solid var(--seg-line);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-  }
-
-  .seg-topbar-left,
-  .seg-topbar-right {
-    min-width: 0;
-    display: inline-flex;
-    align-items: center;
-  }
-
-  .seg-topbar-left {
-    flex: 0 1 auto;
-    gap: 12px;
-  }
-
-  .seg-topbar-right {
-    flex: 0 0 auto;
-    margin-left: auto;
-    gap: 14px;
-  }
-
-  .seg-top-nav {
-    min-width: 0;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .seg-top-link,
-  .seg-top-disabled,
-  .seg-share-button,
-  .seg-icon-button,
-  .seg-user-button,
-  .seg-mobile-toggle {
-    border: 0;
-    outline: 0;
-    border-radius: var(--seg-radius-pill);
-    background: var(--seg-surface);
-    color: var(--seg-text);
-    box-shadow: var(--seg-shadow-soft);
-    text-decoration: none;
-    font-family: inherit;
-    transition:
-      transform 0.18s ease,
-      background 0.18s ease,
-      color 0.18s ease,
-      box-shadow 0.18s ease,
-      opacity 0.18s ease;
-  }
-
-  .seg-top-link,
-  .seg-top-disabled,
-  .seg-share-button {
-    height: 44px;
-    padding: 0 22px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-size: 13px;
-    line-height: 1;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    white-space: nowrap;
-  }
-
-  .seg-top-link {
-    color: #53574f;
-  }
-
-  .seg-top-link i,
-  .seg-top-disabled i,
-  .seg-share-button i {
-    font-size: 13px;
-    line-height: 1;
-    opacity: 0.82;
-  }
-
-  .seg-top-link:hover,
-  .seg-share-button:hover,
-  .seg-icon-button:hover,
-  .seg-user-button:hover,
-  .seg-mobile-toggle:hover {
-    transform: translateY(-1px);
-    background: #ffffff;
-    color: #050505;
-    box-shadow: var(--seg-shadow-pill);
-  }
-
-  .seg-top-link.active {
-    background: #050505;
-    color: #ffffff;
-    box-shadow: var(--seg-shadow-active);
-  }
-
-  .seg-top-disabled {
-    color: #9da198;
-    cursor: not-allowed;
-    opacity: 0.78;
-  }
-
-  .seg-share-button {
-    color: #1a1a1a;
-    cursor: pointer;
-  }
-
-  .seg-icon-button,
-  .seg-user-button,
-  .seg-mobile-toggle {
-    width: 42px;
-    height: 42px;
-    padding: 0;
-    display: inline-grid;
-    place-items: center;
-    cursor: pointer;
-    position: relative;
-  }
-
-  .seg-icon-button i,
-  .seg-mobile-toggle i {
-    font-size: 13px;
-  }
-
-  .seg-notify-dot {
-    position: absolute;
-    top: 10px;
-    right: 11px;
-    width: 5px;
-    height: 5px;
-    border-radius: 999px;
-    background: #e33232;
-  }
-
-  .seg-user-button {
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.78);
-    padding: 0;
-    font-size: 0;
-  }
-
-  .seg-user-button img {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
-    border-radius: 50%;
-  }
-
-  .seg-people {
-    height: 42px;
-    display: inline-flex;
-    align-items: center;
-    padding-left: 4px;
-    margin-right: 26px;
-  }
-
-  .seg-people-avatar,
-  .seg-people-more {
-    width: 34px;
-    height: 34px;
-    margin-left: -8px;
-    border-radius: 50%;
-    display: inline-block;
-    border: 2px solid var(--seg-app-bg);
-    box-shadow: 0 9px 18px rgba(15, 23, 42, 0.055);
-    overflow: hidden;
-    background: #ffffff;
-    object-fit: cover;
-    vertical-align: middle;
-  }
-
-  .seg-people-avatar:first-child {
-    margin-left: 0;
-  }
-
-  .seg-people-more {
-    display: grid;
-    place-items: center;
-    background: #050505;
-    color: #ffffff;
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: -0.035em;
-  }
-
-  .seg-mobile-toggle {
-    display: none;
-  }
-
-  .seg-topbar.is-scrolled {
-    background: rgba(238, 241, 237, 0.96);
-  }
-
-  .seg-topbar.is-scrolled .seg-top-link,
-  .seg-topbar.is-scrolled .seg-top-disabled,
-  .seg-topbar.is-scrolled .seg-share-button,
-  .seg-topbar.is-scrolled .seg-icon-button,
-  .seg-topbar.is-scrolled .seg-user-button {
-    background-color: rgba(255, 255, 255, 0.84);
-  }
-
-  .seg-topbar.is-scrolled .seg-top-link.active {
-    background: #050505;
-  }
-
-  .interno-main,
-  main.interno-main,
-  .interno-content {
-    width: min(1500px, calc(100% - 72px));
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  @media (max-width: 1180px) {
-    .seg-topbar {
-      padding-left: 34px;
-      padding-right: 22px;
-    }
-
-    .seg-top-nav {
-      max-width: calc(100vw - 470px);
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-
-    .seg-top-nav::-webkit-scrollbar {
-      display: none;
-    }
-
-    .seg-top-link,
-    .seg-top-disabled {
-      padding-left: 18px;
-      padding-right: 18px;
-    }
-
-    .seg-share-button span {
-      display: none;
-    }
-
-    .seg-share-button {
-      width: 42px;
-      padding: 0;
-    }
-
-    .seg-people {
-      margin-right: 18px;
-    }
-  }
-
-  @media (max-width: 920px) {
-    :root {
-      --seg-rail-width: 0px;
-      --seg-topbar-height: 78px;
-    }
-
-    body {
-      padding-left: 0 !important;
-      padding-top: var(--seg-topbar-height) !important;
-    }
-
-    .seg-side-rail {
-      display: none;
-    }
-
-    .seg-topbar {
-      left: 0;
-      height: var(--seg-topbar-height);
-      padding: 0 14px;
-      gap: 10px;
-    }
-
-    .seg-topbar-left {
-      flex: 1 1 auto;
-    }
-
-    .seg-top-nav {
-      position: fixed;
-      top: 68px;
-      left: 14px;
-      right: 14px;
-      width: auto;
-      max-width: none;
-      height: auto;
-      padding: 12px;
-      border-radius: 28px;
-      flex-direction: column;
-      align-items: stretch;
-      justify-content: flex-start;
-      background: rgba(255, 255, 255, 0.96);
-      border: 1px solid rgba(0, 0, 0, 0.055);
-      box-shadow: 0 24px 70px rgba(15, 23, 42, 0.16);
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(-8px) scale(0.98);
-      transition:
-        opacity 0.2s ease,
-        visibility 0.2s ease,
-        transform 0.2s ease;
-    }
-
-    .seg-interno-app-chrome.menu-open .seg-top-nav {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0) scale(1);
-    }
-
-    .seg-top-link,
-    .seg-top-disabled {
-      width: 100%;
-      height: 46px;
-      justify-content: center;
-      padding: 0 16px;
-      font-size: 14px;
-    }
-
-    .seg-people,
-    .seg-share-button,
-    .seg-icon-button {
-      display: none;
-    }
-
-    .seg-mobile-toggle {
-      display: inline-grid;
-    }
-
-    .interno-main,
-    main.interno-main,
-    .interno-content {
-      width: min(920px, calc(100% - 32px));
-    }
-  }
-
-  @media (max-width: 520px) {
-    .seg-user-button {
-      width: 40px;
-      height: 40px;
-    }
-
-    .seg-mobile-toggle {
-      width: 40px;
-      height: 40px;
-    }
-  }
-</style>
-
-<div class="seg-interno-app-chrome" data-seg-interno-app-chrome>
-  {% set path = request.url.path %}
-  {% set usuario_nome_header = (user.nome if user and user.nome is defined else usuario_nome|default("Usuário", true)) %}
-  {% set usuario_inicial_header = usuario_nome_header[:1]|upper if usuario_nome_header else "U" %}
-  {% set usuario_admin = user and (user.is_admin or user.permissao == "admin") %}
-  {% set usuario_acessos = user.acessos if user and user.acessos is defined and user.acessos else [] %}
-
-  <aside class="seg-side-rail" aria-label="Atalhos internos SEG">
-    <a class="seg-rail-logo" href="/interno/dashboard" aria-label="Painel Interno SEG">
+{% set path = request.url.path %}
+{% set usuario_nome_header = (user.nome if user and user.nome is defined else usuario_nome|default("Usuário", true)) %}
+{% set usuario_inicial_header = usuario_nome_header[:1]|upper if usuario_nome_header else "U" %}
+{% set usuario_admin = user and (user.is_admin or user.permissao == "admin") %}
+{% set usuario_acessos = user.acessos if user and user.acessos is defined and user.acessos else [] %}
+
+<div class="seg-valora-menu" data-seg-valora-menu>
+  <header class="seg-valora-topbar">
+    <a class="seg-valora-brand" href="/interno/dashboard" aria-label="SEG Sistemas - Painel Interno">
       <img src="/static/img/logo-seg.png" alt="SEG Sistemas">
     </a>
 
-    <nav class="seg-rail-main" aria-label="Menu lateral interno">
-      <a href="/" class="seg-rail-button" aria-label="Voltar para o site">
-        <i class="fa-solid fa-arrow-left"></i>
-        <span class="seg-rail-tooltip">Voltar ao site</span>
-      </a>
+    <button class="seg-valora-mobile-toggle" type="button" data-seg-mobile-toggle aria-label="Abrir menu" aria-expanded="false">
+      <i class="fa-solid fa-bars"></i>
+    </button>
 
+    <nav class="seg-valora-nav" aria-label="Menu principal interno">
       {% if usuario_admin or "dashboard" in usuario_acessos %}
-      <a href="/interno/dashboard" class="seg-rail-button {% if path == '/interno' or path == '/interno/' or path == '/interno/dashboard' %}active{% endif %}" aria-label="Dashboard">
-        <i class="fa-solid fa-chart-line"></i>
-        <span class="seg-rail-tooltip">Dashboard</span>
+      <a class="seg-valora-nav-link {% if path == '/interno' or path == '/interno/' or path == '/interno/dashboard' %}is-active{% endif %}" href="/interno/dashboard">
+        Dashboard
       </a>
       {% endif %}
+
+      <div class="seg-valora-nav-group {% if path.startswith('/interno/ponto') or path.startswith('/interno/plantao') or path.startswith('/interno/escala') or path.startswith('/interno/passagem') or path.startswith('/interno/ocorrencias') or path.startswith('/interno/tarefas') %}is-current{% endif %}" data-seg-menu-group>
+        <button class="seg-valora-nav-trigger" type="button" aria-expanded="false">
+          Operação <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="seg-valora-dropdown">
+          {% if usuario_admin or "ponto" in usuario_acessos %}
+          <a class="seg-valora-dropdown-item {% if path.startswith('/interno/ponto') %}is-active{% endif %}" href="/interno/ponto">Ponto Online</a>
+          {% endif %}
+          {% if usuario_admin or "plantao" in usuario_acessos %}
+          <a class="seg-valora-dropdown-item {% if path.startswith('/interno/plantao') %}is-active{% endif %}" href="/interno/plantao">Plantão</a>
+          {% endif %}
+          {% if usuario_admin or "escala" in usuario_acessos %}
+          <a class="seg-valora-dropdown-item {% if path.startswith('/interno/escala') %}is-active{% endif %}" href="/interno/escala">Escala da Equipe</a>
+          {% endif %}
+          {% if usuario_admin or "passagem" in usuario_acessos %}
+          <a class="seg-valora-dropdown-item {% if path.startswith('/interno/passagem') %}is-active{% endif %}" href="/interno/passagem">Passagem de Plantão</a>
+          {% endif %}
+          {% if usuario_admin or "ocorrencias" in usuario_acessos %}
+          <a class="seg-valora-dropdown-item {% if path.startswith('/interno/ocorrencias') %}is-active{% endif %}" href="/interno/ocorrencias">Ocorrências</a>
+          {% endif %}
+          {% if usuario_admin or "tarefas" in usuario_acessos %}
+          <a class="seg-valora-dropdown-item {% if path.startswith('/interno/tarefas') %}is-active{% endif %}" href="/interno/tarefas">Pendências / Tarefas</a>
+          {% endif %}
+        </div>
+      </div>
 
       {% if usuario_admin or "funcionarios" in usuario_acessos %}
-      <a href="/interno/funcionarios" class="seg-rail-button {% if path.startswith('/interno/funcionarios') %}active{% endif %}" aria-label="Funcionários">
-        <i class="fa-solid fa-user-pen"></i>
-        <span class="seg-rail-tooltip">Funcionários</span>
+      <a class="seg-valora-nav-link {% if path.startswith('/interno/funcionarios') %}is-active{% endif %}" href="/interno/funcionarios">
+        Funcionários
       </a>
       {% endif %}
 
-      {% if usuario_admin or "ponto" in usuario_acessos %}
-      <a href="/interno/ponto" class="seg-rail-button {% if path.startswith('/interno/ponto') %}active{% endif %}" aria-label="Ponto online">
-        <i class="fa-regular fa-clock"></i>
-        <span class="seg-rail-tooltip">Ponto</span>
+      {% if usuario_admin or "comunicados" in usuario_acessos %}
+      <a class="seg-valora-nav-link {% if path.startswith('/interno/comunicados') %}is-active{% endif %}" href="/interno/comunicados">
+        Mural
       </a>
       {% endif %}
 
-      {% if usuario_admin or "plantao" in usuario_acessos %}
-      <a href="/interno/plantao" class="seg-rail-button {% if path.startswith('/interno/plantao') %}active{% endif %}" aria-label="Plantão">
-        <i class="fa-regular fa-comment-dots"></i>
-        <span class="seg-rail-tooltip">Plantão</span>
-      </a>
-      {% endif %}
-
-      {% if usuario_admin or "passagem" in usuario_acessos %}
-      <a href="/interno/passagem" class="seg-rail-button {% if path.startswith('/interno/passagem') %}active{% endif %}" aria-label="Passagem de plantão">
-        <i class="fa-regular fa-file-lines"></i>
-        <span class="seg-rail-tooltip">Passagem</span>
+      {% if usuario_admin or "documentos" in usuario_acessos %}
+      <a class="seg-valora-nav-link {% if path.startswith('/interno/documentos') %}is-active{% endif %}" href="/interno/documentos">
+        Documentos
       </a>
       {% endif %}
 
       {% if usuario_admin or "manual" in usuario_acessos %}
-      <a href="/interno/manual" class="seg-rail-button {% if path.startswith('/interno/manual') %}active{% endif %}" aria-label="Manual interno">
-        <i class="fa-regular fa-folder-open"></i>
-        <span class="seg-rail-tooltip">Manual</span>
-      </a>
-      {% endif %}
-
-      {% if usuario_admin or "ocorrencias" in usuario_acessos %}
-      <a href="/interno/ocorrencias" class="seg-rail-button {% if path.startswith('/interno/ocorrencias') %}active{% endif %}" aria-label="Ocorrências internas">
-        <i class="fa-regular fa-clipboard"></i>
-        <span class="seg-rail-tooltip">Ocorrências</span>
+      <a class="seg-valora-nav-link {% if path.startswith('/interno/manual') %}is-active{% endif %}" href="/interno/manual">
+        Manual
       </a>
       {% endif %}
     </nav>
 
-    <div class="seg-rail-spacer"></div>
+    <div class="seg-valora-actions">
+      <a class="seg-valora-icon-action" href="/interno/busca" aria-label="Busca geral" title="Busca geral">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </a>
+      <a class="seg-valora-plain-action" href="/" title="Voltar ao site">Site</a>
 
-    <div class="seg-rail-bottom">
-      <form method="post" action="/interno/logout" class="seg-rail-logout-form">
-        <button type="submit" class="seg-rail-logout" aria-label="Sair">
-          <i class="fa-solid fa-right-from-bracket"></i>
-          <span class="seg-rail-tooltip">Sair</span>
+      {% if usuario_admin or "ocorrencias" in usuario_acessos %}
+      <a class="seg-valora-new-action" href="/interno/ocorrencias">
+        <span class="seg-valora-plus">+</span>
+        <span>Nova ocorrência</span>
+      </a>
+      {% endif %}
+
+      <button class="seg-valora-icon-action" type="button" data-seg-refresh aria-label="Atualizar" title="Atualizar">
+        <i class="fa-solid fa-rotate-right"></i>
+      </button>
+
+      <div class="seg-valora-notifications" data-seg-notifications>
+        <button class="seg-valora-icon-action seg-valora-notification-trigger" type="button" data-seg-notification-trigger aria-expanded="false" aria-label="Notificações" title="Notificações">
+          <i class="fa-regular fa-bell"></i>
+          <span class="seg-valora-notification-badge" data-seg-notification-badge hidden>0</span>
         </button>
-      </form>
-    </div>
-  </aside>
-
-  <header class="seg-topbar" data-seg-topbar aria-label="Cabeçalho do painel interno SEG">
-    <div class="seg-topbar-left">
-      <nav class="seg-top-nav" id="segInternoTopNav" aria-label="Menu interno">
-        {% if usuario_admin or "dashboard" in usuario_acessos %}
-        <a href="/interno/dashboard" class="seg-top-link {% if path == '/interno' or path == '/interno/' or path == '/interno/dashboard' %}active{% endif %}">
-          <i class="fa-solid fa-table-cells-large"></i>
-          <span>Dashboard</span>
-        </a>
-        {% endif %}
-
-        {% if usuario_admin or "funcionarios" in usuario_acessos %}
-        <a href="/interno/funcionarios" class="seg-top-link {% if path.startswith('/interno/funcionarios') %}active{% endif %}">
-          <i class="fa-solid fa-users"></i>
-          <span>Funcionários</span>
-        </a>
-        {% endif %}
-
-        {% if usuario_admin or "ponto" in usuario_acessos %}
-        <a href="/interno/ponto" class="seg-top-link {% if path.startswith('/interno/ponto') %}active{% endif %}">
-          <i class="fa-regular fa-clock"></i>
-          <span>Ponto</span>
-        </a>
-        {% endif %}
-
-        {% if usuario_admin or "plantao" in usuario_acessos %}
-        <a href="/interno/plantao" class="seg-top-link {% if path.startswith('/interno/plantao') %}active{% endif %}">
-          <i class="fa-solid fa-wave-square"></i>
-          <span>Plantão</span>
-        </a>
-        {% endif %}
-
-        {% if usuario_admin or "passagem" in usuario_acessos %}
-        <a href="/interno/passagem" class="seg-top-link {% if path.startswith('/interno/passagem') %}active{% endif %}">
-          <i class="fa-solid fa-database"></i>
-          <span>Passagem</span>
-        </a>
-        {% endif %}
-
-        {% if usuario_admin or "manual" in usuario_acessos %}
-        <a href="/interno/manual" class="seg-top-link {% if path.startswith('/interno/manual') %}active{% endif %}">
-          <i class="fa-regular fa-folder-open"></i>
-          <span>Manual</span>
-        </a>
-        {% endif %}
-
-        {% if usuario_admin or "ocorrencias" in usuario_acessos %}
-        <a href="/interno/ocorrencias" class="seg-top-link {% if path.startswith('/interno/ocorrencias') %}active{% endif %}">
-          <i class="fa-regular fa-clipboard"></i>
-          <span>Ocorrências</span>
-        </a>
-        {% endif %}
-      </nav>
-    </div>
-
-    <div class="seg-topbar-right">
-      <div class="seg-people" aria-label="Equipe online">
-        <span class="seg-people-more">SEG</span>
+        <div class="seg-valora-notification-menu" data-seg-notification-menu>
+          <div class="seg-valora-notification-head">
+            <div>
+              <strong>Notificações</strong>
+              <span data-seg-notification-summary>Nenhuma nova</span>
+            </div>
+            <button type="button" data-seg-notification-readall>Marcar todas como lidas</button>
+          </div>
+          <div class="seg-valora-notification-list" data-seg-notification-list>
+            <div class="seg-valora-notification-empty">
+              <i class="fa-regular fa-bell-slash"></i>
+              <span>Nenhuma notificação.</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <button class="seg-share-button" type="button" data-seg-refresh title="Atualizar página" aria-label="Atualizar página">
-        <i class="fa-solid fa-rotate-right"></i>
-        <span>Atualizar</span>
-      </button>
-
-      <button class="seg-icon-button" type="button" title="Notificações" aria-label="Notificações">
-        <i class="fa-regular fa-bell"></i>
-        <span class="seg-notify-dot" aria-hidden="true"></span>
-      </button>
-
-      <button class="seg-user-button" type="button" title="{{ usuario_nome_header }}" aria-label="Usuário {{ usuario_nome_header }}">
-        <span style="font-size: 13px; font-weight: 700;">{{ usuario_inicial_header }}</span>
-      </button>
-
-      <button class="seg-mobile-toggle" id="segInternoMobileToggle" type="button" aria-label="Abrir menu" aria-expanded="false">
-        <i class="fa-solid fa-bars"></i>
-      </button>
+      <div class="seg-valora-user" data-seg-user-wrap>
+        <button class="seg-valora-user-trigger" type="button" data-seg-user-trigger aria-expanded="false">
+          <span>{{ usuario_inicial_header }}</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="seg-valora-user-menu">
+          <div class="seg-valora-user-card">
+            <strong>{{ usuario_nome_header }}</strong>
+            <small>Painel interno SEG</small>
+          </div>
+          {% if usuario_admin or "funcionarios" in usuario_acessos %}
+          <a href="/interno/funcionarios"><i class="fa-regular fa-user"></i> Funcionários</a>
+          {% endif %}
+          {% if usuario_admin or "auditoria" in usuario_acessos %}
+          <a href="/interno/auditoria"><i class="fa-solid fa-clock-rotate-left"></i> Histórico / Auditoria</a>
+          {% endif %}
+          <a href="/"><i class="fa-solid fa-arrow-up-right-from-square"></i> Site da SEG</a>
+          <form method="post" action="/interno/logout">
+            <button type="submit" class="danger"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair do sistema</button>
+          </form>
+        </div>
+      </div>
     </div>
   </header>
+
+  <div class="seg-valora-mobile-panel" data-seg-mobile-panel>
+    {% if usuario_admin or "dashboard" in usuario_acessos %}<a href="/interno/dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>{% endif %}
+    {% if usuario_admin or "ponto" in usuario_acessos %}<a href="/interno/ponto"><i class="fa-regular fa-clock"></i> Ponto Online</a>{% endif %}
+    {% if usuario_admin or "plantao" in usuario_acessos %}<a href="/interno/plantao"><i class="fa-solid fa-business-time"></i> Plantão</a>{% endif %}
+    {% if usuario_admin or "escala" in usuario_acessos %}<a href="/interno/escala"><i class="fa-solid fa-calendar-days"></i> Escala da Equipe</a>{% endif %}
+    {% if usuario_admin or "passagem" in usuario_acessos %}<a href="/interno/passagem"><i class="fa-solid fa-right-left"></i> Passagem de Plantão</a>{% endif %}
+    {% if usuario_admin or "ocorrencias" in usuario_acessos %}<a href="/interno/ocorrencias"><i class="fa-regular fa-clipboard"></i> Ocorrências</a>{% endif %}
+    {% if usuario_admin or "tarefas" in usuario_acessos %}<a href="/interno/tarefas"><i class="fa-solid fa-list-check"></i> Pendências / Tarefas</a>{% endif %}
+    {% if usuario_admin or "funcionarios" in usuario_acessos %}<a href="/interno/funcionarios"><i class="fa-solid fa-users"></i> Funcionários</a>{% endif %}
+    {% if usuario_admin or "auditoria" in usuario_acessos %}<a href="/interno/auditoria"><i class="fa-solid fa-clock-rotate-left"></i> Histórico / Auditoria</a>{% endif %}
+    <a href="/interno/busca"><i class="fa-solid fa-magnifying-glass"></i> Busca geral</a>
+    {% if usuario_admin or "comunicados" in usuario_acessos %}<a href="/interno/comunicados"><i class="fa-solid fa-bullhorn"></i> Mural / Comunicados</a>{% endif %}
+    {% if usuario_admin or "documentos" in usuario_acessos %}<a href="/interno/documentos"><i class="fa-regular fa-folder-open"></i> Documentos internos</a>{% endif %}
+    {% if usuario_admin or "manual" in usuario_acessos %}<a href="/interno/manual"><i class="fa-regular fa-folder-open"></i> Manual</a>{% endif %}
+    <a href="/"><i class="fa-solid fa-arrow-up-right-from-square"></i> Voltar ao site</a>
+    <form method="post" action="/interno/logout"><button type="submit"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</button></form>
+  </div>
 </div>
 
 <script>
-  (function () {
-    "use strict";
+(function () {
+  'use strict';
+  const root = document.querySelector('[data-seg-valora-menu]');
+  if (!root || root.dataset.ready === '1') return;
+  root.dataset.ready = '1';
 
-    const root = document.querySelector("[data-seg-interno-app-chrome]");
-    if (!root || root.dataset.ready === "1") return;
-    root.dataset.ready = "1";
+  const groups = Array.from(root.querySelectorAll('[data-seg-menu-group]'));
+  const mobileToggle = root.querySelector('[data-seg-mobile-toggle]');
+  const mobilePanel = root.querySelector('[data-seg-mobile-panel]');
+  const userWrap = root.querySelector('[data-seg-user-wrap]');
+  const userTrigger = root.querySelector('[data-seg-user-trigger]');
+  const refresh = root.querySelector('[data-seg-refresh]');
+  const notifications = root.querySelector('[data-seg-notifications]');
+  const notificationTrigger = root.querySelector('[data-seg-notification-trigger]');
+  const notificationMenu = root.querySelector('[data-seg-notification-menu]');
+  const notificationList = root.querySelector('[data-seg-notification-list]');
+  const notificationBadge = root.querySelector('[data-seg-notification-badge]');
+  const notificationSummary = root.querySelector('[data-seg-notification-summary]');
+  const notificationReadAll = root.querySelector('[data-seg-notification-readall]');
 
-    const topbar = root.querySelector("[data-seg-topbar]");
-    const toggle = root.querySelector("#segInternoMobileToggle");
-    const nav = root.querySelector("#segInternoTopNav");
-    const refreshButton = root.querySelector("[data-seg-refresh]");
-
-    function setScrolledState() {
-      if (!topbar) return;
-
-      if (window.scrollY > 10) {
-        topbar.classList.add("is-scrolled");
-      } else {
-        topbar.classList.remove("is-scrolled");
-      }
-    }
-
-    function setMenu(open) {
-      root.classList.toggle("menu-open", open);
-
-      if (toggle) {
-        toggle.setAttribute("aria-expanded", open ? "true" : "false");
-        toggle.innerHTML = open
-          ? '<i class="fa-solid fa-xmark"></i>'
-          : '<i class="fa-solid fa-bars"></i>';
-      }
-    }
-
-    function closeMenu() {
-      setMenu(false);
-    }
-
-    function toggleMenu() {
-      setMenu(!root.classList.contains("menu-open"));
-    }
-
-    window.addEventListener("scroll", setScrolledState, { passive: true });
-    setScrolledState();
-
-    if (toggle) {
-      toggle.addEventListener("click", function (event) {
-        event.stopPropagation();
-        toggleMenu();
-      });
-    }
-
-    if (refreshButton) {
-      refreshButton.addEventListener("click", function () {
-        window.location.reload();
-      });
-    }
-
-    if (nav) {
-      nav.addEventListener("click", function (event) {
-        const link = event.target && event.target.closest
-          ? event.target.closest("a")
-          : null;
-
-        if (!link) return;
-
-        if (window.matchMedia("(max-width: 920px)").matches) {
-          closeMenu();
-        }
-      });
-    }
-
-    document.addEventListener("click", function (event) {
-      if (!root.classList.contains("menu-open")) return;
-      if (root.contains(event.target)) return;
-      closeMenu();
+  function closeGroups(except) {
+    groups.forEach((group) => {
+      if (group === except) return;
+      group.classList.remove('is-open');
+      const trigger = group.querySelector('.seg-valora-nav-trigger');
+      if (trigger) trigger.setAttribute('aria-expanded', 'false');
     });
+  }
 
-    window.addEventListener("resize", function () {
-      if (!window.matchMedia("(max-width: 920px)").matches) {
-        closeMenu();
-      }
+  groups.forEach((group) => {
+    const trigger = group.querySelector('.seg-valora-nav-trigger');
+    if (!trigger) return;
+    trigger.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const opening = !group.classList.contains('is-open');
+      closeGroups(group);
+      if (userWrap) userWrap.classList.remove('is-open');
+      if (notifications) notifications.classList.remove('is-open');
+      if (notificationTrigger) notificationTrigger.setAttribute('aria-expanded', 'false');
+      group.classList.toggle('is-open', opening);
+      trigger.setAttribute('aria-expanded', opening ? 'true' : 'false');
     });
+  });
 
-    window.addEventListener("keydown", function (event) {
-      if (event.key === "Escape") {
-        closeMenu();
-      }
+  if (userTrigger && userWrap) {
+    userTrigger.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const opening = !userWrap.classList.contains('is-open');
+      closeGroups();
+      if (notifications) notifications.classList.remove('is-open');
+      if (notificationTrigger) notificationTrigger.setAttribute('aria-expanded', 'false');
+      userWrap.classList.toggle('is-open', opening);
+      userTrigger.setAttribute('aria-expanded', opening ? 'true' : 'false');
     });
-  })();
+  }
+
+  if (mobileToggle && mobilePanel) {
+    mobileToggle.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const opening = !mobilePanel.classList.contains('is-open');
+      mobilePanel.classList.toggle('is-open', opening);
+      mobileToggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
+      mobileToggle.innerHTML = opening ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
+    });
+  }
+
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>'\"]/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[char]));
+  }
+
+  function notificationIcon(type) {
+    const icons = {
+      tarefa: 'fa-list-check',
+      passagem: 'fa-right-left',
+      ocorrencia: 'fa-triangle-exclamation',
+      comunicado: 'fa-bullhorn',
+    };
+    return icons[type] || 'fa-bell';
+  }
+
+  function renderNotifications(items, unread) {
+    if (!notificationList || !notificationBadge) return;
+    const safeUnread = Number(unread || 0);
+    notificationBadge.textContent = safeUnread > 99 ? '99+' : String(safeUnread);
+    notificationBadge.hidden = safeUnread <= 0;
+    if (notificationSummary) notificationSummary.textContent = safeUnread ? `${safeUnread} não lida${safeUnread === 1 ? '' : 's'}` : 'Nenhuma nova';
+
+    if (!items.length) {
+      notificationList.innerHTML = '<div class=\"seg-valora-notification-empty\"><i class=\"fa-regular fa-bell-slash\"></i><span>Nenhuma notificação.</span></div>';
+      return;
+    }
+
+    notificationList.innerHTML = items.map((item) => {
+      const unreadClass = item.lida ? '' : ' is-unread';
+      const href = item.url || '#';
+      return `<a class=\"seg-valora-notification-item${unreadClass}\" href=\"${escapeHtml(href)}\" data-notification-id=\"${item.id}\">` +
+        `<span class=\"seg-valora-notification-icon type-${escapeHtml(item.tipo)}\"><i class=\"fa-solid ${notificationIcon(item.tipo)}\"></i></span>` +
+        `<span class=\"seg-valora-notification-content\"><strong>${escapeHtml(item.titulo)}</strong><small>${escapeHtml(item.mensagem)}</small></span>` +
+        `<span class=\"seg-valora-notification-dot\"></span></a>`;
+    }).join('');
+  }
+
+  async function carregarNotificacoes() {
+    try {
+      const response = await fetch('/api/interno/notificacoes', { headers: { 'Accept': 'application/json' }, cache: 'no-store' });
+      if (!response.ok) return;
+      const data = await response.json();
+      renderNotifications(data.notificacoes || [], data.nao_lidas || 0);
+    } catch (_) {}
+  }
+
+  async function marcarNotificacao(id) {
+    try {
+      await fetch(`/api/interno/notificacoes/${id}/ler`, { method: 'POST' });
+    } catch (_) {}
+  }
+
+  if (notificationTrigger && notifications) {
+    notificationTrigger.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const opening = !notifications.classList.contains('is-open');
+      closeGroups();
+      if (userWrap) userWrap.classList.remove('is-open');
+      notifications.classList.toggle('is-open', opening);
+      notificationTrigger.setAttribute('aria-expanded', opening ? 'true' : 'false');
+      if (opening) carregarNotificacoes();
+    });
+  }
+
+  if (notificationList) {
+    notificationList.addEventListener('click', async (event) => {
+      const link = event.target.closest('[data-notification-id]');
+      if (!link) return;
+      const id = link.getAttribute('data-notification-id');
+      if (id) await marcarNotificacao(id);
+    });
+  }
+
+  if (notificationReadAll) {
+    notificationReadAll.addEventListener('click', async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      try { await fetch('/api/interno/notificacoes/ler-todas', { method: 'POST' }); } catch (_) {}
+      await carregarNotificacoes();
+    });
+  }
+
+  carregarNotificacoes();
+  window.setInterval(carregarNotificacoes, 30000);
+
+  if (refresh) refresh.addEventListener('click', () => window.location.reload());
+
+  document.addEventListener('click', (event) => {
+    if (!root.contains(event.target)) {
+      closeGroups();
+      if (userWrap) userWrap.classList.remove('is-open');
+      if (mobilePanel) mobilePanel.classList.remove('is-open');
+      if (notifications) notifications.classList.remove('is-open');
+      if (notificationTrigger) notificationTrigger.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    closeGroups();
+    if (userWrap) userWrap.classList.remove('is-open');
+    if (mobilePanel) mobilePanel.classList.remove('is-open');
+    if (notifications) notifications.classList.remove('is-open');
+    if (notificationTrigger) notificationTrigger.setAttribute('aria-expanded', 'false');
+  });
+})();
 </script>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Escala da Equipe | Painel Interno SEG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="/static/img/favicon.png">
+  <link rel="stylesheet" href="/static/css/interno.css">
+  <link rel="stylesheet" href="/static/css/interno-valora.css?v=20260820-notificacoes-v1">
+</head>
+<body class="interno-app-body escala-body">
+  <div class="interno-shell escala-shell">
+    {% include "partials/sidebar.html" %}
+
+    <main class="escala-main" id="escala-page" data-can-manage="{{ '1' if escala_pode_gerenciar else '0' }}">
+      <section class="escala-header">
+        <div>
+          <h1>Escala da Equipe</h1>
+          <p>Veja quem trabalha hoje, próximos plantões, folgas e substituições.</p>
+        </div>
+        {% if escala_pode_gerenciar %}
+        <button class="escala-primary-btn" type="button" id="btn-nova-escala">
+          <i class="fa-solid fa-plus"></i> Nova escala
+        </button>
+        {% endif %}
+      </section>
+
+      <section class="escala-stats" aria-label="Resumo da escala">
+        <article class="escala-stat">
+          <span>Hoje</span>
+          <strong id="escala-stat-hoje">{{ escala_resumo.total_hoje|default(0) }}</strong>
+          <small>Pessoas na escala</small>
+        </article>
+        <article class="escala-stat is-active">
+          <span>Em andamento</span>
+          <strong id="escala-stat-andamento">{{ escala_resumo.em_andamento|default(0) }}</strong>
+          <small>Plantões iniciados</small>
+        </article>
+        <article class="escala-stat is-rest">
+          <span>Folgas</span>
+          <strong id="escala-stat-folgas">{{ escala_resumo.folgas|default(0) }}</strong>
+          <small>Folgas de hoje</small>
+        </article>
+        <article class="escala-stat is-swap">
+          <span>Substituições</span>
+          <strong id="escala-stat-substituicoes">{{ escala_resumo.substituicoes|default(0) }}</strong>
+          <small>Trocas registradas hoje</small>
+        </article>
+      </section>
+
+      <section class="escala-my-next" id="escala-my-next">
+        <div class="escala-my-next-icon"><i class="fa-regular fa-calendar-check"></i></div>
+        <div>
+          <span>Seu próximo plantão</span>
+          <strong id="escala-proximo-texto">Carregando...</strong>
+        </div>
+        <a href="/interno/plantao">Ir para Plantão <i class="fa-solid fa-arrow-right"></i></a>
+      </section>
+
+      <div class="escala-message" id="escala-message" hidden></div>
+
+      <section class="escala-layout{% if not escala_pode_gerenciar %} view-only{% endif %}">
+        {% if escala_pode_gerenciar %}
+        <aside class="escala-form-panel" id="escala-form-panel">
+          <div class="escala-panel-heading">
+            <div>
+              <h2 id="escala-form-title">Nova escala</h2>
+              <p>Defina turno, folga ou substituição.</p>
+            </div>
+            <button class="escala-icon-btn" type="button" id="btn-limpar-escala" aria-label="Limpar"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+
+          <form id="escala-form" class="escala-form">
+            <input type="hidden" id="escala-id">
+            <label class="escala-field">
+              <span>Funcionário *</span>
+              <select id="escala-funcionario" required>
+                <option value="">Selecione</option>
+                {% for funcionario in funcionarios %}<option value="{{ funcionario.id }}">{{ funcionario.nome }}</option>{% endfor %}
+              </select>
+            </label>
+
+            <div class="escala-form-grid">
+              <label class="escala-field">
+                <span>Data *</span>
+                <input type="date" id="escala-data" required>
+              </label>
+              <label class="escala-field">
+                <span>Situação</span>
+                <select id="escala-status">
+                  <option value="agendado">Agendado</option>
+                  <option value="folga">Folga</option>
+                  <option value="em_andamento">Em andamento</option>
+                  <option value="concluido">Concluído</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="escala-form-grid" id="escala-horarios-wrap">
+              <label class="escala-field">
+                <span>Início *</span>
+                <input type="time" id="escala-inicio" value="18:00">
+              </label>
+              <label class="escala-field">
+                <span>Fim *</span>
+                <input type="time" id="escala-fim" value="06:00">
+              </label>
+            </div>
+
+            <div class="escala-substituicao-box">
+              <div class="escala-sub-title"><i class="fa-solid fa-right-left"></i><span>Substituição</span></div>
+              <label class="escala-field">
+                <span>Substituto</span>
+                <select id="escala-substituto">
+                  <option value="">Sem substituição</option>
+                  {% for funcionario in funcionarios %}<option value="{{ funcionario.id }}">{{ funcionario.nome }}</option>{% endfor %}
+                </select>
+              </label>
+              <label class="escala-field" id="escala-motivo-wrap" hidden>
+                <span>Motivo da substituição</span>
+                <input type="text" id="escala-motivo" maxlength="240" placeholder="Ex.: troca de turno autorizada">
+              </label>
+            </div>
+
+            <label class="escala-field">
+              <span>Observação</span>
+              <textarea id="escala-observacao" rows="3" placeholder="Informação útil sobre este turno."></textarea>
+            </label>
+
+            <div class="escala-form-actions">
+              <button class="escala-primary-btn" type="submit" id="btn-salvar-escala"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+              <button class="escala-secondary-btn" type="button" id="btn-cancelar-edicao">Limpar</button>
+            </div>
+          </form>
+        </aside>
+        {% endif %}
+
+        <section class="escala-list-panel">
+          <div class="escala-panel-heading escala-list-heading">
+            <div>
+              <h2>Agenda da equipe</h2>
+              <p>Hoje e os próximos dias.</p>
+            </div>
+            <button class="escala-icon-btn" type="button" id="btn-reload-escala" aria-label="Atualizar"><i class="fa-solid fa-rotate-right"></i></button>
+          </div>
+
+          <div class="escala-filters">
+            <label><span>De</span><input type="date" id="escala-filtro-inicio"></label>
+            <label><span>Até</span><input type="date" id="escala-filtro-fim"></label>
+            <select id="escala-filtro-status">
+              <option value="">Todos</option>
+              <option value="agendado">Agendado</option>
+              <option value="em_andamento">Em andamento</option>
+              <option value="concluido">Concluído</option>
+              <option value="folga">Folga</option>
+              <option value="cancelado">Cancelado</option>
+            </select>
+            <label class="escala-search"><i class="fa-solid fa-magnifying-glass"></i><input type="search" id="escala-busca" placeholder="Buscar pessoa"></label>
+          </div>
+
+          <div id="escala-list" class="escala-list"></div>
+          <div id="escala-empty" class="escala-empty" hidden>
+            <i class="fa-regular fa-calendar"></i>
+            <strong>Nenhuma escala encontrada</strong>
+            <span>Altere o período ou cadastre um turno.</span>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/js/pages/interno-base.js"></script>
+  <script src="/static/js/pages/interno-escala.js?v=20260820-escala-v1"></script>
+</body>
+</html>

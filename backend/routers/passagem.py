@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from ..deps import require_interno_module_api
 from ..models import InternoPassagem
+from ..services.auditoria import registrar_auditoria
 from ..services.interno import (
     passagem_publica,
     passagens_do_dia,
@@ -12,7 +13,7 @@ from ..services.interno import (
     ultima_passagem_pendente,
     validar_payload_passagem,
 )
-from ..utils import client_ip, now_utc, parse_bool, read_json_body_safe, safe_str, today_local_iso
+from ..utils import client_ip, now_local, now_utc, parse_bool, read_json_body_safe, safe_str, today_local_iso
 
 router = APIRouter(prefix="/api/interno", tags=["Interno - Passagem"])
 
@@ -59,7 +60,7 @@ async def api_interno_criar_passagem(request: Request, db: Session = Depends(get
     now = now_utc()
     passagem = InternoPassagem(
         status="pendente",
-        data_plantao=now.date(),
+        data_plantao=now_local().date(),
         passado_por_id=user_or_response.get("funcionario_id"),
         passado_por_nome=user_or_response.get("nome") or user_or_response.get("username"),
         passado_por_usuario=user_or_response.get("username") or "",
@@ -81,6 +82,8 @@ async def api_interno_criar_passagem(request: Request, db: Session = Depends(get
         atualizado_em=now,
     )
     db.add(passagem)
+    db.flush()
+    registrar_auditoria(db, user_or_response, request, modulo="passagem", entidade="passagem", entidade_id=passagem.id, acao="CRIAR", descricao=f"Criou a passagem de plantão de {passagem.passado_por_nome}.")
     db.commit()
     db.refresh(passagem)
     return JSONResponse(status_code=201, content={"ok": True, "passagem": passagem_publica(passagem)})
@@ -117,6 +120,7 @@ async def api_interno_assumir_passagem(passagem_id: int, request: Request, db: S
     passagem.confirmacao_recebimento = True
     passagem.ip_recebimento = client_ip(request)
     passagem.atualizado_em = now
+    registrar_auditoria(db, user_or_response, request, modulo="passagem", entidade="passagem", entidade_id=passagem.id, acao="ASSUMIR", descricao=f"Assumiu a passagem de {passagem.passado_por_nome}.")
     db.commit()
     db.refresh(passagem)
     return {"ok": True, "passagem": passagem_publica(passagem)}

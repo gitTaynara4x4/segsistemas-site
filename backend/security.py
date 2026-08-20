@@ -47,6 +47,54 @@ def verify_password(password: str, stored_hash: str) -> bool:
         return False
 
 
+
+
+def sign_area_cliente_payload(payload_b64: str) -> str:
+    return hmac.new(
+        settings.area_cliente_secret.encode("utf-8"),
+        payload_b64.encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+
+
+def create_area_cliente_session(cliente_id: int, codigo_cliente: str = "") -> str:
+    now = int(time.time())
+    payload = {
+        "sub": int(cliente_id),
+        "codigo": str(codigo_cliente or ""),
+        "iat": now,
+        "exp": now + settings.area_cliente_session_ttl_seconds,
+        "aud": "area_cliente",
+    }
+    payload_b64 = b64url_encode(json.dumps(payload, separators=(",", ":")).encode("utf-8"))
+    signature = sign_area_cliente_payload(payload_b64)
+    return f"{payload_b64}.{signature}"
+
+
+def read_area_cliente_session(request: Request) -> dict | None:
+    token = request.cookies.get(settings.area_cliente_cookie_name)
+    if not token or "." not in token:
+        return None
+
+    try:
+        payload_b64, signature = token.split(".", 1)
+        expected = sign_area_cliente_payload(payload_b64)
+        if not hmac.compare_digest(signature, expected):
+            return None
+
+        payload = json.loads(b64url_decode(payload_b64).decode("utf-8"))
+        if payload.get("aud") != "area_cliente":
+            return None
+        if int(payload.get("exp") or 0) < int(time.time()):
+            return None
+        cliente_id = int(payload.get("sub") or 0)
+        if cliente_id <= 0:
+            return None
+        return payload
+    except Exception:
+        return None
+
+
 def normalizar_usuario_login(usuario: str | None) -> str:
     return safe_lower(usuario).replace(" ", "")
 
